@@ -39,7 +39,7 @@ void SoundManager_Music_unloadInfiniteLooper(int music_id);
 
 void SoundManager_Music_play(int music_id);
 void SoundManager_Music_isPlaying(int music_id);
-void SoundManager_Music_stop(int music_id);
+void SoundManager_Music_stop(int music_id, bool wait=false);
 void SoundManager_Music_isStopped(int music_id);
 void SoundManager_Music_pause(int music_id);
 bool SoundManager_Music_isPaused(int music_id);

@@ -1,4 +1,5 @@
 #include <fstream>
+#include <sstream>
 #include <iostream>
 #include <iomanip>
 #include <vector>
@@ -6,6 +7,7 @@
 #include <algorithm>
 #include <chrono>
 #include <thread>
+#include <atomic>
 
 #include "soundmanager.h"
 
@@ -20,70 +22,6 @@
 #define log_error(x) { \
     log(std::string("ERROR in: ")+__FUNCTION__"() !"); \
     log_func(x); }
-
-struct LooperElement {
-    float score, time1, time2;
-    long sampleFrom, sampleTo, length;
-    bool last = false; 
-};
-
-class LooperInfos {
-public:
-    LooperInfos(const char* filename);
-    inline LooperElement* get_jump(long current_sample);
-    inline void exit_jump();
-    long current_jump_progression;
-    long last_jump_position;
-private:
-    std::vector< LooperElement > elems;
-    std::map< long, std::vector< long > > map_sample_from_index;
-    LooperElement* current_jump;
-    
-};
-
-typedef struct SoundManager_Music
-{
-    // Modified by Program whenever
-    bool loadedInfiniteLooper;
-    LooperInfos* looperInfos;
-    bool repeat;
-    bool paused;
-    float desired_gain;
-    float desired_balance;
-    float paused_gain;
-
-    // Modified by Program, only after ensuring music is stopped
-    bool loaded;
-    unsigned long long nbSamples;
-    long sampleRate_file;
-    long sampleRate;
-    int nbChannels;
-    float* data;
-
-    // Modified by Program, then callback in response
-    long order_seek;
-    bool order_stop;
-
-    // Modified by Callback only, or after ensuring music is stopped
-    unsigned long position;
-    unsigned long stopped_position; // position when stop() is called
-    float gain;
-    float gain_log;
-    float balance;
-    float balance_left_gain;
-    float balance_right_gain;
-} Music;
-typedef struct _SoundManager_data
-{
-    Music array_music[NUM_MUSICS];
-    float global_gain = 1.f;
-} SoundManager_data;
-
-
-static bool is_initialized = false;
-static bool is_stream_open = false;
-static PaStream* stream = NULL;
-static SoundManager_data sm_data;
 
 static void log_func(const std::string &text, const std::string &file, const std::string &line)
 {
@@ -105,6 +43,67 @@ static void log_func(const std::string &text)
     log_file << text;
     log_file << std::endl;
 }
+
+struct LooperElement {
+    float score, time1, time2;
+    long sampleFrom, sampleTo, length;
+    bool last = false; 
+};
+
+struct LooperInfos {
+public:
+    inline LooperElement* get_jump(long current_sample);
+    inline void exit_jump();
+    std::atomic<long> current_jump_progression;
+    std::atomic<long> last_jump_position;
+    std::vector< LooperElement > elems; //readonly after loading
+    std::map< long, std::vector< long > > map_sample_from_index; //readonly after loading
+    std::atomic<LooperElement*> current_jump;
+};
+
+typedef struct SoundManager_Music
+{
+    // Modified by Program whenever
+    std::atomic<bool> loadedInfiniteLooper = false;
+    LooperInfos* looperInfos = NULL;
+    std::atomic<bool> repeat = false;
+    std::atomic<bool> paused = true;
+    std::atomic<float> desired_gain = 1;
+    std::atomic<float> desired_balance = 0;
+    std::atomic<float> paused_gain = 1;
+
+    // Modified by Program, only after ensuring music is stopped
+    bool loaded = false;
+    unsigned long long nbSamples = 0;
+    long sampleRate = 0;
+    int nbChannels = 0;
+    float* data = NULL;
+
+    // Modified by Program, then callback in response
+    std::atomic<long> order_seek = -1;
+    std::atomic<bool> order_stop = false;
+
+    // Modified by Callback only, or after ensuring music is stopped
+    std::atomic<unsigned long> position = 0;
+    std::atomic<unsigned long> stopped_position; // position when stop() is called
+    std::atomic<float> gain = 1;
+    std::atomic<float> gain_log = 0;
+    std::atomic<float> balance = 0;
+    std::atomic<float> balance_left_gain = 0;
+    std::atomic<float> balance_right_gain = 0;
+} Music;
+typedef struct _SoundManager_data
+{
+    Music array_music[NUM_MUSICS];
+    float global_gain = 1.f;
+} SoundManager_data;
+
+
+static bool is_initialized = false;
+static bool is_stream_open = false;
+static PaStream* stream = NULL;
+static SoundManager_data sm_data;
+
 
 // Global
 
@@ -185,12 +184,12 @@ void SoundManager_CloseStream(){
 }
 
 float SoundManager_getGlobalGain(){
-
+    return sm_data.global_gain;
 }
+
 void SoundManager_setGlobalGain(float gain){
-
+    sm_data.global_gain = gain;
 }
-
 
 // Music functions
 void SoundManager_Music_load(int music_id, std::string filename){
@@ -200,7 +199,7 @@ void SoundManager_Music_load(int music_id, std::string filename){
     }
     m->repeat = false;
     m->gain = 0.3333333f;
-    m->desired_gain = m->gain;
+    m->desired_gain = m->gain.load();
     m->position = 0;
     m->order_seek = -1;
     m->order_stop = false;
@@ -219,36 +218,112 @@ void SoundManager_Music_load(int music_id, std::string filename){
     }
     
     m->nbSamples = sfinfo.channels * (long)sfinfo.frames;
-    m->sampleRate_file = sfinfo.samplerate;
+    // m->sampleRate_file = sfinfo.samplerate;
     m->sampleRate = sfinfo.samplerate;
     m->nbChannels = sfinfo.channels;
     
     m->data = new float[m->nbSamples];
     if (sf_read_float(file, m->data, m->nbSamples) != m->nbSamples) {
-        log_error(std::string("Samples error."));
+        log_error("Samples error.");
     }
-    /*for(int i=0;i<m->nbSamples;i++){
-        if(m->data[i]>0.01)
-            ;//log("file: "+std::to_string(i));
-    }*/
+    if (SAMPLE_RATE != m->sampleRate) {
+        log_error("Sample rate not supported!");
+    }
     sf_close(file);
     m->loaded = true;
 }
 bool SoundManager_Music_isLoaded(int music_id){
-
+    Music* m = &sm_data.array_music[music_id];
+    return m->loaded;
 }
 void SoundManager_Music_unload(int music_id){
-
+    Music* m = &sm_data.array_music[music_id];
+    if (m->loaded) {
+        SoundManager_Music_stop(music_id, true);
+        m->loaded = false;
+        delete[] m->data;
+    }
 }
 
 void SoundManager_Music_loadInfiniteLooper(int music_id, std::string filename){
+    Music* m = &sm_data.array_music[music_id];
+    if (m->loadedInfiniteLooper)
+        SoundManager_Music_unloadInfiniteLooper(music_id);
 
+    m->looperInfos = new LooperInfos;
+    auto loop = m->looperInfos;
+
+    loop->current_jump = nullptr;
+    loop->current_jump_progression = 0;
+
+    std::ifstream file(filename);
+    if (!file.good()) {
+        log_error("Error while opening the loop file: "+filename);
+        return;
+    }
+    std::string line;
+
+    int i;
+    for (i = 0; std::getline(file, line) /*&& i<50*/;)   //read stream line by line
+    {
+        std::istringstream in(line);      //make a stream for the line itself
+        float score = 0;
+        long s_to = 0;
+        long s_from = 0;
+        long length = 0;
+        float t1 = 0;
+        float t2 = 0;
+        int activatedBack = 0;
+        int activatedForward = 0;
+
+        in >> score >> s_to >> s_from >> length >> t1 >> t2 >> activatedBack >> activatedForward;
+
+        if (activatedBack) {
+            loop->elems.resize(i + 1);
+            loop->elems[i].score = score;
+            loop->elems[i].sampleTo = s_to;
+            loop->elems[i].sampleFrom = s_from;
+            loop->elems[i].length = length;
+            loop->elems[i].time1 = t1;
+            loop->elems[i].time2 = t2;
+            if (activatedBack == 2) {
+                loop->elems[i].last = true;
+                loop->last_jump_position = loop->elems[i].sampleFrom;
+            }
+            else {
+                loop->elems[i].last = false;
+            }
+            loop->map_sample_from_index[loop->elems[i].sampleFrom].push_back(i);
+            i++;
+        }
+        if (activatedForward && activatedBack!=2) {
+            loop->elems.resize(i + 1);
+            loop->elems[i].score = score;
+            loop->elems[i].sampleTo = s_from;
+            loop->elems[i].sampleFrom = s_to;
+            loop->elems[i].length = length;
+            loop->elems[i].time1 = t2;
+            loop->elems[i].time2 = t1;
+            loop->elems[i].last = false;
+            loop->map_sample_from_index[loop->elems[i].sampleFrom].push_back(i);
+            i++;
+        }
+    }
+
+
+    m->loadedInfiniteLooper = true;
 }
 bool SoundManager_Music_isLoadedInfiniteLooper(int music_id){
-
+    Music* m = &sm_data.array_music[music_id];
+    return m->loadedInfiniteLooper;
 }
 void SoundManager_Music_unloadInfiniteLooper(int music_id){
-
+    Music* m = &sm_data.array_music[music_id];
+    if (m->loadedInfiniteLooper) {
+        SoundManager_Music_stop(music_id, true);
+        m->loadedInfiniteLooper = false;
+        delete m->looperInfos;
+    }
 }
 
 void SoundManager_Music_play(int music_id){
@@ -261,8 +336,16 @@ void SoundManager_Music_play(int music_id){
 void SoundManager_Music_isPlaying(int music_id){
 
 }
-void SoundManager_Music_stop(int music_id){
 
+void SoundManager_Music_stop(int music_id, bool wait){
+    Music* m = &sm_data.array_music[music_id];
+    if (!m->loaded)
+        return;
+    m->order_stop = 1;
+    if (wait) {
+        while (m->order_stop)
+            std::this_thread::sleep_for(std::chrono::milliseconds(10)); // @check if it works
+    }
 }
 void SoundManager_Music_isStopped(int music_id){
 
@@ -322,9 +405,11 @@ void SoundManager_Music_seekFrame(int music_id, unsigned long sample, bool wait)
 void update_gain(Music* m)
 {
     if (m->paused_gain < PAUSE_FADE_LIMIT)
-        m->gain = m->desired_gain;
-    else
-        m->gain += (m->desired_gain - m->gain) * UPDATE_GAIN_RATE;
+        m->gain = m->desired_gain.load();
+    else{
+        float current_gain = m->gain;
+        m->gain = current_gain + ((m->desired_gain - current_gain) * UPDATE_GAIN_RATE);
+    }
     
     //y = (Math.exp(x)-1)/(Math.E-1)
     m->gain_log = (powf(10, m->gain)-1)/9;
@@ -334,9 +419,11 @@ void update_gain(Music* m)
 void update_balance(Music* m)
 {
     if (m->paused_gain < PAUSE_FADE_LIMIT)
-        m->balance = m->desired_balance;
-    else
-        m->balance += (m->desired_balance - m->balance) * UPDATE_BALANCE_RATE;
+        m->balance = m->desired_balance.load();
+    else{
+        float current_balance = m->balance;
+        m->balance = current_balance + ((m->desired_balance - current_balance) * UPDATE_BALANCE_RATE);
+    }
 
     double angle = m->balance * PI_4;
     m->balance_left_gain = (float)(SQRT2_2 * (cos(angle) - sin(angle)));
@@ -349,7 +436,7 @@ void SoundManager_Music_writeAudio(float* out, unsigned long frameCount, SoundMa
         if (m->order_stop) {
             m->paused = true;
             if (m->paused_gain < PAUSE_FADE_LIMIT || m->position >= m->nbSamples) {
-                m->stopped_position = m->position;
+                m->stopped_position = m->position.load();
                 m->position = 0;
                 m->order_stop = false;
             }
@@ -364,7 +451,7 @@ void SoundManager_Music_writeAudio(float* out, unsigned long frameCount, SoundMa
 
         /////////////
         if (m->position >= m->nbSamples) {
-            m->gain = m->desired_gain;
+            m->gain = m->desired_gain.load();
             return;
         }
         for (unsigned int i = 0; i < frameCount; i++) {
@@ -375,7 +462,9 @@ void SoundManager_Music_writeAudio(float* out, unsigned long frameCount, SoundMa
                 if (m->paused_gain < PAUSE_FADE_LIMIT) {
                     return;
                 }
-                m->paused_gain *= PAUSE_FADE_RATE;
+                auto current = m->paused_gain.load();
+                while (!m->paused_gain.compare_exchange_weak(current, current * PAUSE_FADE_RATE)) // @do tests
+                    ;
             }
             else {
                 m->paused_gain = std::min(1.f, m->paused_gain / PAUSE_FADE_RATE);
@@ -462,8 +551,9 @@ void SoundManager_Music_writeAudio(float* out, unsigned long frameCount, SoundMa
 
 LooperElement *LooperInfos::get_jump(long current_sample)
 {
-    if (current_jump) {
-        if (current_jump_progression < current_jump->length) {
+    auto current_jump_loaded = current_jump.load();
+    if (current_jump_loaded) {
+        if (current_jump_progression.load() < current_jump_loaded->length) {
             return current_jump;
         }
         else {
@@ -489,9 +579,9 @@ LooperElement *LooperInfos::get_jump(long current_sample)
         }
     }
 
-    if (current_jump) {
-        if (current_jump->sampleTo + current_jump->length >= last_jump_position)
-            current_jump = nullptr;
+    if (current_jump_loaded) {
+        if (current_jump_loaded->sampleTo + current_jump_loaded->length >= last_jump_position)
+            current_jump_loaded = nullptr;
     }
     
     return current_jump;
