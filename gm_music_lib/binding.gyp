@@ -10,9 +10,11 @@
       "include_dirs": [ 
         "<!(node -e \"require('nan')\")",
         "include/portaudio/",
+        "include/libsndfile/",
       ],
       "libraries": [
         "portaudio_x64.lib",
+        "libsndfile-1.lib",
       ],
       "library_dirs": [
         "lib/",
