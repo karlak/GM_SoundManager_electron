@@ -8,6 +8,11 @@
     <h1>Hello World!</h1>
     We are using node <script>document.write(process.versions.node)</script>,
     Chrome <script>document.write(process.versions.chrome)</script>,
-    and Electron <script>document.write(process.versions.electron)</script>.
+    and Electron <script>document.write(process.versions.electron)</script>.<br>
+  <script type="text/javascript">
+    var a = require('./gm_music_lib/bin/win32-x64-53/gm_music_lib.node');
+    var b = a.add(1, 5);
+    document.write(b)
+  </script>
   </body>
 </html>

@@ -2,3 +2,15 @@
 *.sublime-workspace
 
 *.sublime-project
+
+node_modules/
+
+viewjs_test/
+
+gm_music_lib/index\.js
+
+gm_music_lib/portaudio_x64\.dll
+
+gm_music_lib/bin/
+
+gm_music_lib/build/
