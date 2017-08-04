@@ -4,6 +4,10 @@
 
 void Add(const Nan::FunctionCallbackInfo<v8::Value>& info) {
   SoundManager_Initialize();
+  SoundManager_OpenStream();
+  SoundManager_Music_load(0, "PSY.ogg");
+  SoundManager_Music_play(0);
+
   if (info.Length() < 2) {
     Nan::ThrowTypeError("Wrong number of arguments");
     return;

@@ -14,3 +14,5 @@ gm_music_lib/portaudio_x64\.dll
 gm_music_lib/bin/
 
 gm_music_lib/build/
+
+*.ogg
