@@ -1,9 +1,9 @@
 #include <nan.h> 
-#include "portaudio.h"
+#include "soundmanager.h"
+
 
 void Add(const Nan::FunctionCallbackInfo<v8::Value>& info) {
-  Pa_Initialize();
-  int numDevices = Pa_GetDeviceCount();
+  SoundManager_Initialize();
   if (info.Length() < 2) {
     Nan::ThrowTypeError("Wrong number of arguments");
     return;
@@ -18,7 +18,7 @@ void Add(const Nan::FunctionCallbackInfo<v8::Value>& info) {
   double arg1 = info[1]->NumberValue();
   v8::Local<v8::Number> num = Nan::New(arg0 + arg1 + 100);
 
-  info.GetReturnValue().Set(numDevices+00);
+  info.GetReturnValue().Set(num);
 }
 
 void Init(v8::Local<v8::Object> exports) {
