@@ -30,7 +30,7 @@ void Init(v8::Local<v8::Object> exports) {
                Nan::New<v8::FunctionTemplate>(Add)->GetFunction());
 }
 
-NODE_MODULE(addon, Init)
+NODE_MODULE(gm_music_lib, Init)
 /*
 /////////////////////
 using namespace v8;

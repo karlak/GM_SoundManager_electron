@@ -16,3 +16,5 @@ gm_music_lib/bin/
 gm_music_lib/build/
 
 *.ogg
+
+log_file\.txt

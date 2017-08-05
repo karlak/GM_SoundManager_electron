@@ -46,18 +46,18 @@ static void log_func(const std::string &text)
 
 struct LooperElement {
     float score, time1, time2;
-    long sampleFrom, sampleTo, length;
+    unsigned long long sampleFrom, sampleTo, length;
     bool last = false; 
 };
 
 struct LooperInfos {
 public:
-    inline LooperElement* get_jump(long current_sample);
+    inline LooperElement* get_jump(unsigned long long current_sample);
     inline void exit_jump();
-    std::atomic<long> current_jump_progression;
-    std::atomic<long> last_jump_position;
+    std::atomic<unsigned long long> current_jump_progression;
+    std::atomic<unsigned long long> last_jump_position;
     std::vector< LooperElement > elems; //readonly after loading
-    std::map< long, std::vector< long > > map_sample_from_index; //readonly after loading
+    std::map< unsigned long long, std::vector< unsigned long long > > map_sample_from_index; //readonly after loading
     std::atomic<LooperElement*> current_jump;
 };
 
@@ -80,12 +80,12 @@ typedef struct SoundManager_Music
     float* data = NULL;
 
     // Modified by Program, then callback in response
-    std::atomic<long> order_seek = -1;
+    std::atomic<unsigned long long> order_seek = -1;
     std::atomic<bool> order_stop = false;
 
     // Modified by Callback only, or after ensuring music is stopped
-    std::atomic<unsigned long> position = 0;
-    std::atomic<unsigned long> stopped_position; // position when stop() is called
+    std::atomic<unsigned long long> position = 0;
+    std::atomic<unsigned long long> stopped_position; // position when stop() is called
     std::atomic<float> gain = 1;
     std::atomic<float> gain_log = 0;
     std::atomic<float> balance = 0;
@@ -217,7 +217,7 @@ void SoundManager_Music_load(int music_id, std::string filename){
         return;
     }
     
-    m->nbSamples = sfinfo.channels * (long)sfinfo.frames;
+    m->nbSamples = sfinfo.channels * (unsigned long long)sfinfo.frames;
     // m->sampleRate_file = sfinfo.samplerate;
     m->sampleRate = sfinfo.samplerate;
     m->nbChannels = sfinfo.channels;
@@ -329,12 +329,12 @@ void SoundManager_Music_unloadInfiniteLooper(int music_id){
 void SoundManager_Music_play(int music_id){
     Music* m = &sm_data.array_music[music_id];
     if(m->paused){
-        m->paused_gain = 1.f;
+        m->paused_gain = 0.002f;
         m->paused = false;
     }
 }
-void SoundManager_Music_isPlaying(int music_id){
-
+bool SoundManager_Music_isPlaying(int music_id){
+    return (!SoundManager_Music_isPaused(music_id) && !SoundManager_Music_isStopped(music_id));
 }
 
 void SoundManager_Music_stop(int music_id, bool wait){
@@ -347,58 +347,97 @@ void SoundManager_Music_stop(int music_id, bool wait){
             std::this_thread::sleep_for(std::chrono::milliseconds(10)); // @check if it works
     }
 }
-void SoundManager_Music_isStopped(int music_id){
 
+bool SoundManager_Music_isStopped(int music_id){
+    Music* m = &sm_data.array_music[music_id];
+    return (m->paused_gain < PAUSE_FADE_LIMIT || m->position >= m->nbSamples);
 }
-void SoundManager_Music_pause(int music_id){
 
+void SoundManager_Music_pause(int music_id){
+    Music* m = &sm_data.array_music[music_id];
+    if(!m->paused){
+        m->paused_gain = 1.f;
+        m->paused = true;
+    }
 }
 bool SoundManager_Music_isPaused(int music_id){
-
+    Music* m = &sm_data.array_music[music_id];
+    return m->paused;
 }
 
 bool SoundManager_Music_getRepeat(int music_id){
+    Music* m = &sm_data.array_music[music_id];
+    return m->repeat;
 
 }
 void SoundManager_Music_setRepeat(int music_id, bool repeat){
-
+    Music* m = &sm_data.array_music[music_id];
+    m->repeat = repeat;
 }
 
 float SoundManager_Music_getGain(int music_id){
-
+    Music* m = &sm_data.array_music[music_id];
+    return m->gain;
+}
+float SoundManager_Music_getGainLog(int music_id){
+    Music* m = &sm_data.array_music[music_id];
+    return m->gain_log;
 }
 void SoundManager_Music_setGain(int music_id, float gain){
-
+    Music* m = &sm_data.array_music[music_id];
+    m->desired_gain = gain;
 }
 float SoundManager_Music_getBalance(int music_id){
-
+    Music* m = &sm_data.array_music[music_id];
+    return m->balance;    
 }
 void SoundManager_Music_setBalance(int music_id, float balance){
-
+    Music* m = &sm_data.array_music[music_id];
+    m->desired_balance = balance;
 }
 
-unsigned long SoundManager_Music_getPositionFrame(int music_id){
-
+unsigned long long SoundManager_Music_getPositionFrame(int music_id){
+    Music* m = &sm_data.array_music[music_id];
+    return m->position / m->nbChannels;
 }
-unsigned long SoundManager_Music_getPositionBisFrame(int music_id){
-
+unsigned long long SoundManager_Music_getPositionBisFrame(int music_id){
+    Music* m = &sm_data.array_music[music_id];
+    if (!m->loadedInfiniteLooper)
+        return 0;
+    auto position = m->position / m->nbChannels;
+    auto e = m->looperInfos->get_jump(position);
+    if (e) {
+        auto from = e->sampleFrom;
+        auto to = e->sampleTo;
+        return position - from + to;
+    }
+    return 0;
 }
-unsigned long SoundManager_Music_getStoppedPositionFrame(int music_id){
-
+unsigned long long SoundManager_Music_getStoppedPositionFrame(int music_id){
+    Music* m = &sm_data.array_music[music_id];
+    return m->stopped_position / m->nbChannels;
 }
 
-unsigned long SoundManager_Music_getLengthFrame(int music_id){
-
+unsigned long long SoundManager_Music_getLengthFrame(int music_id){
+    Music* m = &sm_data.array_music[music_id];
+    return m->nbSamples / m->nbChannels;
 }
-unsigned long SoundManager_Music_getLengthSample(int music_id){
-
+unsigned long long SoundManager_Music_getLengthSample(int music_id){
+    Music* m = &sm_data.array_music[music_id];
+    return m->nbSamples;
 }
 
 unsigned long SoundManager_Music_getSampleRate(int music_id){
-
+    Music* m = &sm_data.array_music[music_id];
+    return m->sampleRate;
 }
-void SoundManager_Music_seekFrame(int music_id, unsigned long sample, bool wait){
-
+void SoundManager_Music_seekFrame(int music_id, unsigned long long frame, bool wait){
+    Music* m = &sm_data.array_music[music_id];
+    m->order_seek = frame * m->nbChannels;
+    if (wait) {
+        while (m->order_seek != -1)
+            std::this_thread::sleep_for(std::chrono::milliseconds(10)); // @check if it works  [Sleep(10);]
+    }
 }
 
 ///////////
@@ -411,7 +450,7 @@ void update_gain(Music* m)
         m->gain = current_gain + ((m->desired_gain - current_gain) * UPDATE_GAIN_RATE);
     }
     
-    //y = (Math.exp(x)-1)/(Math.E-1)
+    //y = ((10^x)-1)/(10-1) // log10 based volume
     m->gain_log = (powf(10, m->gain)-1)/9;
     
 }
@@ -443,7 +482,7 @@ void SoundManager_Music_writeAudio(float* out, unsigned long frameCount, SoundMa
         }
 
         if (m->order_seek != -1) {
-            m->position = m->order_seek;
+            m->position = m->order_seek.load();
             if (m->loadedInfiniteLooper)
                 m->looperInfos->exit_jump();
             m->order_seek = -1;
@@ -473,34 +512,29 @@ void SoundManager_Music_writeAudio(float* out, unsigned long frameCount, SoundMa
 
             float* dataPtr = &(m->data[m->position]);
             
-            // if (m->loadedInfiniteLooper) {
-            //     LooperInfos* looper = m->looperInfos;
-            //     LooperElement* e;
-            //     if (e = looper->get_jump(m->position / m->nbChannels)) {
-            //         static float dataLooper[64];
-            //         for (int i = 0; i < m->nbChannels; i++) {
-            //             auto jump_pos = looper->current_jump_progression;
-            //             dataLooper[i] = 0;
-            //             /*long from = e->sampleFrom;
-            //             long to = e->sampleTo;
-            //             long chan = nbChannels;
-            //             long res = (e->sampleFrom + jump_pos)*nbChannels + i;
-            //             */
-            //             dataLooper[i] += m->data[(e->sampleFrom + jump_pos)*m->nbChannels + i] * ((e->length - jump_pos) / (float)e->length);
-            //             dataLooper[i] += m->data[(e->sampleTo + jump_pos)*m->nbChannels + i] * ((jump_pos) / (float)e->length);
+            if (m->loadedInfiniteLooper) {
+                LooperInfos* looper = m->looperInfos;
+                LooperElement* e;
+                if (e = looper->get_jump(m->position / m->nbChannels)) {
+                    static float dataLooper[64];
+                    for (int i = 0; i < m->nbChannels; i++) {
+                        auto jump_pos = looper->current_jump_progression.load();
+                        dataLooper[i] = 0;
+                        dataLooper[i] += m->data[(e->sampleFrom + jump_pos)*m->nbChannels + i] * ((e->length - jump_pos) / (float)e->length);
+                        dataLooper[i] += m->data[(e->sampleTo + jump_pos)*m->nbChannels + i] * ((jump_pos) / (float)e->length);
                         
-            //             // m fator prevent a bit of the loss of volume from the mixing of the chunks (=1 at the beg/end; =1.25 at the middle). 
-            //             // Those values seem to work
-            //             float factor = (-(((jump_pos) / (float)e->length) - 0.5f)*(((jump_pos) / (float)e->length) - 0.5f) + 0.25f) + 1.f;
-            //             dataLooper[i] *= factor;
-            //         }
-            //         looper->current_jump_progression++;
-            //         dataPtr = dataLooper;
-            //         if (looper->current_jump_progression == e->length) {
-            //             m->position = (e->sampleTo + looper->current_jump_progression - 1)*m->nbChannels;
-            //         }
-            //     }
-            // }
+                        // m fator prevent a bit of the loss of volume from the mixing of the chunks (=1 at the beg/end; =1.25 at the middle). 
+                        // Those values seem to work
+                        float factor = (-(((jump_pos) / (float)e->length) - 0.5f)*(((jump_pos) / (float)e->length) - 0.5f) + 0.25f) + 1.f;
+                        dataLooper[i] *= factor;
+                    }
+                    looper->current_jump_progression++;
+                    dataPtr = dataLooper;
+                    if (looper->current_jump_progression == e->length) {
+                        m->position = (e->sampleTo + looper->current_jump_progression - 1)*m->nbChannels;
+                    }
+                }
+            }
             
 
 
@@ -549,7 +583,7 @@ void SoundManager_Music_writeAudio(float* out, unsigned long frameCount, SoundMa
 }
 
 
-LooperElement *LooperInfos::get_jump(long current_sample)
+LooperElement *LooperInfos::get_jump(unsigned long long current_sample)
 {
     auto current_jump_loaded = current_jump.load();
     if (current_jump_loaded) {

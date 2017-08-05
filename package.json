@@ -4,7 +4,8 @@
   "description": "GM SoundManager",
   "main": "main.js",
   "scripts": {
-    "start": "cd gm_music_lib && node-gyp rebuild && electron-rebuild && cd .. && electron ."
+    "start": "cd gm_music_lib && node-gyp rebuild && electron-rebuild && cd .. && electron .",
+    "test": "cd gm_music_lib && node-gyp rebuild"
   },
   "license": "MIT",
   "dependencies": {
