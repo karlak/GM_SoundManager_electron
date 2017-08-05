@@ -21,7 +21,7 @@ bool SoundManager_Terminate();
 // getDevicesInfo();
 int SoundManager_callback(const void *input, void *output, unsigned long frameCount, const PaStreamCallbackTimeInfo* timeInfo, PaStreamCallbackFlags statusFlags, void *userData);
 
-void SoundManager_OpenStream();
+void SoundManager_OpenDefaultStream();
 void SoundManager_CloseStream();
 
 float SoundManager_getGlobalGain();
@@ -61,7 +61,7 @@ unsigned long long SoundManager_Music_getLengthFrame(int music_id);
 unsigned long long SoundManager_Music_getLengthSample(int music_id);
 
 unsigned long SoundManager_Music_getSampleRate(int music_id);
-void SoundManager_Music_seekFrame(int music_id, unsigned long long frame, bool wait);
+void SoundManager_Music_seekFrame(int music_id, unsigned long long frame, bool wait=false);
 
 //float* SoundManager_Music_getData(int music_id);
 //float* SoundManager_Music_getVisualData(int music_id, int width); // @todo

@@ -151,7 +151,7 @@ int SoundManager_callback(const void *input, void *output, unsigned long frameCo
     return paContinue;
 }
 
-void SoundManager_OpenStream(){
+void SoundManager_OpenDefaultStream(){
     if (is_stream_open) {
         log("Stream already open ! Closing current stream...");
         SoundManager_CloseStream();
@@ -188,6 +188,8 @@ float SoundManager_getGlobalGain(){
 }
 
 void SoundManager_setGlobalGain(float gain){
+    if(gain > 1) gain = 1;
+    if(gain < 0) gain = 0;
     sm_data.global_gain = gain;
 }
 
@@ -384,6 +386,8 @@ float SoundManager_Music_getGainLog(int music_id){
     return m->gain_log;
 }
 void SoundManager_Music_setGain(int music_id, float gain){
+    if(gain < 0) gain = 0;
+    if(gain > 1) gain = 1;
     Music* m = &sm_data.array_music[music_id];
     m->desired_gain = gain;
 }
@@ -392,6 +396,8 @@ float SoundManager_Music_getBalance(int music_id){
     return m->balance;    
 }
 void SoundManager_Music_setBalance(int music_id, float balance){
+    if(balance < -1) balance = -1;
+    if(balance >  1) balance =  1;
     Music* m = &sm_data.array_music[music_id];
     m->desired_balance = balance;
 }
