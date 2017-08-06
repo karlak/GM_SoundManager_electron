@@ -140,6 +140,54 @@ bool SoundManager_Terminate(){
     return true;
 }
 
+std::vector<DeviceInfo> SoundManager_GetDevicesInfo(){
+    int numDevices = Pa_GetDeviceCount();
+    if (numDevices < 0) {
+        throw (std::to_string(numDevices));
+    }
+    int default_output_device = Pa_GetDefaultOutputDevice();
+
+    const PaDeviceInfo* deviceInfo;
+    std::vector<DeviceInfo> d = std::vector<DeviceInfo>(numDevices);
+
+    int j = 0;
+    for (int i = 0; i<numDevices; i++)
+    {
+        deviceInfo = Pa_GetDeviceInfo(i);
+        if (deviceInfo->maxOutputChannels <= 0) {
+            continue;
+        }
+        PaStreamParameters outputParameters;
+        outputParameters.channelCount = 2;
+        outputParameters.device = i;
+        outputParameters.hostApiSpecificStreamInfo = NULL;
+        outputParameters.sampleFormat = paFloat32;
+        outputParameters.suggestedLatency = deviceInfo->defaultLowOutputLatency;
+        PaError err = Pa_IsFormatSupported( NULL, &outputParameters, SAMPLE_RATE);
+        if( err != paFormatIsSupported )
+            continue;
+        
+        
+        auto api = Pa_GetHostApiInfo(deviceInfo->hostApi);
+        d[j].api = std::string(api->name);
+        
+        d[j].name = std::string(deviceInfo->name);
+        d[j].device_id = i;
+        d[j].is_default = (i == default_output_device);
+
+        d[j].defaultSampleRate = deviceInfo->defaultSampleRate;
+        d[j].defaultHighInputLatency = deviceInfo->defaultHighInputLatency;
+        d[j].defaultHighOutputLatency = deviceInfo->defaultHighOutputLatency;
+        d[j].defaultLowInputLatency = deviceInfo->defaultLowInputLatency;
+        d[j].defaultLowOutputLatency = deviceInfo->defaultLowOutputLatency;
+        d[j].maxInputChannels = deviceInfo->maxInputChannels;
+        d[j].maxOutputChannels = deviceInfo->maxOutputChannels;
+        j++;
+    }
+    d.resize(j);
+    return d;
+}
+
 int SoundManager_callback(const void *input, void *output, unsigned long frameCount, const PaStreamCallbackTimeInfo* timeInfo, PaStreamCallbackFlags statusFlags, void *userData){
     input; timeInfo; statusFlags;
     // log("zbra0: "+std::to_string((int)output));
@@ -149,6 +197,33 @@ int SoundManager_callback(const void *input, void *output, unsigned long frameCo
         SoundManager_Music_writeAudio((float*)output, frameCount, (SoundManager_data*)userData, music);
     }
     return paContinue;
+}
+
+void SoundManager_OpenStream(DeviceInfo dev){
+    if (is_stream_open) {
+        log("Stream already open ! Closing current stream...");
+        SoundManager_CloseStream();
+    }
+    PaStreamParameters outputParameters;
+
+    outputParameters.channelCount = 2;
+    outputParameters.device = dev.device_id;
+    outputParameters.hostApiSpecificStreamInfo = NULL;
+    outputParameters.sampleFormat = paFloat32;
+    outputParameters.suggestedLatency = dev.defaultLowOutputLatency;
+
+
+    PaError err = Pa_OpenStream(&stream, NULL, &outputParameters, SAMPLE_RATE, 64, paNoFlag, &SoundManager_callback, &sm_data);
+    if (err != paNoError){
+        log_error(Pa_GetErrorText(err))
+        return;
+    }
+    err = Pa_StartStream(stream);
+    if (err != paNoError){
+        log_error(Pa_GetErrorText(err))
+        return;
+    }
+    is_stream_open = true;
 }
 
 void SoundManager_OpenDefaultStream(){

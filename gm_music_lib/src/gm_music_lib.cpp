@@ -7,7 +7,6 @@
 #define ARG_TYPE(x) IIF( IS_PAREN(x) )(;, VERIFY_ARG_TYPE_HELPER(x)) ____current_arg_verified++;
 
 #define ARG_COUNT(count) int ____current_arg_verified=0;if (info.Length() != count) {Nan::ThrowError("Wrong number of arguments ["#count" expected!]");return;}
-#define ARG_VERIFY_NONE() ARG_COUNT(0)
 #define args info
 
 /*  Possible arguments to macro ARG_TYPE(x):
@@ -76,28 +75,118 @@ NAN_METHOD(Add) {
 }
 
 NAN_METHOD(GM_Initialize){
-    ARG_VERIFY_NONE();
+    ARG_COUNT(0);
 
     bool result = SoundManager_Initialize();
     info.GetReturnValue().Set(Nan::New(result));
 }
 
 NAN_METHOD(GM_Terminate){
-    ARG_VERIFY_NONE();
+    ARG_COUNT(0);
     bool result = SoundManager_Terminate();
     info.GetReturnValue().Set(Nan::New(result));
 }
+/*
+struct DeviceInfo {
+    int device_id;
+    std::string name;
+    std::string api;
+    int maxInputChannels;
+    int maxOutputChannels;
+    double defaultLowInputLatency;
+    double defaultLowOutputLatency;
+    double defaultHighInputLatency;
+    double defaultHighOutputLatency;
+    double defaultSampleRate;
+    bool is_default;
+};
+*/
+NAN_METHOD(GM_GetDevicesInfo){
+    ARG_COUNT(0);
 
-/*NAN_METHOD(GM_GetDevicesInfo){}*/
-// // getDevicesInfo();
+    auto vec = SoundManager_GetDevicesInfo();
+    auto array = Nan::New<v8::Array>(vec.size());
+
+    for (auto it = vec.begin() ; it != vec.end(); ++it){
+        auto obj = Nan::New<v8::Object>();
+        obj->Set(Nan::New("device_id").ToLocalChecked(), Nan::New((*it).device_id));
+        auto name = Nan::EmptyString();
+        Nan::New((*it).name).ToLocal(&name);
+        obj->Set(Nan::New("name").ToLocalChecked(), name);
+        auto api = Nan::EmptyString();
+        Nan::New((*it).api).ToLocal(&api);
+        obj->Set(Nan::New("api").ToLocalChecked(), api);
+        obj->Set(Nan::New("maxInputChannels").ToLocalChecked(), Nan::New((*it).maxInputChannels));
+        obj->Set(Nan::New("maxOutputChannels").ToLocalChecked(), Nan::New((*it).maxOutputChannels));
+        obj->Set(Nan::New("defaultLowInputLatency").ToLocalChecked(), Nan::New((*it).defaultLowInputLatency));
+        obj->Set(Nan::New("defaultLowOutputLatency").ToLocalChecked(), Nan::New((*it).defaultLowOutputLatency));
+        obj->Set(Nan::New("defaultHighInputLatency").ToLocalChecked(), Nan::New((*it).defaultHighInputLatency));
+        obj->Set(Nan::New("defaultHighOutputLatency").ToLocalChecked(), Nan::New((*it).defaultHighOutputLatency));
+        obj->Set(Nan::New("defaultSampleRate").ToLocalChecked(), Nan::New((*it).defaultSampleRate));
+        obj->Set(Nan::New("is_default").ToLocalChecked(), Nan::New((*it).is_default));
+        Nan::Set(array, (uint32_t)(it - vec.begin()), obj);
+    }
+    //std::cout << ' ' << *it;
+    
+    info.GetReturnValue().Set(array);
+}
+
+NAN_METHOD(GM_OpenStream){
+    ARG_COUNT(1);
+    ARG_TYPE(IsObject());
+
+    auto arg0 = args[0]->ToObject();
+    auto device_id = Nan::Get(arg0, Nan::New("device_id").ToLocalChecked());
+    auto name = Nan::Get(arg0, Nan::New("name").ToLocalChecked());
+    auto api = Nan::Get(arg0, Nan::New("api").ToLocalChecked());
+    auto maxInputChannels = Nan::Get(arg0, Nan::New("maxInputChannels").ToLocalChecked());
+    auto maxOutputChannels = Nan::Get(arg0, Nan::New("maxOutputChannels").ToLocalChecked());
+    auto defaultLowInputLatency = Nan::Get(arg0, Nan::New("defaultLowInputLatency").ToLocalChecked());
+    auto defaultLowOutputLatency = Nan::Get(arg0, Nan::New("defaultLowOutputLatency").ToLocalChecked());
+    auto defaultHighInputLatency = Nan::Get(arg0, Nan::New("defaultHighInputLatency").ToLocalChecked());
+    auto defaultHighOutputLatency = Nan::Get(arg0, Nan::New("defaultHighOutputLatency").ToLocalChecked());
+    auto defaultSampleRate = Nan::Get(arg0, Nan::New("defaultSampleRate").ToLocalChecked());
+    auto is_default = Nan::Get(arg0, Nan::New("is_default").ToLocalChecked());
+    
+    #define TEST_EXIST(var) if(var.IsEmpty()){Nan::ThrowError("Not well formed device parameter.");return;}
+    TEST_EXIST(device_id);
+    TEST_EXIST(name);
+    TEST_EXIST(api);
+    TEST_EXIST(maxInputChannels);
+    TEST_EXIST(maxOutputChannels);
+    TEST_EXIST(defaultLowInputLatency);
+    TEST_EXIST(defaultLowOutputLatency);
+    TEST_EXIST(defaultHighInputLatency);
+    TEST_EXIST(defaultHighOutputLatency);
+    TEST_EXIST(defaultSampleRate);
+    TEST_EXIST(is_default);
+    #undef TEST_EXIST
+
+    DeviceInfo dev;
+    dev.device_id = device_id.ToLocalChecked()->Uint32Value();
+    dev.name = *Nan::Utf8String(name.ToLocalChecked());
+    dev.api = *Nan::Utf8String(api.ToLocalChecked());
+    dev.maxInputChannels = maxInputChannels.ToLocalChecked()->Uint32Value();
+    dev.maxOutputChannels = maxOutputChannels.ToLocalChecked()->Uint32Value();
+    dev.defaultLowInputLatency = defaultLowInputLatency.ToLocalChecked()->NumberValue();
+    dev.defaultLowOutputLatency = defaultLowOutputLatency.ToLocalChecked()->NumberValue();
+    dev.defaultHighInputLatency = defaultHighInputLatency.ToLocalChecked()->NumberValue();
+    dev.defaultHighOutputLatency = defaultHighOutputLatency.ToLocalChecked()->NumberValue();
+    dev.defaultSampleRate = defaultSampleRate.ToLocalChecked()->NumberValue();
+    dev.is_default = is_default.ToLocalChecked()->BooleanValue();
+
+    SoundManager_OpenStream(dev);
+}
+//void SoundManager_OpenStream(DeviceInfo dev);
+
 
 NAN_METHOD(GM_OpenDefaultStream){
-    ARG_VERIFY_NONE();
+    ARG_COUNT(0);
 
     SoundManager_OpenDefaultStream();
 }
 NAN_METHOD(GM_CloseStream){
-    ARG_VERIFY_NONE();
+    ARG_COUNT(0);
 
     SoundManager_CloseStream();
 }
@@ -319,11 +408,11 @@ NAN_METHOD(GM_Music_SeekFrame){
 // void SoundManager_Music_seekFrame(int music_id, unsigned long long frame);
 
 NAN_MODULE_INIT(Init) {
-    // Export(target, "add", Add);
     Export(target, "add", Add);
     Export(target, "initialize", GM_Initialize);
     Export(target, "terminate", GM_Terminate);
-    //Export(target, "getDevicesInfo", GM_GetDevicesInfo);
+    Export(target, "getDevicesInfo", GM_GetDevicesInfo);
+    Export(target, "openStream",             GM_OpenStream);
     Export(target, "openDefaultStream",             GM_OpenDefaultStream);
     Export(target, "closeStream",                   GM_CloseStream);
     Export(target, "getGlobalGain",                 GM_GetGlobalGain);

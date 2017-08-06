@@ -1,9 +1,11 @@
 #ifndef SOUNDMANAGER_H
 #define SOUNDMANAGER_H
 
-#include <string>
 #include "portaudio.h"
 #include "sndfile.h"
+#include <vector>
+#include <string>
+
 
 #define SAMPLE_RATE 44100
 #define NUM_MUSICS 32
@@ -16,11 +18,27 @@
 #define SQRT2_2 0.70710678118 // SQRT(2)/2
 #define E_minus1 1.718281828459045235360287471352662497757247093699959574966 // (e-1)
 
+
+struct DeviceInfo {
+    int device_id;
+    std::string name;
+    std::string api;
+    int maxInputChannels;
+    int maxOutputChannels;
+    double defaultLowInputLatency;
+    double defaultLowOutputLatency;
+    double defaultHighInputLatency;
+    double defaultHighOutputLatency;
+    double defaultSampleRate;
+    bool is_default;
+};
+
 bool SoundManager_Initialize();
 bool SoundManager_Terminate();
-// getDevicesInfo();
+std::vector<DeviceInfo> SoundManager_GetDevicesInfo();
 int SoundManager_callback(const void *input, void *output, unsigned long frameCount, const PaStreamCallbackTimeInfo* timeInfo, PaStreamCallbackFlags statusFlags, void *userData);
 
+void SoundManager_OpenStream(DeviceInfo dev);
 void SoundManager_OpenDefaultStream();
 void SoundManager_CloseStream();
 
