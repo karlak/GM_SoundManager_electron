@@ -1,0 +1,30 @@
+#app {
+    position: absolute;
+    left: 5px;
+    right: 5px;
+    bottom: 5px;
+    top: 5px;
+}
+
+#left-panel {
+    position: absolute;
+    padding: 0px;
+    left: 5px;
+    right: 5px;
+    bottom: 5px;
+    top: 5px;
+    width: 250px;
+    margin-top: unset;
+    margin-bottom: unset;
+}
+
+#right-panel {
+    position: absolute;
+    left: 265px;
+    right: 5px;
+    bottom: 5px;
+    top: 5px;
+    margin-top: unset;
+    margin-bottom: unset;
+    width: unset;
+}

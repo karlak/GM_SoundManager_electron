@@ -1,18 +1,80 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <title>Hello World!</title>
-  </head>
-  <body>
-    <h1>Hello World!</h1>
-    We are using node <script>document.write(process.versions.node)</script>,
-    Chrome <script>document.write(process.versions.chrome)</script>,
-    and Electron <script>document.write(process.versions.electron)</script>.<br>
+<head>
+  <meta charset="UTF-8">
+  <title>Hello World!</title>
+  <link rel="import" href="node_modules/xel/xel.html">
+  <link rel="stylesheet" href="node_modules/xel/stylesheets/galaxy.theme.css">
+  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+  <div id="app">
+
+    <x-card id="left-panel">LEFT
+      <x-card>
+        <main>
+          <x-label>Right-click to open the context menu.</x-label>
+        </main>
+
+        <x-contextmenu>
+          <x-menu>
+            <x-menuitem>
+              <x-label>Undo</x-label>
+            </x-menuitem>
+
+            <x-menuitem>
+              <x-label>Redo</x-label>
+            </x-menuitem>
+
+            <hr>
+
+            <x-menuitem>
+              <x-label>Cut</x-label>
+            </x-menuitem>
+
+            <x-menuitem>
+              <x-label>Copy</x-label>
+            </x-menuitem>
+
+            <x-menuitem>
+              <x-label>Paste</x-label>
+            </x-menuitem>
+
+            <hr>
+
+            <x-menuitem>
+              <x-label>Refresh</x-label>
+            </x-menuitem>
+          </x-menu>
+        </x-contextmenu>
+      </x-card>
+    </x-card>
+    <x-card id="right-panel">
+      RIGHT<x-progressbar value="0.5"></x-progressbar>
+      <input type="button" id="sync-msg">
+    </x-card>
+
+  </div>
+
   <script type="text/javascript">
-    var a = require('./gm_music_lib/bin/win32-x64-53/gm_music_lib.node');
-    var b = a.add(1, 5);
-    document.write(b)
+    var a = null;
+    const ipc = require('electron').ipcRenderer
+
+    const syncMsgBtn = document.getElementById('sync-msg')
+
+    syncMsgBtn.addEventListener('click', function () {
+      a = ipc.sendSync('synchronous-message', 'ping')
+      //const message = `Synchronous message reply: ${reply}`
+      //document.getElementById('sync-reply').innerHTML = message
+    })
   </script>
-  </body>
+
+</body>
 </html>
+
+<!--<script type="text/javascript">
+  var a = require('./gm_music_lib/bin/win32-x64-53/gm_music_lib.node');
+  var b = a.add(1, 5);
+  document.write(b)
+</script>-->

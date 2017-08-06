@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "GM SoundManager",
   "main": "main.js",
+  "private": true,
   "scripts": {
     "start": "cd gm_music_lib && node-gyp rebuild && electron-rebuild && cd .. && electron .",
     "test": "cd gm_music_lib && node-gyp rebuild"
@@ -10,11 +11,13 @@
   "license": "MIT",
   "dependencies": {
     "bindings": "^1.2.1",
-    "nan": "^2.6.2"
+    "electron-window-state": "^4.1.1",
+    "xel": "0.0.50"
   },
   "gypfile": true,
   "devDependencies": {
     "electron": "^1.6.11",
+    "nan": "^2.6.2",
     "electron-rebuild": "^1.6.0"
   }
 }
