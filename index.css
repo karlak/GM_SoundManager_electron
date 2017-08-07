@@ -1,48 +1,106 @@
+#titlebar-buttons {
+  position: absolute;
+  right: 10px;
+  bottom: 0px;
+  top: 0px;
+  text-align: right;
+  -webkit-app-region: no-drag;
+  -webkit-user-select: none;
+  -webkit-user-drag: none;
+}
+.titlebar-image {
+  display: inline-block;
+  vertical-align: middle;
+  line-height: 1em;
+}
+
+.titlebar-button {
+  display:inline-block;
+  width: 44px;
+  text-align: center;
+  align-content: center;
+  line-height: 32px;
+}
+
+.titlebar-button-close.titlebar-button:hover {
+  background-color: #FF0000;
+}
+.titlebar-button:hover {
+  background-color: #D8E6F6;
+}
+
+#titlebar-out {
+  position: absolute;
+  left: 0px;
+  right: 0px;
+  top: 0px;
+  height: 33px;
+  background-color: #8FB9E6;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  border-bottom-color: #6785A4;
+}
+#titlebar-out:before{
+  -webkit-user-select: none;
+  content:""; 
+  display:block; 
+  position:absolute; 
+  top:0px; 
+  left:0px; 
+  right:0px; 
+
+  bottom:0px; 
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  border-bottom-color: #495F75;
+}
+
 #titlebar {
-    position: absolute;
-    left: 5px;
-    right: 5px;
-    top: 5px;
-    height: 35px;
-    background-color: red;
-    -webkit-app-region: drag;
+  position: absolute;
+  left: 5px;
+  right: 5px;
+  top: 5px;
+  height: 27px;
+  background-color: #8FB9E6;
+  -webkit-app-region: drag;
 }
 
 #titlebar.maximized {
-    left: 0px;
-    right: 0px;
-    top: 0px;
+  left: 0px;
+  right: 0px;
+  top: 0px;
+  height: 32px;
 }
 
 #app {
-    position: absolute;
-    left: 5px;
-    right: 5px;
-    bottom: 5px;
-    top: 30px;
+  position: absolute;
+  left: 5px;
+  right: 5px;
+  bottom: 5px;
+  top: 35px;
 }
 
 #left-panel {
-    position: absolute;
-    padding: 0px;
-    left: 5px;
-    right: 5px;
-    bottom: 5px;
-    top: 5px;
-    width: 250px;
-    margin-top: unset;
-    margin-bottom: unset;
+  position: absolute;
+  padding: 0px;
+  left: 5px;
+  right: 5px;
+  bottom: 5px;
+  top: 5px;
+  width: 250px;
+  margin-top: unset;
+  margin-bottom: unset;
 }
 
 #right-panel {
-    position: absolute;
-    left: 265px;
-    right: 5px;
-    bottom: 5px;
-    top: 5px;
-    margin-top: unset;
-    margin-bottom: unset;
-    width: unset;
+  position: absolute;
+  left: 265px;
+  right: 5px;
+  bottom: 5px;
+  top: 5px;
+  margin-top: unset;
+  margin-bottom: unset;
+  width: unset;
 }
 
 @keyframes fadein {
@@ -60,7 +118,7 @@
 
   /* Make sure this matches the native window background color that you pass to
    * electron.BrowserWindow({...}), otherwise your app startup will look janky. */
-  background-color: #525252;
+  /*background-color: #525252;*/
   
   /* Smoother startup */
   animation: fadein 0.8s;

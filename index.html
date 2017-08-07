@@ -4,13 +4,17 @@
   <meta charset="UTF-8">
   <title>Hello World!</title>
   <!-- <link rel="import" href="include/xel/xel.min.html"> -->
-  <link rel="stylesheet" href="include/xel/stylesheets/galaxy.theme.css">
+  <link rel="stylesheet" href="include/xel/stylesheets/vanilla.theme.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
   <link rel="stylesheet" href="index.css">
   <script type="text/javascript" src="include/xel/xel.min.js" ></script>
 </head>
 <body>
-  <div id="titlebar">
+  <div id="titlebar-out">
+    <div id="titlebar">
+
+    </div>
+    <div id="titlebar-buttons"><span onclick="minimize()" class="titlebar-button"><img class="titlebar-image" src="include/imgs/minimize.png" draggable="false"/></span><span onclick="maximize()" class="titlebar-button"><img class="titlebar-image" src="include/imgs/maximize.png" draggable="false"/></span><span onclick="closewindow();" class="titlebar-button titlebar-button-close"><img class="titlebar-image" src="include/imgs/close.png" draggable="false"/></span></div>
   </div>
   <div id="app">
 

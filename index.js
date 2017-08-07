@@ -1,4 +1,5 @@
 const ipc = require('electron').ipcRenderer
+const { remote } = require('electron')
 // const {app, BrowserWindow} = require('electron')
 
 // const win_id = ipc.sendSync('get_win_id', '')
@@ -16,7 +17,22 @@ ipc.on('unmaximize', (event, message) => {
   syncMsgBtn.value= 'unmaximized';
 })
 
+function minimize() {
+	remote.BrowserWindow.getFocusedWindow().minimize();
+}
+function maximize() {
+	win = remote.BrowserWindow.getFocusedWindow();
+	if(win.isMaximized()){
+		win.unmaximize();
+	}
+	else{
+		win.maximize();
+	}
 
+}
+function closewindow() {
+	remote.BrowserWindow.getFocusedWindow().close();
+}
 
 
 
