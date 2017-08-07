@@ -2,15 +2,18 @@ const {app, BrowserWindow} = require('electron')
 const path = require('path')
 const url = require('url')
 const windowStateKeeper = require('electron-window-state');
-const gm_music = require('./gm_music_lib/bin/win32-x64-53/gm_music_lib.node');
+gm_music = require('./gm_music_lib/bin/win32-x64-53/gm_music_lib.node');
 
 let win
 
 function createWindow () {
   let mainWindowState = windowStateKeeper({
     defaultWidth: 800,
-    defaultHeight: 600
+    defaultHeight: 600,
+    fullScreen: false
   });
+
+
   
   var dirtyFlashHack=(process.platform=='win32');
   
@@ -20,9 +23,10 @@ function createWindow () {
     'width': mainWindowState.width,
     'height': mainWindowState.height,
     'frame': false,
-    'show': false,
+    'show': true,
     'backgroundColor': '#525252',
     'transparent': false,
+    'fullscreenable': false,
   });
 
   win.loadURL(url.format({
@@ -36,9 +40,15 @@ function createWindow () {
       console.log('dirtyFlashHack: true')
       win.show();
       win.hide();
-      win.setPosition(mainWindowState.x, mainWindowState.y, false);
+      if(mainWindowState.x < 0 && mainWindowState.y < 0){
+        win.setPosition(0, 0, false);
+      }
+      else{
+        win.setPosition(mainWindowState.x, mainWindowState.y, false);
+      }
       mainWindowState.manage(win);
       win.show();
+      // console.log(win.getPosition())
     }
     else{
       console.log('dirtyFlashHack: false')

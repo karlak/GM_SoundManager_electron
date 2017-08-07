@@ -1,3 +1,14 @@
+#cpuusage{
+  position: absolute;
+  left: 10px;
+  bottom: 0px;
+  top: 1px;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+  line-height: 32px;
+  color: #FFF;
+  font-weight: 800;
+}
 #titlebar-buttons {
   position: absolute;
   right: 10px;
@@ -30,6 +41,7 @@
 }
 
 #titlebar-out {
+  cursor:default;
   position: absolute;
   left: 0px;
   right: 0px;

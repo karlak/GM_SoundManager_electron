@@ -1,12 +1,13 @@
 const ipc = require('electron').ipcRenderer
 const { remote } = require('electron')
-// const {app, BrowserWindow} = require('electron')
 
-// const win_id = ipc.sendSync('get_win_id', '')
-// let win = BrowserWindow.fromId(win_id)
+let win = remote.getCurrentWindow();
 
-const syncMsgBtn = document.getElementById('sync-msg')
-syncMsgBtn.value='...';
+function check_position() {
+	var pos = win.getPosition();
+	if(pos[0]==-4000&&pos[1]==-4000){win.center();}
+}
+check_position();
 
 ipc.on('maximize', (event, message) => {
   document.getElementById("titlebar").classList.add('maximized');
@@ -18,12 +19,12 @@ ipc.on('unmaximize', (event, message) => {
 })
 
 function minimize() {
-	remote.BrowserWindow.getFocusedWindow().minimize();
+	win.minimize();
 }
 function maximize() {
-	win = remote.BrowserWindow.getFocusedWindow();
 	if(win.isMaximized()){
 		win.unmaximize();
+		check_position();
 	}
 	else{
 		win.maximize();
@@ -31,8 +32,12 @@ function maximize() {
 
 }
 function closewindow() {
-	remote.BrowserWindow.getFocusedWindow().close();
+	win.close();
 }
 
-
-
+//
+function update_cpuusage(argument) {
+	cpu = remote.process.getCPUUsage();
+	document.getElementById("cpuusage").innerHTML = "[CPU "+cpu.percentCPUUsage.toFixed(2) + "%]";
+}
+var t=setInterval(update_cpuusage,1000);
