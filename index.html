@@ -3,12 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <title>Hello World!</title>
-  <link rel="import" href="node_modules/xel/xel.html">
-  <link rel="stylesheet" href="node_modules/xel/stylesheets/galaxy.theme.css">
-  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+  <!-- <link rel="import" href="include/xel/xel.min.html"> -->
+  <link rel="stylesheet" href="include/xel/stylesheets/galaxy.theme.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
   <link rel="stylesheet" href="index.css">
+  <script type="text/javascript" src="include/xel/xel.min.js" ></script>
 </head>
 <body>
+  <div id="titlebar">
+  </div>
   <div id="app">
 
     <x-card id="left-panel">LEFT
@@ -52,22 +55,24 @@
     </x-card>
     <x-card id="right-panel">
       RIGHT<x-progressbar value="0.5"></x-progressbar>
-      <input type="button" id="sync-msg">
+      <input type="button" id="sync-msg" value="zbra">
     </x-card>
 
   </div>
+  <script type="text/javascript" src="index.js" ></script>
 
   <script type="text/javascript">
-    var a = null;
-    const ipc = require('electron').ipcRenderer
+    // const BrowserWindow = require('electron').remote.BrowserWindow
 
-    const syncMsgBtn = document.getElementById('sync-msg')
+    // var a = null;
+    // const ipc = require('electron').ipcRenderer
 
-    syncMsgBtn.addEventListener('click', function () {
-      a = ipc.sendSync('synchronous-message', 'ping')
-      //const message = `Synchronous message reply: ${reply}`
-      //document.getElementById('sync-reply').innerHTML = message
-    })
+
+    // syncMsgBtn.addEventListener('click', function () {
+    //   a = ipc.sendSync('synchronous-message', 'ping')
+    //   //const message = `Synchronous message reply: ${reply}`
+    //   //document.getElementById('sync-reply').innerHTML = message
+    // })
   </script>
 
 </body>

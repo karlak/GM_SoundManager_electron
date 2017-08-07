@@ -1,9 +1,25 @@
+#titlebar {
+    position: absolute;
+    left: 5px;
+    right: 5px;
+    top: 5px;
+    height: 35px;
+    background-color: red;
+    -webkit-app-region: drag;
+}
+
+#titlebar.maximized {
+    left: 0px;
+    right: 0px;
+    top: 0px;
+}
+
 #app {
     position: absolute;
     left: 5px;
     right: 5px;
     bottom: 5px;
-    top: 5px;
+    top: 30px;
 }
 
 #left-panel {
@@ -27,4 +43,25 @@
     margin-top: unset;
     margin-bottom: unset;
     width: unset;
+}
+
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+#app {
+  /* Disable text selection, or your app will feel like a web page */
+  -webkit-user-select: none;
+
+  /* Make sure this matches the native window background color that you pass to
+   * electron.BrowserWindow({...}), otherwise your app startup will look janky. */
+  background-color: #525252;
+  
+  /* Smoother startup */
+  animation: fadein 0.8s;
 }
