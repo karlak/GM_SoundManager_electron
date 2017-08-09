@@ -75,3 +75,14 @@ Split(['#left-panel', '#right-panel'], {
     }
 })
 /***********************/
+
+// Prevents the middle click scroll behavior
+document.body.onmousedown = e => { if (e.button === 1) return false; };
+
+
+
+
+
+
+
+
