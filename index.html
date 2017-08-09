@@ -7,8 +7,10 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
   <link rel="stylesheet" href="index.css">
   <script type="text/javascript" src="include/xel/xel.min.js" ></script>
+  <script src="include/split.js"></script>
 </head>
 <body>
+  <div id="border"></div>
   <div id="titlebar-out">
     <div id="titlebar">
     </div>
@@ -110,65 +112,65 @@
     </x-menubar>
   </div>
   <div id="app">
+  <div id="split-parent">
+      <x-card id="left-panel">LEFT
+        <x-card>
+          <main>
+            <x-label>Right-click to open the context menu.</x-label>
+            <x-buttons tracking="2">
+              <x-button toggled>
+                <x-icon name="format-bold"></x-icon>
+              </x-button>
 
-    <x-card id="left-panel">LEFT
-      <x-card>
-        <main>
-          <x-label>Right-click to open the context menu.</x-label>
-          <x-buttons tracking="2">
-            <x-button toggled>
-              <x-icon name="format-bold"></x-icon>
-            </x-button>
+              <x-button>
+                <x-icon name="format-underlined"></x-icon>
+              </x-button>
 
-            <x-button>
-              <x-icon name="format-underlined"></x-icon>
-            </x-button>
+              <x-button>
+                <x-icon name="format-italic"></x-icon>
+              </x-button>
+            </x-buttons>
 
-            <x-button>
-              <x-icon name="format-italic"></x-icon>
-            </x-button>
-          </x-buttons>
-          
-        </main>
+          </main>
 
-        <x-contextmenu>
-          <x-menu>
-            <x-menuitem>
-              <x-label>Undo</x-label>
-            </x-menuitem>
+          <x-contextmenu>
+            <x-menu>
+              <x-menuitem>
+                <x-label>Undo</x-label>
+              </x-menuitem>
 
-            <x-menuitem>
-              <x-label>Redo</x-label>
-            </x-menuitem>
+              <x-menuitem>
+                <x-label>Redo</x-label>
+              </x-menuitem>
 
-            <hr>
+              <hr>
 
-            <x-menuitem>
-              <x-label>Cut</x-label>
-            </x-menuitem>
+              <x-menuitem>
+                <x-label>Cut</x-label>
+              </x-menuitem>
 
-            <x-menuitem>
-              <x-label>Copy</x-label>
-            </x-menuitem>
+              <x-menuitem>
+                <x-label>Copy</x-label>
+              </x-menuitem>
 
-            <x-menuitem>
-              <x-label>Paste</x-label>
-            </x-menuitem>
+              <x-menuitem>
+                <x-label>Paste</x-label>
+              </x-menuitem>
 
-            <hr>
+              <hr>
 
-            <x-menuitem>
-              <x-label>Refresh</x-label>
-            </x-menuitem>
-          </x-menu>
-        </x-contextmenu>
+              <x-menuitem>
+                <x-label>Refresh</x-label>
+              </x-menuitem>
+            </x-menu>
+          </x-contextmenu>
+        </x-card>
       </x-card>
-    </x-card>
-    <x-card id="right-panel">
-      RIGHT<x-progressbar value="0.5"></x-progressbar>
-      <input type="button" id="sync-msg" value="zbra">
-    </x-card>
-
+      <x-card id="right-panel">
+        RIGHT<x-progressbar value="0.5"></x-progressbar>
+        <input type="button" id="sync-msg" value="zbra">
+      </x-card>
+    </div>
   </div>
   <script type="text/javascript" src="index.js" ></script>
 

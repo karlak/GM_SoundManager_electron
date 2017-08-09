@@ -1,6 +1,21 @@
 body {
   overflow: hidden;
 }
+#border {
+  position: absolute;
+  left:0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 110;
+
+  border-style: solid;
+  border-width: 1px;
+  border-color: #6785A4;
+
+  pointer-events: none;
+}
+
 #cpuusage{
   position: absolute;
   left: 10px;
@@ -103,6 +118,8 @@ body {
   z-index: 100;
 }
 
+:root {
+}
 
 #app {
   position: absolute;
@@ -110,30 +127,30 @@ body {
   right: 0px;
   bottom: 0px;
   top: 63px;
+  -webkit-user-select: none;
+  animation: fadein 0.8s;
+}
+
+#split-parent{
+  margin-top: -1px;
+  margin-bottom: -1px;
+  display: flex;
+  flex-direction: row;
+  background: red;
+  width: 100%;
+  height: 100%;
 }
 
 #left-panel {
-  position: absolute;
-  padding: 0px;
-  left: -1px;
+  margin: unset;
   padding: 5px;
-  right: 0px;
-  bottom: 0px;
-  top: -1px;
-  width: 250px;
-  margin-top: unset;
-  margin-bottom: unset;
+  min-width: 150px;
 }
 
 #right-panel {
-  position: absolute;
-  left: 253px;
-  right: 0px;
-  bottom: 0px;
-  top: 5px;
-  margin-top: unset;
-  margin-bottom: unset;
-  width: unset;
+  margin: unset;
+  padding: 5px;
+  min-width: 400px;
 }
 
 @keyframes fadein {
@@ -145,14 +162,21 @@ body {
   }
 }
 
-#app {
-  /* Disable text selection, or your app will feel like a web page */
-  -webkit-user-select: none;
+/******** Split ********/
+.gutter {
+    background-color: #eee;
 
-  /* Make sure this matches the native window background color that you pass to
-   * electron.BrowserWindow({...}), otherwise your app startup will look janky. */
-  /*background-color: #525252;*/
-  
-  /* Smoother startup */
-  animation: fadein 0.8s;
+    background-repeat: no-repeat;
+    background-position: 50%;
 }
+
+.gutter.gutter-horizontal {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==');
+    cursor: ew-resize;
+}
+
+.gutter.gutter-vertical {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAFAQMAAABo7865AAAABlBMVEVHcEzMzMzyAv2sAAAAAXRSTlMAQObYZgAAABBJREFUeF5jOAMEEAIEEFwAn3kMwcB6I2AAAAAASUVORK5CYII=');
+    cursor: ns-resize;
+}
+/************************/

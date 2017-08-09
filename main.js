@@ -27,6 +27,8 @@ function createWindow () {
     'backgroundColor': '#ECECEC',
     'transparent': false,
     'fullscreenable': false,
+    'minWidth': 600,
+    'minHeight': 500,
   });
 
   win.loadURL(url.format({
