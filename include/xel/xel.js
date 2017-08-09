@@ -1,9 +1,3 @@
-<!DOCTYPE html>
-
-<html>
-<head>
-
-    <script>
         (function() {
             "use strict";
             var _Mathabs = Math.abs,
@@ -5200,7 +5194,7 @@ customElements.define("x-menubar", XMenuBarElement)
                 }
             }
         } else if ("blink" === w) {
-            this._blinking = !0, this.parentElement.focus(), await _sleep10(150), this.focus(), await _sleep10(150), this._blinking = !0;
+            this._blinking = !0, this.parentElement.focus(), await _sleep10(50), this.focus(), await _sleep10(50), this._blinking = !0;
             var T = !0,
             N = !1,
             O;
@@ -8779,12 +8773,3 @@ customElements.define("x-rectcolorpicker", XRectColorPickerElement)
 customElements.define("x-colorselect", XColorSelectElement)
 }
 })()
-</script>
-
-<title>
-</title>
-</head>
-
-<body>
-</body>
-</html>

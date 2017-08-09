@@ -207,11 +207,14 @@ x-swatch {
  */
 
 x-button {
+  cursor:default;
+  -webkit-user-select: none;
   min-height: 28px;
   padding: 2px 14px;
   color: var(--text-color);
   background: #ffffff;
   border: 1px solid var(--x-border-color);
+  /*--trigger-effect: ripple;*/
   --x-border-color: #ACACAC;
   --x-toggled-border-color: hsl(var(--accent-color-h), var(--accent-color-s), calc(var(--accent-color-l) - 12%));
   --x-pressed-border-color: hsl(var(--accent-color-h), var(--accent-color-s), calc(var(--accent-color-l) - 12%));
@@ -636,6 +639,9 @@ x-doctab {
   border-bottom: none;
   outline: 1px solid #bdbdbd;
   --ripple-type: none;
+  /*
+  --ripple-type: unbounded;
+  */
   --selection-indicator-height: 0;
   --close-button-position: absolute;
   --close-button-width: 16px;
@@ -694,7 +700,7 @@ x-menu {
   box-shadow: rgba(0, 0, 0, 0.3) 0px 4px 22px;
   border: 1px solid rgba(0, 0, 0, 0.25);
   color: var(--text-color);
-  --open-transition: none;
+  --open-transition: 50 transform cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 x-menu hr {
@@ -719,7 +725,11 @@ x-menuitem {
   padding: 6px 12px 6px 23px;
   min-height: 28px;
   color: var(--text-color);
+  --trigger-effect: none;
+  /* 
+  --trigger-effect: ripple;
   --trigger-effect: blink;
+  */
   --checkmark-width: 18px;
   --checkmark-height: 18px;
   --checkmark-margin: 0 2px 0 -20px;
