@@ -1,3 +1,6 @@
+body {
+  overflow: hidden;
+}
 #cpuusage{
   position: absolute;
   left: 10px;
@@ -40,6 +43,13 @@
   background-color: #D8E6F6;
 }
 
+.titlebar-button-close.titlebar-button:active {
+  background-color: #FF6666;
+}
+.titlebar-button:active {
+  background-color: #C0CCDA;
+}
+
 #titlebar-out {
   cursor:default;
   position: absolute;
@@ -51,6 +61,7 @@
   border-bottom-style: solid;
   border-bottom-width: 1px;
   border-bottom-color: #6785A4;
+  z-index: 101;
 }
 #titlebar-out:before{
   -webkit-user-select: none;
@@ -84,21 +95,31 @@
   height: 32px;
 }
 
+#menubar{
+  position: absolute;
+  top: 33px;
+  left: -1px;
+  right: -1px;
+  z-index: 100;
+}
+
+
 #app {
   position: absolute;
-  left: 5px;
-  right: 5px;
-  bottom: 5px;
-  top: 35px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  top: 63px;
 }
 
 #left-panel {
   position: absolute;
   padding: 0px;
-  left: 5px;
-  right: 5px;
-  bottom: 5px;
-  top: 5px;
+  left: -1px;
+  padding: 5px;
+  right: 0px;
+  bottom: 0px;
+  top: -1px;
   width: 250px;
   margin-top: unset;
   margin-bottom: unset;
@@ -106,9 +127,9 @@
 
 #right-panel {
   position: absolute;
-  left: 265px;
-  right: 5px;
-  bottom: 5px;
+  left: 253px;
+  right: 0px;
+  bottom: 0px;
   top: 5px;
   margin-top: unset;
   margin-bottom: unset;

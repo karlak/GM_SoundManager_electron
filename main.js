@@ -15,7 +15,7 @@ function createWindow () {
 
 
   
-  var dirtyFlashHack=(process.platform=='win32');
+  var dirtyFlashHack=false;//(process.platform=='win32');
   
   win = new BrowserWindow({
     'x': dirtyFlashHack?-4000:mainWindowState.x,
@@ -23,8 +23,8 @@ function createWindow () {
     'width': mainWindowState.width,
     'height': mainWindowState.height,
     'frame': false,
-    'show': true,
-    'backgroundColor': '#525252',
+    'show': false,
+    'backgroundColor': '#ECECEC',
     'transparent': false,
     'fullscreenable': false,
   });
@@ -36,7 +36,7 @@ function createWindow () {
   }))
 
   win.webContents.on('dom-ready', function () {
-    if(dirtyFlashHack){
+    if(dirtyFlashHack){ // @bug ?
       console.log('dirtyFlashHack: true')
       win.show();
       win.hide();
@@ -48,7 +48,6 @@ function createWindow () {
       }
       mainWindowState.manage(win);
       win.show();
-      // console.log(win.getPosition())
     }
     else{
       console.log('dirtyFlashHack: false')
