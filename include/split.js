@@ -454,11 +454,11 @@ var Split = function (ids, options) {
 
         // Set the element size to our determined size.
         // Half-size gutters for first and last elements.
-        if (i === 0 || i === ids.length - 1) {
-            setElementSize(element.element, element.size, gutterSize / 2, element.num);
-        } else {
-            setElementSize(element.element, element.size, gutterSize, element.num);
-        }
+        // if (i === 0 || i === ids.length - 1) {
+        //     setElementSize(element.element, element.size_px, gutterSize / 2, element.num);
+        // } else {
+        //     setElementSize(element.element, element.size_px, gutterSize, element.num);
+        // }
 
         var computedSize = element.element[getBoundingClientRect]()[dimension];
 

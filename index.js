@@ -46,25 +46,25 @@ var t=setInterval(update_cpuusage,1000);
 const element_split_parent = document.querySelector("#split-parent");
 
 Split(['#left-panel', '#right-panel'], {
-    //sizes: ['300px', '1px'],
     gutterSize: 5,
     snapOffset: 0,
     elementStyle: function (dimension, size, gutterSize, num=-1) {
             // console.log(num);
+        if (typeof size === 'string' || size instanceof String) {
+            if (size.indexOf('%')>0 || size.indexOf('px')>0) {
+                var ret = [];
+                ret['flex-basis'] = 'calc(' + size + ' - ' + gutterSize + 'px)';
+                return ret;
+            }
+            return {};
+        }
+
         if(num==0){
             var calc_size_px = element_split_parent.offsetWidth * (size / 100.0);
             var ret = [];
             ret['flex-basis'] = 'calc(' + calc_size_px + 'px - ' + gutterSize + 'px)';
             return ret;
         }
-        else if(num==1){
-            var ret = {
-                'flex-grow': 1,
-                'flex-basis': '1px'
-            };
-            return ret;
-        }
-        // console.log(num , size);
         return {};
     },
     gutterStyle: function (dimension, gutterSize) {
