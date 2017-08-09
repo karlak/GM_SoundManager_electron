@@ -1,4 +1,8 @@
-const {app, BrowserWindow} = require('electron')
+const electron = require('electron');
+const app = electron.app;
+const BrowserWindow = electron.BrowserWindow;
+var screen;
+
 const path = require('path')
 const url = require('url')
 const windowStateKeeper = require('electron-window-state');
@@ -60,8 +64,28 @@ function createWindow () {
 
   // win.webContents.openDevTools()
 
+  var mouse_in_win = false;
+  function checkWindowLeaveEvent(){
+    var old_mouse_in_win = mouse_in_win;
+    var bounds = win.getBounds();
+    var pos = screen.getCursorScreenPoint();
+    mouse_in_win = (
+      pos.x > bounds.x && pos.x < bounds.x+bounds.width &&
+      pos.y > bounds.y && pos.y < bounds.y+bounds.height
+      );
+    if (!mouse_in_win && old_mouse_in_win) {
+      win.webContents.sendInputEvent({
+        type: "mouseLeave",
+        x: 0,
+        y: 0});
+    }
+
+  }
+  var checkWindowLeaveTimer=setInterval(checkWindowLeaveEvent,50);
+
   win.on('closed', () => {
-    win = null
+    clearInterval(checkWindowLeaveTimer);
+    win = null;
   })
 
   win.on('maximize', () => {
@@ -74,7 +98,11 @@ function createWindow () {
   
 }
 
-app.on('ready', createWindow)
+
+app.on('ready', () => {
+  screen = electron.screen;
+  createWindow();
+});
 app.on('window-all-closed', app.quit)
 app.on('activate', () => {})
 
