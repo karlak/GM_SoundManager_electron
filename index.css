@@ -1,3 +1,5 @@
+:root {
+}
 body {
   overflow: hidden;
 }
@@ -118,9 +120,24 @@ body {
   z-index: 100;
 }
 
-:root {
+@keyframes body_fadein {
+  0% {
+    opacity: 0;
+  }
+  20% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
-
+body {
+  opacity: 0;
+}
+body.loaded{
+  animation: body_fadein 0.5s;
+  opacity: 1;
+}
 #app {
   position: absolute;
   left: 0px;
@@ -132,7 +149,7 @@ body {
 }
 
 #app.loaded{
-  animation: fadein 0.8s;  
+  /*animation: fadein 0.8s;  */
   opacity: 1;
 }
 

@@ -44,8 +44,9 @@ function update_cpuusage(argument) {
 ///////////////////////////////////////
 
 document.addEventListener("DOMContentLoaded", () => {
+    win.show();
     check_position();
-    
+
     ipc.on('maximize', (event, message) => {
         document.getElementById("titlebar").classList.add('maximized');
         syncMsgBtn.value= 'maximized';
@@ -117,6 +118,7 @@ document.addEventListener("DOMContentLoaded", () => {
     /************************/
     /*** Show the app div ***/
     document.getElementById("app").classList.add('loaded');
+    document.body.classList.add('loaded');
 
 });
 

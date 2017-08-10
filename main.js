@@ -28,7 +28,7 @@ function createWindow () {
     'height': mainWindowState.height,
     'frame': false,
     'show': false,
-    'backgroundColor': '#ECECEC',
+    'backgroundColor': '#FFF',
     'transparent': false,
     'fullscreenable': false,
     'minWidth': 600,
@@ -42,24 +42,24 @@ function createWindow () {
   }))
 
   mainWindowState.manage(win);
-  win.webContents.on('dom-ready', function () {
-    // if(dirtyFlashHack){ // @bug ?
-    //   console.log('dirtyFlashHack: true')
-    //   win.show();
-    //   win.hide();
-    //   if(mainWindowState.x < 0 && mainWindowState.y < 0){
-    //     win.setPosition(0, 0, false);
-    //   }
-    //   else{
-    //     win.setPosition(mainWindowState.x, mainWindowState.y, false);
-    //   }
-    //   mainWindowState.manage(win);
-    //   win.show();
-    // }
-    // else{
-      win.show();
-    // }
-  });
+  // win.webContents.on('dom-ready', function () {
+  //   // if(dirtyFlashHack){ // @bug ?
+  //   //   console.log('dirtyFlashHack: true')
+  //   //   win.show();
+  //   //   win.hide();
+  //   //   if(mainWindowState.x < 0 && mainWindowState.y < 0){
+  //   //     win.setPosition(0, 0, false);
+  //   //   }
+  //   //   else{
+  //   //     win.setPosition(mainWindowState.x, mainWindowState.y, false);
+  //   //   }
+  //   //   mainWindowState.manage(win);
+  //   //   win.show();
+  //   // }
+  //   // else{
+  //     // win.show();
+  //   // }
+  // });
 
   // win.webContents.openDevTools()
 
