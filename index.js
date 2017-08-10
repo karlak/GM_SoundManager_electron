@@ -1,7 +1,13 @@
-const ipc = require('electron').ipcRenderer
-const { remote } = require('electron')
+const electron = require('electron');
+const ipc = electron.ipcRenderer;
+const remote = electron.remote;
+const app = remote.app;
 const win = remote.getCurrentWindow();
 
+const Datastore = remote.require('nedb')
+const path = require('path');
+var db;
+    
 // Prevents the middle click scroll behavior
 document.body.onmousedown = e => { if (e.button === 1) return false; };
 
@@ -37,7 +43,7 @@ function update_cpuusage(argument) {
 ///////////////////////////////////////
 ///////////////////////////////////////
 
-window.addEventListener("load", () => {
+document.addEventListener("DOMContentLoaded", () => {
     check_position();
     
     ipc.on('maximize', (event, message) => {
@@ -83,6 +89,34 @@ window.addEventListener("load", () => {
             }
         })
     /***********************/
+    /*******SearchBar*******/
+    document.getElementById("searchBar").addEventListener("keydown", (event) => {
+        if(event.key=='Escape')
+            document.getElementById("searchBar").value = '';
+    });
+
+    /************************/
+    /********Database********/
+    let db_filename = path.join(app.getPath('userData'), 'something.db');
+    db = new Datastore({ filename: db_filename, autoload: true});
+    // db.insert({hello:'world!'});
+    // db.persistence.compactDatafile();
+    db.find({}, function (err, docs) {
+        console.log(docs);
+    });
+
+
+    /************************/
+    /********TreeView********/
+    $(function(){
+      $("#tree").fancytree();
+    });
+
+
+
+    /************************/
+    /*** Show the app div ***/
+    document.getElementById("app").classList.add('loaded');
 
 });
 

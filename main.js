@@ -41,25 +41,24 @@ function createWindow () {
     slashes: true
   }))
 
+  mainWindowState.manage(win);
   win.webContents.on('dom-ready', function () {
-    if(dirtyFlashHack){ // @bug ?
-      console.log('dirtyFlashHack: true')
+    // if(dirtyFlashHack){ // @bug ?
+    //   console.log('dirtyFlashHack: true')
+    //   win.show();
+    //   win.hide();
+    //   if(mainWindowState.x < 0 && mainWindowState.y < 0){
+    //     win.setPosition(0, 0, false);
+    //   }
+    //   else{
+    //     win.setPosition(mainWindowState.x, mainWindowState.y, false);
+    //   }
+    //   mainWindowState.manage(win);
+    //   win.show();
+    // }
+    // else{
       win.show();
-      win.hide();
-      if(mainWindowState.x < 0 && mainWindowState.y < 0){
-        win.setPosition(0, 0, false);
-      }
-      else{
-        win.setPosition(mainWindowState.x, mainWindowState.y, false);
-      }
-      mainWindowState.manage(win);
-      win.show();
-    }
-    else{
-      console.log('dirtyFlashHack: false')
-      mainWindowState.manage(win);
-      win.show();
-    }
+    // }
   });
 
   // win.webContents.openDevTools()

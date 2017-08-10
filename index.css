@@ -128,7 +128,12 @@ body {
   bottom: -1px;
   top: 62px;
   -webkit-user-select: none;
-  animation: fadein 0.8s;
+  opacity: 0;
+}
+
+#app.loaded{
+  animation: fadein 0.8s;  
+  opacity: 1;
 }
 
 #split-parent{
