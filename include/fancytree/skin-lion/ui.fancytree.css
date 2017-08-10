@@ -129,7 +129,7 @@ img.fancytree-icon {
  * 3rd character (optional): 'l': Last sibling
  *----------------------------------------------------------------------------*/
 span.fancytree-expander {
-  cursor: pointer;
+  /*cursor: pointer;*/
 }
 .fancytree-exp-n span.fancytree-expander,
 .fancytree-exp-nl span.fancytree-expander {
@@ -323,15 +323,17 @@ span.fancytree-node {
   width: 100%;
   margin-top: 1px;
   min-height: 16px;
+  padding-top: 1px;
 }
 span.fancytree-title {
   color: black;
-  cursor: pointer;
+  /*cursor: pointer;*/
+  cursor: default;
   display: inline-block;
   vertical-align: top;
   min-height: 16px;
   padding: 0 3px 0 3px;
-  margin: 0px 0 0 3px;
+  margin: 0 0 -1 3px;
   border: 1px solid transparent;
   -webkit-border-radius: 0px;
   -moz-border-radius: 0px;

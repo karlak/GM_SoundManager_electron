@@ -11,7 +11,9 @@
   <script type="text/javascript" src="include/xel/xel.js" ></script>
   <!-- TreeView -->
   <script type="text/javascript" src="include/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="include/jquery-ui.min.js"></script>
   <script type="text/javascript" src="include/fancytree/jquery.fancytree-all-deps.min.js" ></script>
+  <script type="text/javascript" src="include/fancytree/jquery.fancytree.dnd.js" ></script>
   <link href="include/fancytree/skin-lion/ui.fancytree.css" rel="stylesheet">
   <!--    /     -->
   <script src="include/split.js"></script>
@@ -127,15 +129,9 @@
           <x-label>Search</x-label>
           <x-icon name="cancel" id="searchCancel" onclick="document.getElementById('searchBar').value='';"></x-icon>
         </x-input>
-        <div id="tree" class="noFocus">
-          <ul id="treeData" style="display: none;">
-            <li id="1"/>Node 1
-            <li id="2" class="folder"/>Folder 2
-            <ul>
-              <li id="3"/>Node 2.1
-              <li id="4"/>Node 2.2
-            </ul>
-          </ul>
+        <div id="tree-container">
+          <div id="tree" class="noFocus">
+          </div>
         </div>
       </div>
       <div id="right-panel" class="panel">
@@ -147,7 +143,7 @@
   <script type="text/javascript" src="index.js" ></script>
 
   <script type="text/javascript">
-    
+
   </script>
 
 </body>
