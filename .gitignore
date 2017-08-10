@@ -52,3 +52,5 @@ include/fancytree/jquery\.fancytree-all\.min\.js
 include/fancytree/jquery\.fancytree\.js
 
 include/fancytree/jquery\.fancytree\.min\.js
+
+include/xel/src/

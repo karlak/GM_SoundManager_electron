@@ -134,7 +134,7 @@ body {
 #split-parent{
   display: flex;
   flex-direction: row;
-  background: red;
+  /*background: red;*/
   width: 100%;
   height: 100%;
   flex-grow: 0;
@@ -151,11 +151,14 @@ x-card {
 }
 
 #left-panel {
+  display: flex;
+  flex-direction: column;
   margin: unset;
-  padding: 5px;
+  /*padding: 5px;*/
   min-width: 150px;
   max-width: 250px;
   flex-basis: 200px;
+  overflow: hidden;
 }
 
 #right-panel {
@@ -170,26 +173,59 @@ x-card {
   from {
     opacity: 0;
   }
-  to {
+  to {d
     opacity: 1;
   }
 }
 
 /******** Split ********/
 .gutter {
-    background-color: #ddd;
+  background-color: #ddd;
 
-    background-repeat: no-repeat;
-    background-position: 50%;
+  background-repeat: no-repeat;
+  background-position: 50%;
 }
 
 .gutter.gutter-horizontal {
-    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==');
-    cursor: ew-resize;
+  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==');
+  cursor: ew-resize;
 }
 
 .gutter.gutter-vertical {
-    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAFAQMAAABo7865AAAABlBMVEVHcEzMzMzyAv2sAAAAAXRSTlMAQObYZgAAABBJREFUeF5jOAMEEAIEEFwAn3kMwcB6I2AAAAAASUVORK5CYII=');
-    cursor: ns-resize;
+  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAFAQMAAABo7865AAAABlBMVEVHcEzMzMzyAv2sAAAAAXRSTlMAQObYZgAAABBJREFUeF5jOAMEEAIEEFwAn3kMwcB6I2AAAAAASUVORK5CYII=');
+  cursor: ns-resize;
 }
 /************************/
+
+#searchBar {
+  box-sizing : border-box;
+  width: 100%;
+  max-width: unset;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom-color: #D5D5D5;
+  --input-margin-right: 22px;
+}
+#searchCancel {
+  position: absolute;
+  right: 5px;
+  cursor: pointer;
+  opacity: 0.7;
+}
+#searchCancel:hover {
+  opacity: 0.5;
+}
+
+#tree {
+  flex-grow: 1;
+  background-color: #FFF;
+  line-height: normal;
+}
+
+.noFocus :focus {
+    outline: none;
+}
+
+
+

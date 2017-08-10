@@ -120,59 +120,23 @@
     </x-menubar>
   </div>
   <div id="app">
-  <div id="split-parent">
-      <div id="left-panel" class="panel">LEFT
-        <x-card>
-          <main>
-            <x-label>Right-click to open the context menu.</x-label>
-            <x-buttons tracking="2">
-              <x-button toggled>
-                <x-icon name="format-bold"></x-icon>
-              </x-button>
-
-              <x-button>
-                <x-icon name="format-underlined"></x-icon>
-              </x-button>
-
-              <x-button>
-                <x-icon name="format-italic"></x-icon>
-              </x-button>
-            </x-buttons>
-
-          </main>
-
-          <x-contextmenu>
-            <x-menu>
-              <x-menuitem>
-                <x-label>Undo</x-label>
-              </x-menuitem>
-
-              <x-menuitem>
-                <x-label>Redo</x-label>
-              </x-menuitem>
-
-              <hr>
-
-              <x-menuitem>
-                <x-label>Cut</x-label>
-              </x-menuitem>
-
-              <x-menuitem>
-                <x-label>Copy</x-label>
-              </x-menuitem>
-
-              <x-menuitem>
-                <x-label>Paste</x-label>
-              </x-menuitem>
-
-              <hr>
-
-              <x-menuitem>
-                <x-label>Refresh</x-label>
-              </x-menuitem>
-            </x-menu>
-          </x-contextmenu>
-        </x-card>
+    <div id="split-parent">
+      <div id="left-panel" class="panel">
+        <x-input id="searchBar">
+          <x-icon name="search"></x-icon>
+          <x-label>Search</x-label>
+          <x-icon name="cancel" id="searchCancel" onclick="document.getElementById('searchBar').value='';"></x-icon>
+        </x-input>
+        <div id="tree" class="noFocus">
+          <ul id="treeData" style="display: none;">
+            <li id="1"/>Node 1
+            <li id="2" class="folder"/>Folder 2
+            <ul>
+              <li id="3"/>Node 2.1
+              <li id="4"/>Node 2.2
+            </ul>
+          </ul>
+        </div>
       </div>
       <div id="right-panel" class="panel">
         RIGHT<x-progressbar value="0.5"></x-progressbar>
