@@ -6,8 +6,16 @@
   <link rel="stylesheet" href="include/xel/stylesheets/vanilla.theme.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
   <link rel="stylesheet" href="index.css">
+
+  <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
   <script type="text/javascript" src="include/xel/xel.js" ></script>
+  <!-- TreeView -->
+  <script type="text/javascript" src="include/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="include/fancytree/jquery.fancytree-all-deps.min.js" ></script>
+  <link href="include/fancytree/skin-lion/ui.fancytree.css" rel="stylesheet">
+  <!--    /     -->
   <script src="include/split.js"></script>
+  <script>if (window.module) module = window.module;</script>
 </head>
 <body>
   <div id="border"></div>
@@ -175,17 +183,10 @@
   <script type="text/javascript" src="index.js" ></script>
 
   <script type="text/javascript">
-    // const BrowserWindow = require('electron').remote.BrowserWindow
-
-    // var a = null;
-    // const ipc = require('electron').ipcRenderer
-
-
-    // syncMsgBtn.addEventListener('click', function () {
-    //   a = ipc.sendSync('synchronous-message', 'ping')
-    //   //const message = `Synchronous message reply: ${reply}`
-    //   //document.getElementById('sync-reply').innerHTML = message
-    // })
+    $(function(){
+      // Create the tree inside the <div id="tree"> element.
+      $("#tree").fancytree();
+    });
   </script>
 
 </body>

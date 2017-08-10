@@ -1016,8 +1016,9 @@ x-input {
   --selection-background: inherit;
 }
 x-input:focus {
-  outline: 3px solid hsl(var(--accent-color-h), var(--accent-color-s), calc(var(--accent-color-l) + 15%));
-  border-color: hsl(var(--accent-color-h), var(--accent-color-s), calc(var(--accent-color-l) - 3%));
+  outline: unset;
+  /*outline: 3px solid hsl(var(--accent-color-h), var(--accent-color-s), calc(var(--accent-color-l) + 15%));*/
+  /*border-color: hsl(var(--accent-color-h), var(--accent-color-s), calc(var(--accent-color-l) - 3%));*/*/
 }
 x-input[invalid] {
   border-color: #d50000;
