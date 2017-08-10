@@ -7261,7 +7261,7 @@ customElements.define("x-tab", XTabElement)
     }, {
         key: "_onKeyDown",
         value: function(m) {
-            "Enter" === m.key && (document.execCommand("selectAll"), this._updateInvalidState())
+            //"Enter" === m.key && (document.execCommand("selectAll"), this._updateInvalidState())
         }
     }, {
         key: "_onInputInput",
