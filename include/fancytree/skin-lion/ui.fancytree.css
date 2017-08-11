@@ -54,8 +54,8 @@ ul.fancytree-container li {
   background-repeat: repeat-y;
   background-image: none;
   margin: 0;
-  margin-left: -250px;
-  padding-left: 250px;
+  /*margin-left: -250px;*/
+  /*padding-left: 250px;*/
 }
 ul.fancytree-container li.fancytree-lastsib {
   background-image: none;
@@ -64,9 +64,11 @@ ul.fancytree-container li.fancytree-lastsib {
   opacity: 0.5;
   background-color: silver;
 }
-ul.fancytree-connectors.fancytree-container li {
-  background-image: url("data:image/gif;base64,R0lGODlhEAAQAPcAAAAAANPT0wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAP8ALAAAAAAQABAAAAgxAP8JHPgvAMGDCA0iXFiQ4UKFDglCjChwIkWLETE61MiQ40OKEkEO9JhQZEWTDRcGBAA7");
-  background-position: 0 0;
+.fancytree-connectors ul.fancytree-container li {
+  background-image: url("vertical_line.png");
+  /*background-image: url("data:image/gif;base64,R0lGODlhEAAQAPcAAAAAANPT0wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAP8ALAAAAAAQABAAAAgxAP8JHPgvAMGDCA0iXFiQ4UKFDglCjChwIkWLETE61MiQ40OKEkEO9JhQZEWTDRcGBAA7");*/
+  background-position: 1px 0;
+  /*#ui-id-1*/
 }
 ul.fancytree-container li.fancytree-lastsib,
 ul.fancytree-no-connector > li {
@@ -138,57 +140,112 @@ span.fancytree-expander {
 }
 .fancytree-connectors .fancytree-exp-n span.fancytree-expander,
 .fancytree-connectors .fancytree-exp-nl span.fancytree-expander {
-  background-image: url("icons.gif");
+  /*background-image: url("icons.png");*/
   margin-top: 0;
 }
 .fancytree-connectors .fancytree-exp-n span.fancytree-expander,
 .fancytree-connectors .fancytree-exp-n span.fancytree-expander:hover {
   background-position: 0px -64px;
+  height: 20px;
+  margin-bottom: -2px;
+  margin-top: -2px;
 }
 .fancytree-connectors .fancytree-exp-nl span.fancytree-expander,
 .fancytree-connectors .fancytree-exp-nl span.fancytree-expander:hover {
+  margin-bottom: -2px;
+  margin-top: -2px;
+  height: 20px;
+  background-image: url("icons.png");
   background-position: -16px -64px;
 }
-.fancytree-exp-c span.fancytree-expander {
+
+/**************************/
+/****WHEN IT'S SELECTED****/
+.fancytree-exp-c.fancytree-active span.fancytree-expander {
   background-position: 0px -80px;
 }
-.fancytree-exp-c span.fancytree-expander:hover {
+.fancytree-exp-c.fancytree-active span.fancytree-expander:hover {
   background-position: -16px -80px;
 }
-.fancytree-exp-cl span.fancytree-expander {
+.fancytree-exp-cl.fancytree-active span.fancytree-expander {
   background-position: 0px -96px;
 }
-.fancytree-exp-cl span.fancytree-expander:hover {
+.fancytree-exp-cl.fancytree-active span.fancytree-expander:hover {
   background-position: -16px -96px;
 }
-.fancytree-exp-cd span.fancytree-expander {
+.fancytree-exp-cd.fancytree-active span.fancytree-expander {
   background-position: -64px -80px;
 }
-.fancytree-exp-cd span.fancytree-expander:hover {
+.fancytree-exp-cd.fancytree-active span.fancytree-expander:hover {
   background-position: -80px -80px;
 }
-.fancytree-exp-cdl span.fancytree-expander {
+.fancytree-exp-cdl.fancytree-active span.fancytree-expander {
   background-position: -64px -96px;
 }
-.fancytree-exp-cdl span.fancytree-expander:hover {
+.fancytree-exp-cdl.fancytree-active span.fancytree-expander:hover {
   background-position: -80px -96px;
+}
+.fancytree-exp-e.fancytree-active span.fancytree-expander,
+.fancytree-exp-ed.fancytree-active span.fancytree-expander {
+  background-position: -32px -80px;
+}
+.fancytree-exp-e.fancytree-active span.fancytree-expander:hover,
+.fancytree-exp-ed.fancytree-active span.fancytree-expander:hover {
+  background-position: -48px -80px;
+}
+.fancytree-exp-el.fancytree-active span.fancytree-expander,
+.fancytree-exp-edl.fancytree-active span.fancytree-expander {
+  background-position: -32px -96px;
+}
+.fancytree-exp-el.fancytree-active span.fancytree-expander:hover,
+.fancytree-exp-edl.fancytree-active span.fancytree-expander:hover {
+  background-position: -48px -96px;
+}
+
+/*************************/
+/****WHEN NOT SELECTED****/
+.fancytree-exp-c span.fancytree-expander {
+  background-position: 0px -176px;
+}
+.fancytree-exp-c span.fancytree-expander:hover {
+  background-position: -16px -176px;
+}
+.fancytree-exp-cl span.fancytree-expander {
+  background-position: 0px -176px;
+}
+.fancytree-exp-cl span.fancytree-expander:hover {
+  background-position: -16px -176px;
+}
+.fancytree-exp-cd span.fancytree-expander {
+  background-position: -64px -176px;
+}
+.fancytree-exp-cd span.fancytree-expander:hover {
+  background-position: -80px -176px;
+}
+.fancytree-exp-cdl span.fancytree-expander {
+  background-position: -64px -176px;
+}
+.fancytree-exp-cdl span.fancytree-expander:hover {
+  background-position: -80px -176px;
 }
 .fancytree-exp-e span.fancytree-expander,
 .fancytree-exp-ed span.fancytree-expander {
-  background-position: -32px -80px;
+  background-position: -32px -176px;
 }
 .fancytree-exp-e span.fancytree-expander:hover,
 .fancytree-exp-ed span.fancytree-expander:hover {
-  background-position: -48px -80px;
+  background-position: -48px -176px;
 }
 .fancytree-exp-el span.fancytree-expander,
 .fancytree-exp-edl span.fancytree-expander {
-  background-position: -32px -96px;
+  background-position: -32px -176px;
 }
 .fancytree-exp-el span.fancytree-expander:hover,
 .fancytree-exp-edl span.fancytree-expander:hover {
-  background-position: -48px -96px;
+  background-position: -48px -176px;
 }
+
+/*****************/
 /* Fade out expanders, when container is not hovered or active */
 .fancytree-fade-expander span.fancytree-expander {
   transition: opacity 1.5s;
@@ -325,6 +382,8 @@ span.fancytree-node {
   min-height: 16px;
   padding-top: 1px;
   padding-bottom: 1px;
+    margin-left: -250px;
+  padding-left: 250px;
 }
 span.fancytree-title {
   color: black;
@@ -633,8 +692,8 @@ span.fancytree-active span.fancytree-title {
 */
 span.fancytree-selected,
 span.fancytree-active {
-  margin-left: -250px;
-  padding-left: 250px;
+/*  margin-left: -250px;
+  padding-left: 250px;*/
   background-color: #D4D4D4;
 }
 span.fancytree-selected span.fancytree-title {
@@ -649,8 +708,8 @@ span.fancytree-selected span.fancytree-title {
 .fancytree-treefocus span.fancytree-selected,
 .fancytree-treefocus span.fancytree-active {
   /*color: white;*/
-  margin-left: -250px;
-  padding-left: 250px;
+  /*margin-left: -250px;*/
+  /*padding-left: 250px*/
   background-color: #CCE8FF;
 }
 /*******************************************************************************

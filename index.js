@@ -247,6 +247,7 @@ document.addEventListener("DOMContentLoaded", () => {
             dragDrop: (targetNode, data) => {
                 data.otherNode.moveTo(targetNode, data.hitMode).then(() => {
                     targetNode.sortChildren();
+                    targetNode.setExpanded(true);
                     db.update({
                         _id: data.otherNode.key
                     }, {
@@ -261,8 +262,11 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         },
         filter: { // override default settings
-            counter: false, // No counter badges
-            mode: "hide" // "dimm": Grayout unmatched nodes, "hide": remove unmatched nodes
+            counter: true, // No counter badges
+            hideExpandedCounter: false,
+            highlight: false,
+            fuzzy: true,
+            //mode: "hide", // "dimm": Grayout unmatched nodes, "hide": remove unmatched nodes
         },
     });
     var invisibleRootNode = $("#tree").fancytree("getRootNode");
@@ -270,7 +274,9 @@ document.addEventListener("DOMContentLoaded", () => {
         rootNode = invisibleRootNode.getFirstChild();
         rootNode.setExpanded();
     }
-
+    // $("#tree").fancytree("getTree").filterNodes("");
+    // $("#tree").fancytree("getTree").filterNodes("title", { autoExpand: false, leavesOnly: true });
+    // $("#tree").fancytree("getTree").filterBranches("title");
     /************************/
     /*** Show the app div ***/
     document.body.classList.add('loaded');
