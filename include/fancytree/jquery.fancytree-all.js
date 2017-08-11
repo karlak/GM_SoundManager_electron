@@ -1316,7 +1316,7 @@ FancytreeNode.prototype = /** @lends FancytreeNode# */{
 				return; // #258
 			}
 			this.parent.children = this.parent.lazy ? [] : null;
-			this.parent.expanded = false;
+			this.parent.setExpanded(false);
 		} else {
 			pos = $.inArray(this, this.parent.children);
 			_assert(pos >= 0, "invalid source parent");
