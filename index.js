@@ -9,11 +9,15 @@ const path = require('path');
 var db;
 
 // Prevents the middle click scroll behavior
-document.body.onmousedown = e => { if (e.button === 1) return false; };
+document.body.onmousedown = e => {
+    if (e.button === 1) return false;
+};
 
 function check_position() {
     var pos = win.getPosition();
-    if(pos[0]==-4000&&pos[1]==-4000){win.center();}
+    if (pos[0] == -4000 && pos[1] == -4000) {
+        win.center();
+    }
 }
 
 function minimize() {
@@ -21,11 +25,10 @@ function minimize() {
 }
 
 function maximize() {
-    if(win.isMaximized()){
+    if (win.isMaximized()) {
         win.unmaximize();
         check_position();
-    }
-    else{
+    } else {
         win.maximize();
     }
 
@@ -37,7 +40,7 @@ function closewindow() {
 
 function update_cpuusage(argument) {
     cpu = remote.process.getCPUUsage();
-    document.getElementById("cpuusage").innerHTML = "[CPU "+cpu.percentCPUUsage.toFixed(2) + "%]";
+    document.getElementById("cpuusage").innerHTML = "[CPU " + cpu.percentCPUUsage.toFixed(2) + "%]";
 }
 
 ///////////////////////////////////////
@@ -53,8 +56,8 @@ document.addEventListener("DOMContentLoaded", () => {
     ipc.on('unmaximize', (event, message) => {
         document.getElementById("titlebar").classList.remove('maximized');
     })
-    var t=setInterval(update_cpuusage,1000);
-    
+    var t = setInterval(update_cpuusage, 1000);
+
     /***********************/
     /******* Splitter ******/
     const element_split_parent = document.querySelector("#split-parent");
@@ -62,43 +65,46 @@ document.addEventListener("DOMContentLoaded", () => {
     Split(['#left-panel', '#right-panel'], {
         gutterSize: 5,
         snapOffset: 0,
-        elementStyle: function (dimension, size, gutterSize, num=-1) {
-                // console.log(num);
-                if (typeof size === 'string' || size instanceof String) {
-                    if (size.indexOf('%')>0 || size.indexOf('px')>0) {
-                        var ret = [];
-                        ret['flex-basis'] = 'calc(' + size + ' - ' + gutterSize + 'px)';
-                        return ret;
-                    }
-                    return {};
-                }
-
-                if(num==0){
-                    var calc_size_px = element_split_parent.offsetWidth * (size / 100.0);
+        elementStyle: function(dimension, size, gutterSize, num = -1) {
+            // console.log(num);
+            if (typeof size === 'string' || size instanceof String) {
+                if (size.indexOf('%') > 0 || size.indexOf('px') > 0) {
                     var ret = [];
-                    ret['flex-basis'] = 'calc(' + calc_size_px + 'px - ' + gutterSize + 'px)';
+                    ret['flex-basis'] = 'calc(' + size + ' - ' + gutterSize + 'px)';
                     return ret;
                 }
                 return {};
-            },
-            gutterStyle: function (dimension, gutterSize) {
-                return {
-                    'flex-basis':  gutterSize + 'px',
-                    'min-width': gutterSize + 'px'
-                }
             }
-        })
+
+            if (num == 0) {
+                var calc_size_px = element_split_parent.offsetWidth * (size / 100.0);
+                var ret = [];
+                ret['flex-basis'] = 'calc(' + calc_size_px + 'px - ' + gutterSize + 'px)';
+                return ret;
+            }
+            return {};
+        },
+        gutterStyle: function(dimension, gutterSize) {
+            return {
+                'flex-basis': gutterSize + 'px',
+                'min-width': gutterSize + 'px'
+            }
+        }
+    })
     /***********************/
     /*******SearchBar*******/
     document.getElementById("searchBar").addEventListener("keydown", (event) => {
-        if(event.key=='Escape')
+        if (event.key == 'Escape')
             document.getElementById("searchBar").value = '';
     });
 
     /************************/
     /********Database********/
     let db_filename = path.join(app.getPath('userData'), 'something.db');
-    db = new Datastore({ filename: db_filename, autoload: true});
+    db = new Datastore({
+        filename: db_filename,
+        autoload: true
+    });
     //db.insert({hello:'world!'});
     // db.persistence.compactDatafile();
     // db.find({}, function (err, docs) {
@@ -109,35 +115,48 @@ document.addEventListener("DOMContentLoaded", () => {
     /************************/
     /********TreeView********/
     function myAfterCollapse(event, data) {
-        if(data.node.children != null && data.node.children.length>0){
+        if (data.node.children != null && data.node.children.length > 0) {
             console.log("resetLazy");
-            data.node.resetLazy();            
+            data.node.resetLazy();
         }
         return true;
     }
+
     function myLazyLoad(event, data) {
         var node = data.node;
         var parent_key = node.key;
         console.log("Lazy load for key: ", parent_key);
 
-        
+
         var dfd = new $.Deferred();
         data.result = dfd.promise();
-        
+
         // We find children of that 'key' node
-        var cursor = db.find({ parent: parent_key }).sort({is_folder: -1, title: 1});
-        cursor.exec(function (err, docs) {
+        var cursor = db.find({
+            parent: parent_key
+        }).sort({
+            is_folder: -1,
+            title: 1
+        });
+        cursor.exec(function(err, docs) {
             // transformation of the data to fancytree format
-            var loaded = docs.map((doc)=>{
-                return { title: doc.title, folder: doc.is_folder, key: doc._id, lazy: doc.is_folder};
+            var loaded = docs.map((doc) => {
+                return {
+                    title: doc.title,
+                    folder: doc.is_folder,
+                    key: doc._id,
+                    lazy: doc.is_folder
+                };
             });
             // checking new elements for children (to set or remove the lazy flag)
-            var promises = loaded.filter(function(loaded_element){
+            var promises = loaded.filter(function(loaded_element) {
                 return loaded_element.folder; // just check the folders
-            }).map(function(loaded_element){
+            }).map(function(loaded_element) {
                 var dfd2 = new $.Deferred();
-                db.findOne({parent: loaded_element.key}, function (err, doc){
-                    if (doc===null){
+                db.findOne({
+                    parent: loaded_element.key
+                }, function(err, doc) {
+                    if (doc === null) {
                         loaded_element.lazy = false;
                     }
                     dfd2.resolve();
@@ -145,77 +164,109 @@ document.addEventListener("DOMContentLoaded", () => {
                 return dfd2.promise();
             });
             // console.log("promises: ", promises);
-            
+
             $.when.apply($, promises).then(function() {
                 dfd.resolve(loaded);
-            });           
+            });
         });
     }
     $("#tree").fancytree({
-        source: [
-        {title: "Library", key: "root", folder: true, lazy: true},
-        ],
+        source: [{
+            title: "Library",
+            key: "root",
+            folder: true,
+            lazy: true
+        }, ],
         //tabindex: "",
         autoScroll: true,
         titlesTabbable: true,
         minExpandLevel: 2,
-        toggleEffect: { effect: "blind", options: {direction: "vertical", scale: "box"}, duration: 60 },
+        toggleEffect: {
+            effect: "blind",
+            options: {
+                direction: "vertical",
+                scale: "box"
+            },
+            duration: 60
+        },
         lazyLoad: myLazyLoad,
         collapse: myAfterCollapse,
-        extensions: ["dnd"],
+        extensions: ["dnd", "filter"],
         dnd: {
             // Available options with their default:
-            autoExpandMS: 400,          // Expand nodes after n milliseconds of hovering
-            draggable: {                // modify default jQuery draggable options
+            autoExpandMS: 400, // Expand nodes after n milliseconds of hovering
+            draggable: { // modify default jQuery draggable options
                 zIndex: 1000,
                 scroll: true,
                 containment: "parent",
                 revert: "invalid"
             },
-            droppable: null,            // Additional options passed to jQuery UI droppable
-            dropMarkerOffsetX: -24,     // absolute position offset for .fancytree-drop-marker
-                                        // relatively to ..fancytree-title (icon/img near a node accepting drop)
+            droppable: null, // Additional options passed to jQuery UI droppable
+            dropMarkerOffsetX: -24, // absolute position offset for .fancytree-drop-marker
+            // relatively to ..fancytree-title (icon/img near a node accepting drop)
             dropMarkerInsertOffsetX: -16, // additional offset for drop-marker with hitMode = "before"/"after"
-            focusOnClick: true,        // Focus, although draggable cancels mousedown event (#270)
-            preventRecursiveMoves: true,// Prevent dropping nodes on own descendants
-            preventVoidMoves: true,     // Prevent dropping nodes 'before self', etc.
-            smartRevert: true,          // set draggable.revert = true if drop was rejected
+            focusOnClick: true, // Focus, although draggable cancels mousedown event (#270)
+            preventRecursiveMoves: true, // Prevent dropping nodes on own descendants
+            preventVoidMoves: true, // Prevent dropping nodes 'before self', etc.
+            smartRevert: true, // set draggable.revert = true if drop was rejected
 
             // Events that make tree nodes draggable
             dragStart: function(node, data) {
-                if(node.key == "root") {return false;}
+                if (node.key == "root") {
+                    return false;
+                }
                 return true;
             },
-            dragStop:     (sourceNode, data)=>{return true},
-            initHelper:   (sourceNode, data)=>{return false},
-            updateHelper: (sourceNode, data)=>{return false},
+            dragStop: (sourceNode, data) => {
+                return true
+            },
+            initHelper: (sourceNode, data) => {
+                return false
+            },
+            updateHelper: (sourceNode, data) => {
+                return false
+            },
 
             // Events that make tree nodes accept draggables
-            dragEnter: (targetNode, data)=> {
+            dragEnter: (targetNode, data) => {
                 /* Return 'over', 'before, or 
                 'after' to force a hitMode.*/
-                if(targetNode!=null && !targetNode.folder)
+                if (targetNode != null && !targetNode.folder)
                     return false;
                 return 'over';
-            },            
-            dragExpand: (targetNode, data)=> {
+            },
+            dragExpand: (targetNode, data) => {
                 //return false to prevent autoExpand
-                if(data.otherNode != null && data.otherNode.key == targetNode.key)
+                if (data.otherNode != null && data.otherNode.key == targetNode.key)
                     return false;
                 return true
-            },           
-            dragOver: (targetNode, data)=>{return true},
-            dragDrop: (targetNode, data)=>{
-                data.otherNode.moveTo(targetNode, data.hitMode).then(()=>{
-                   targetNode.sortChildren();
-                   db.update({_id: data.otherNode.key}, {$set: {parent: targetNode.key}}, {});
+            },
+            dragOver: (targetNode, data) => {
+                return true
+            },
+            dragDrop: (targetNode, data) => {
+                data.otherNode.moveTo(targetNode, data.hitMode).then(() => {
+                    targetNode.sortChildren();
+                    db.update({
+                        _id: data.otherNode.key
+                    }, {
+                        $set: {
+                            parent: targetNode.key
+                        }
+                    }, {});
                 });
             },
-            dragLeave: (targetNode, data)=>{return true}
+            dragLeave: (targetNode, data) => {
+                return true
+            }
+        },
+        filter: { // override default settings
+            counter: false, // No counter badges
+            mode: "hide" // "dimm": Grayout unmatched nodes, "hide": remove unmatched nodes
         },
     });
     var invisibleRootNode = $("#tree").fancytree("getRootNode");
-    if( invisibleRootNode ){
+    if (invisibleRootNode) {
         rootNode = invisibleRootNode.getFirstChild();
         rootNode.setExpanded();
     }
@@ -225,14 +276,3 @@ document.addEventListener("DOMContentLoaded", () => {
     document.body.classList.add('loaded');
 
 });
-
-
-
-
-
-
-
-
-
-
-
