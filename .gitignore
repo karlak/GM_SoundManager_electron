@@ -45,7 +45,6 @@ include/fancytree/skin-xp/
 
 *.less
 
-include/fancytree/jquery\.fancytree-all\.js
 
 include/fancytree/jquery\.fancytree-all\.min\.js
 

@@ -128,6 +128,11 @@ document.addEventListener("DOMContentLoaded", () => {
         source: [
         {title: "Library", key: "root", folder: true, lazy: true},
         ],
+        //tabindex: "",
+        autoScroll: true,
+        titlesTabbable: true,
+        minExpandLevel: 2,
+        toggleEffect: { effect: "blind", options: {direction: "vertical", scale: "box"}, duration: 60 },
         lazyLoad: myLazyLoad,
         extensions: ["dnd"],
         dnd: {
@@ -143,7 +148,7 @@ document.addEventListener("DOMContentLoaded", () => {
             dropMarkerOffsetX: -24,     // absolute position offset for .fancytree-drop-marker
                                         // relatively to ..fancytree-title (icon/img near a node accepting drop)
             dropMarkerInsertOffsetX: -16, // additional offset for drop-marker with hitMode = "before"/"after"
-            focusOnClick: false,        // Focus, although draggable cancels mousedown event (#270)
+            focusOnClick: true,        // Focus, although draggable cancels mousedown event (#270)
             preventRecursiveMoves: true,// Prevent dropping nodes on own descendants
             preventVoidMoves: true,     // Prevent dropping nodes 'before self', etc.
             smartRevert: true,          // set draggable.revert = true if drop was rejected
@@ -161,6 +166,8 @@ document.addEventListener("DOMContentLoaded", () => {
             dragEnter: (targetNode, data)=> {
                 /* Return 'over', 'before, or 
                 'after' to force a hitMode.*/
+                if(targetNode!=null && !targetNode.folder)
+                    return false;
                 return 'over';
             },            
             dragExpand: (targetNode, data)=> {
@@ -176,11 +183,14 @@ document.addEventListener("DOMContentLoaded", () => {
             dragLeave: (targetNode, data)=>{return true}
         },
     });
-
+    var invisibleRootNode = $("#tree").fancytree("getRootNode");
+    if( invisibleRootNode ){
+        rootNode = invisibleRootNode.getFirstChild();
+        rootNode.setExpanded();
+    }
 
     /************************/
     /*** Show the app div ***/
-    document.getElementById("app").classList.add('loaded');
     document.body.classList.add('loaded');
 
 });
