@@ -1286,6 +1286,7 @@ FancytreeNode.prototype = /** @lends FancytreeNode# */{
 	 *  @param {function} [map] optional callback(FancytreeNode) to allow modifcations
 	 */
 	moveTo: function(targetNode, mode, map) {
+		const targetNode_old = targetNode;
 		if(mode === undefined || mode === "over"){
 			mode = "child";
 		} else if ( mode === "firstChild" ) {
@@ -1307,6 +1308,19 @@ FancytreeNode.prototype = /** @lends FancytreeNode# */{
 		}else if( targetParent.isDescendantOf(this) ){
 			$.error("Cannot move a node to its own descendant");
 		}
+//	
+		console.log('children', targetParent.children);
+		if(targetParent.isLazy() && targetParent.children == null){
+			console.log('YEAAAAAAAAAAH');
+			var tmp = targetParent.load();
+			var that = this;
+			tmp.always(function() {
+				console.log('ZBRAAAA');
+				that.moveTo(targetNode_old, mode, map);
+			});
+			return;
+		}
+//
 		if( targetParent !== prevParent ) {
 			prevParent.triggerModifyChild("remove", this);
 		}
@@ -1323,9 +1337,9 @@ FancytreeNode.prototype = /** @lends FancytreeNode# */{
 			this.parent.children.splice(pos, 1);
 		}
 		// Remove from source DOM parent
-//		if(this.parent.ul){
-//			this.parent.ul.removeChild(this.li);
-//		}
+		// if(this.parent.ul){
+		// 	this.parent.ul.removeChild(this.li);
+		// }
 
 		// Insert this node to target parent's child list
 		this.parent = targetParent;
@@ -1354,17 +1368,17 @@ FancytreeNode.prototype = /** @lends FancytreeNode# */{
 			targetParent.children = [ this ];
 		}
 		// Parent has no <ul> tag yet:
-//		if( !targetParent.ul ) {
-//			// This is the parent's first child: create UL tag
-//			// (Hidden, because it will be
-//			targetParent.ul = document.createElement("ul");
-//			targetParent.ul.style.display = "none";
-//			targetParent.li.appendChild(targetParent.ul);
-//		}
-//		// Issue 319: Add to target DOM parent (only if node was already rendered(expanded))
-//		if(this.li){
-//			targetParent.ul.appendChild(this.li);
-//		}^
+		// if( !targetParent.ul ) {
+		// 	// This is the parent's first child: create UL tag
+		// 	// (Hidden, because it will be
+		// 	targetParent.ul = document.createElement("ul");
+		// 	targetParent.ul.style.display = "none";
+		// 	targetParent.li.appendChild(targetParent.ul);
+		// }
+		// // Issue 319: Add to target DOM parent (only if node was already rendered(expanded))
+		// if(this.li){
+		// 	targetParent.ul.appendChild(this.li);
+		// }^
 
 		// Let caller modify the nodes
 		if( map ){
@@ -1379,7 +1393,7 @@ FancytreeNode.prototype = /** @lends FancytreeNode# */{
 		// Handle cross-tree moves
 		if( this.tree !== targetNode.tree ) {
 			// Fix node.tree for all source nodes
-//			_assert(false, "Cross-tree move is not yet implemented.");
+			// _assert(false, "Cross-tree move is not yet implemented.");
 			this.warn("Cross-tree moveTo is experimantal!");
 			this.visit(function(n){
 				// TODO: fix selection state and activation, ...
