@@ -1302,23 +1302,22 @@ FancytreeNode.prototype = /** @lends FancytreeNode# */{
 			targetParent = (mode === "child") ? targetNode : targetNode.parent;
 
 		if(this === targetNode){
-			return;
+			return $.when();
 		}else if( !this.parent  ){
 			$.error("Cannot move system root");
 		}else if( targetParent.isDescendantOf(this) ){
 			$.error("Cannot move a node to its own descendant");
 		}
 //	
-		console.log('children', targetParent.children);
+		//console.log('children', targetParent.children);
 		if(targetParent.isLazy() && targetParent.children == null){
-			console.log('YEAAAAAAAAAAH');
+			var dfd = new $.Deferred();
 			var tmp = targetParent.load();
 			var that = this;
 			tmp.always(function() {
-				console.log('ZBRAAAA');
-				that.moveTo(targetNode_old, mode, map);
+				that.moveTo(targetNode_old, mode, map).then(dfd.resolve);
 			});
-			return;
+			return dfd.promise();
 		}
 //
 		if( targetParent !== prevParent ) {
@@ -1327,7 +1326,7 @@ FancytreeNode.prototype = /** @lends FancytreeNode# */{
 		// Unlink this node from current parent
 		if( this.parent.children.length === 1 ) {
 			if( this.parent === targetParent ){
-				return; // #258
+				return $.when(); // #258
 			}
 			this.parent.children = this.parent.lazy ? [] : null;
 			this.parent.setExpanded(false);
@@ -1450,6 +1449,7 @@ FancytreeNode.prototype = /** @lends FancytreeNode# */{
 		return ftnode;
 
 */
+		return $.when();
 	},
 	/** Set focus relative to this node and optionally activate.
 	 *

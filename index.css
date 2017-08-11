@@ -124,7 +124,7 @@ body {
   0% {
     opacity: 0;
   }
-  20% {
+  10% {
     opacity: 0;
   }
   100% {
@@ -133,9 +133,10 @@ body {
 }
 body {
   opacity: 0;
+  background-color: #FFF;
 }
 body.loaded{
-  animation: body_fadein 0.5s;
+  animation: body_fadein 0.4s;
   opacity: 1;
 }
 #app {
