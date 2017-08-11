@@ -228,6 +228,7 @@ x-card {
   flex-grow: 1;
   background-color: #FFF;
   line-height: normal;
+  margin-left: -10px;
 }
 #tree-container {
   height: 100%;

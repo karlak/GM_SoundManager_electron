@@ -3579,6 +3579,7 @@ $.extend(Fancytree.prototype,
 			if(level > 1){
 				ares.push("<span " + role + " class='fancytree-expander fancytree-expander-fixed'></span>");
 			}
+			ares.push("<span " + role + " class='fancytree-expander fancytree-expander-fixed' style='opacity: 0'></span>");
 			// .. else (i.e. for root level) skip expander/connector alltogether
 		} else {
 			ares.push("<span " + role + " class='fancytree-expander'></span>");
