@@ -55,6 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
     })
     var t=setInterval(update_cpuusage,1000);
     
+    /***********************/
     /******* Splitter ******/
     const element_split_parent = document.querySelector("#split-parent");
 
@@ -107,6 +108,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     /************************/
     /********TreeView********/
+    function myAfterCollapse(event, data) {
+        if(data.node.children != null && data.node.children.length>0){
+            console.log("resetLazy");
+            data.node.resetLazy();            
+        }
+        return true;
+    }
     function myLazyLoad(event, data) {
         var node = data.node;
         var parent_key = node.key;
@@ -136,7 +144,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 });
                 return dfd2.promise();
             });
-            console.log("promises: ", promises);
+            // console.log("promises: ", promises);
             
             $.when.apply($, promises).then(function() {
                 dfd.resolve(loaded);
@@ -153,6 +161,7 @@ document.addEventListener("DOMContentLoaded", () => {
         minExpandLevel: 2,
         toggleEffect: { effect: "blind", options: {direction: "vertical", scale: "box"}, duration: 60 },
         lazyLoad: myLazyLoad,
+        collapse: myAfterCollapse,
         extensions: ["dnd"],
         dnd: {
             // Available options with their default:
