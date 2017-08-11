@@ -116,12 +116,31 @@ document.addEventListener("DOMContentLoaded", () => {
         var dfd = new $.Deferred();
         data.result = dfd.promise();
         
-        db.find({ parent: parent_key }, function (err, docs) {
+        // We find children of that 'key' node
+        var cursor = db.find({ parent: parent_key }).sort({is_folder: -1, title: 1});
+        cursor.exec(function (err, docs) {
+            // transformation of the data to fancytree format
             var loaded = docs.map((doc)=>{
                 return { title: doc.title, folder: doc.is_folder, key: doc._id, lazy: doc.is_folder};
-            })
-            console.log("Loaded: ", loaded);
-            dfd.resolve(loaded);
+            });
+            // checking new elements for children (to set or remove the lazy flag)
+            var promises = loaded.filter(function(loaded_element){
+                return loaded_element.folder; // just check the folders
+            }).map(function(loaded_element){
+                var dfd2 = new $.Deferred();
+                db.findOne({parent: loaded_element.key}, function (err, doc){
+                    if (doc===null){
+                        loaded_element.lazy = false;
+                    }
+                    dfd2.resolve();
+                });
+                return dfd2.promise();
+            });
+            console.log("promises: ", promises);
+            
+            $.when.apply($, promises).then(function() {
+                dfd.resolve(loaded);
+            });           
         });
     }
     $("#tree").fancytree({

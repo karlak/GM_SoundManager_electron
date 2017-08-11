@@ -223,6 +223,10 @@ x-card {
 #searchCancel:hover {
   opacity: 0.5;
 }
+x-input[empty] > #searchCancel {
+  cursor: default;
+  display: none;
+}
 
 #tree {
   flex-grow: 1;
