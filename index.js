@@ -198,8 +198,10 @@ document.addEventListener("DOMContentLoaded", () => {
             draggable: { // modify default jQuery draggable options
                 zIndex: 1000,
                 scroll: true,
+                // containment: $("#tree")
                 containment: "parent",
-                revert: "invalid"
+                revert: "invalid",
+                revertDuration: 150,
             },
             droppable: null, // Additional options passed to jQuery UI droppable
             dropMarkerOffsetX: -24, // absolute position offset for .fancytree-drop-marker
@@ -266,7 +268,7 @@ document.addEventListener("DOMContentLoaded", () => {
             hideExpandedCounter: false,
             highlight: false,
             fuzzy: true,
-            //mode: "hide", // "dimm": Grayout unmatched nodes, "hide": remove unmatched nodes
+            mode: "dimm", // "dimm": Grayout unmatched nodes, "hide": remove unmatched nodes
         },
     });
     var invisibleRootNode = $("#tree").fancytree("getRootNode");
@@ -274,7 +276,9 @@ document.addEventListener("DOMContentLoaded", () => {
         rootNode = invisibleRootNode.getFirstChild();
         rootNode.setExpanded();
     }
-    // $("#tree").fancytree("getTree").filterNodes("");
+    $("#myButton").click(()=>{
+        $("#tree").fancytree("getTree").filterNodes("title");
+    });
     // $("#tree").fancytree("getTree").filterNodes("title", { autoExpand: false, leavesOnly: true });
     // $("#tree").fancytree("getTree").filterBranches("title");
     /************************/

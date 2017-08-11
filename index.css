@@ -246,14 +246,21 @@ x-input[empty]>#searchCancel {
 }
 
 #tree {
+    margin: 0;
+    padding: 0;
     flex-grow: 1;
     background-color: #FFF;
     line-height: normal;
     margin-left: -10px;
+    width: calc(100% + 10px);
+    overflow: none;
+    /*min-height: 100%;*/
+    height: calc(100% - 3px);
 }
 
 #tree-container {
     height: 100%;
+    width: 100%;
     position: relative;
     background-color: #FFF;
     line-height: normal;
