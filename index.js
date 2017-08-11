@@ -198,7 +198,8 @@ document.addEventListener("DOMContentLoaded", () => {
             dragOver: (targetNode, data)=>{return true},
             dragDrop: (targetNode, data)=>{
                 data.otherNode.moveTo(targetNode, data.hitMode).then(()=>{
-                   db.update({_id: data.otherNode.key}, {$set: {parent: targetNode.key}}, {}) 
+                   targetNode.sortChildren();
+                   db.update({_id: data.otherNode.key}, {$set: {parent: targetNode.key}}, {});
                 });
             },
             dragLeave: (targetNode, data)=>{return true}

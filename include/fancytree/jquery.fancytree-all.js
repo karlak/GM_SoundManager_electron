@@ -1328,7 +1328,7 @@ FancytreeNode.prototype = /** @lends FancytreeNode# */{
 			if( this.parent === targetParent ){
 				return $.when(); // #258
 			}
-			this.parent.children = this.parent.lazy ? [] : null;
+			this.parent.children = [];
 			this.parent.setExpanded(false);
 		} else {
 			pos = $.inArray(this, this.parent.children);
