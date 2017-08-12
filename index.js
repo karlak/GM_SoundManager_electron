@@ -97,7 +97,25 @@ document.addEventListener("DOMContentLoaded", () => {
         if (event.key == 'Escape')
             document.getElementById("searchBar").value = '';
     });
+    
+    var delayTimer;
+    function doSearch(text) {
+        clearTimeout(delayTimer);
+        if (text.length < 3) {
+            delayTimer = setTimeout(function() {
+                $jquery("#tree").fancytree("getTree").clearFilter();
+            }, 300);
+        }
+        else{
+            delayTimer = setTimeout(function() {
+                $jquery("#tree").fancytree("getTree").filterNodes(text);
+            }, 300);
+        }
+    }
 
+    $jquery("#searchBar").on('input',function(e){
+        doSearch($jquery("#searchBar").val());
+    });
     /************************/
     /********Database********/
     let db_filename = path.join(app.getPath('userData'), 'something.db');
@@ -273,26 +291,6 @@ document.addEventListener("DOMContentLoaded", () => {
         rootNode.setExpanded();
     }
 
-    var delayTimer;
-    function doSearch(text) {
-        clearTimeout(delayTimer);
-        if (text.length < 3) {
-            delayTimer = setTimeout(function() {
-                $jquery("#tree").fancytree("getTree").clearFilter();
-            }, 200);            
-        }
-        else{
-            delayTimer = setTimeout(function() {
-                $jquery("#tree").fancytree("getTree").filterNodes(text);
-            }, 200);
-        }
-    }
-
-    $jquery("#searchBar").on('input',function(e){
-        doSearch($jquery("#searchBar").val());
-        // console.log(e);
-        // $jquery("#tree").fancytree("getTree").filterNodes("title");
-    });
     /*************************/
     /**** Filter the Tree ****/
     var KeyNoData = "__not_found__",
@@ -450,3 +448,10 @@ document.addEventListener("DOMContentLoaded", () => {
     document.body.classList.add('loaded');
 
 });
+
+
+// Debug Functions
+function sleepFor( sleepDuration ){
+    var now = new Date().getTime();
+    while(new Date().getTime() < now + sleepDuration){ /* do nothing */ } 
+}
