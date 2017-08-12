@@ -4,7 +4,7 @@ const remote = electron.remote;
 const app = remote.app;
 const win = remote.getCurrentWindow();
 
-const Datastore = remote.require('nedb')
+const Datastore = remote.require('./include/nedb')
 const path = require('path');
 var db;
 
@@ -128,16 +128,11 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log("Lazy load for key: ", parent_key);
 
 
-        var dfd = new $.Deferred();
+        var dfd = new $jquery.Deferred();
         data.result = dfd.promise();
 
         // We find children of that 'key' node
-        var cursor = db.find({
-            parent: parent_key
-        }).sort({
-            is_folder: -1,
-            title: 1
-        });
+        var cursor = db.find({parent: parent_key}).sort({is_folder: -1, title: 1});
         cursor.exec(function(err, docs) {
             // transformation of the data to fancytree format
             var loaded = docs.map((doc) => {
@@ -152,7 +147,7 @@ document.addEventListener("DOMContentLoaded", () => {
             var promises = loaded.filter(function(loaded_element) {
                 return loaded_element.folder; // just check the folders
             }).map(function(loaded_element) {
-                var dfd2 = new $.Deferred();
+                var dfd2 = new $jquery.Deferred();
                 db.findOne({
                     parent: loaded_element.key
                 }, function(err, doc) {
@@ -165,12 +160,12 @@ document.addEventListener("DOMContentLoaded", () => {
             });
             // console.log("promises: ", promises);
 
-            $.when.apply($, promises).then(function() {
+            $jquery.when.apply($jquery, promises).then(function() {
                 dfd.resolve(loaded);
             });
         });
     }
-    $("#tree").fancytree({
+    $jquery("#tree").fancytree({
         source: [{
             title: "Library",
             key: "root",
@@ -271,14 +266,146 @@ document.addEventListener("DOMContentLoaded", () => {
             mode: "dimm", // "dimm": Grayout unmatched nodes, "hide": remove unmatched nodes
         },
     });
-    var invisibleRootNode = $("#tree").fancytree("getRootNode");
+    var invisibleRootNode = $jquery("#tree").fancytree("getRootNode");
     if (invisibleRootNode) {
         rootNode = invisibleRootNode.getFirstChild();
         rootNode.setExpanded();
     }
-    $("#myButton").click(()=>{
-        $("#tree").fancytree("getTree").filterNodes("title");
+    $jquery("#myButton").click(()=>{
+        $jquery("#tree").fancytree("getTree").filterNodes("title");
     });
+    /*************************/
+    /**** Filter the Tree ****/
+    /*var KeyNoData = "__not_found__",
+    escapeHtml = $jquery.ui.fancytree.escapeHtml;
+
+    function _escapeRegex(str){
+        return (str + "").replace(/([.?*+\^\$\[\]\\(){}|-])/g, "\\$1");
+    }
+
+    function extractHtmlText(s){
+        if( s.indexOf(">") >= 0 ) {
+            return $jquery("<div/>").html(s).text();
+        }
+        return s;
+    }
+    $jquery.ui.fancytree._FancytreeClass.prototype._applyFilterImpl = function(filter, branchMode, _opts){
+        // console.log(arguments);
+        if(typeof filter !== "string"){
+            console.error('Argument type not handled ! String expected, got', typeof filter);
+            return;
+        }
+        this.enableFilter = true;
+        this.lastFilterArgs = [filter, false, undefined];
+
+        branchMode = false;
+        var match, statusNode, re, reHighlight,
+        count = 0,
+        treeOpts = this.options,
+        escapeTitles = treeOpts.escapeTitles,
+        prevAutoCollapse = treeOpts.autoCollapse,
+        opts = $jquery.extend({}, treeOpts.filter, _opts),
+        hideMode = opts.mode === "hide",
+        leavesOnly = !!opts.leavesOnly && !branchMode;
+
+        
+        if(typeof filter === "string"){
+            match = _escapeRegex(filter); // make sure a '.' is treated literally
+            re = new RegExp(match);
+            filter = function(node){
+
+                db.find({title: /title/ }, function(err, docs) {
+                    console.log($);
+                    console.log($jquery);
+                    console.log("testing node ", node.title, " with ", re)
+                    console.log('Found ', docs);
+                    console.log('Len ', docs.length);
+                });
+                //cursor.exec(function(err, docs) {
+                return true;
+
+                // var display,
+                // text = node.title,
+                // res = !!re.test(text);
+                // return res;
+            };
+        }
+
+
+        
+        this.$div.addClass("fancytree-ext-filter");
+        if( hideMode ){
+            this.$div.addClass("fancytree-ext-filter-hide");
+        } else {
+            this.$div.addClass("fancytree-ext-filter-dimm");
+        }
+        this.$div.toggleClass("fancytree-ext-filter-hide-expanders", !!opts.hideExpanders);
+        // Reset current filter
+        this.visit(function(node){
+            delete node.match;
+            delete node.titleWithHighlight;
+            node.subMatchCount = 0;
+        });
+        statusNode = this.getRootNode()._findDirectChild(KeyNoData);
+        if( statusNode ) {
+            statusNode.remove();
+        }
+
+        // Adjust node.hide, .match, and .subMatchCount properties
+        treeOpts.autoCollapse = false;  // #528
+
+        this.visit(function(node){
+            if ( leavesOnly && node.children != null ) {
+                return;
+            }
+            var res = filter(node),
+            matchedByBranch = false;
+
+            if( res === "skip" ) {
+                node.visit(function(c){
+                    c.match = false;
+                }, true);
+                return "skip";
+            }
+            if( res ) {
+                count++;
+                node.match = true;
+                node.visitParents(function(p){
+                    p.subMatchCount += 1;
+                    // Expand match (unless this is no real match, but only a node in a matched branch)
+                    if( opts.autoExpand && !matchedByBranch && !p.expanded ) {
+                        p.setExpanded(true, {noAnimation: true, noEvents: true, scrollIntoView: false});
+                        p._filterAutoExpanded = true;
+                    }
+                });
+            }
+        });
+        treeOpts.autoCollapse = prevAutoCollapse;
+
+        if( count === 0 && opts.nodata && hideMode ) {
+            statusNode = opts.nodata;
+            if( $jquery.isFunction(statusNode) ) {
+                statusNode = statusNode();
+            }
+            if( statusNode === true ) {
+                statusNode = {};
+            } else if( typeof statusNode === "string" ) {
+                statusNode = { title: statusNode };
+            }
+            statusNode = $jquery.extend({
+                statusNodeType: "nodata",
+                key: KeyNoData,
+                title: this.options.strings.noData
+            }, statusNode);
+
+            this.getRootNode().addNode(statusNode).match = true;
+        }
+        // Redraw whole tree
+        this.render();
+        return count;
+    };*/
+
+
     // $("#tree").fancytree("getTree").filterNodes("title", { autoExpand: false, leavesOnly: true });
     // $("#tree").fancytree("getTree").filterBranches("title");
     /************************/
