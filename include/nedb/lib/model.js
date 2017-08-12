@@ -616,7 +616,7 @@ comparisonFunctions.$nin = function (a, b) {
   return !comparisonFunctions.$in(a, b);
 };
 
-comparisonFunctions.$regex = function (a, b) {
+/*comparisonFunctions.$regex = function (a, b) {
   if (!util.isRegExp(b)) { throw new Error("$regex operator called with non regular expression"); }
 
   if (typeof a !== 'string') {
@@ -624,7 +624,29 @@ comparisonFunctions.$regex = function (a, b) {
   } else {
     return b.test(a);
   }
+};*/
+
+comparisonFunctions.$regex = function (a, b, c) {
+  if (!util.isRegExp(b)) {
+    if (typeof b == 'string') {
+      if (!c)
+        c = '';
+      b = new RegExp(b,c);
+    } else {
+      throw new Error("$regex operator called with non regular expression");
+    }
+  }
+  if (typeof a !== 'string') {
+    return false
+  } else {
+    return b.test(a);
+  }
 };
+
+comparisonFunctions.$options = function (a, b) {
+  return true;
+};
+
 
 comparisonFunctions.$exists = function (value, exists) {
   if (exists || exists === '') {   // This will be true for all values of exists except false, null, undefined and 0
@@ -805,7 +827,8 @@ function matchQueryPart (obj, queryKey, queryValue, treatObjAsValue) {
       for (i = 0; i < keys.length; i += 1) {
         if (!comparisonFunctions[keys[i]]) { throw new Error("Unknown comparison function " + keys[i]); }
 
-        if (!comparisonFunctions[keys[i]](objValue, queryValue[keys[i]])) { return false; }
+        // if (!comparisonFunctions[keys[i]](objValue, queryValue[keys[i]])) { return false; }
+        if (!comparisonFunctions[keys[i]](objValue, queryValue[keys[i]], queryValue['$options'])) { return false; }
       }
       return true;
     }

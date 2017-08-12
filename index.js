@@ -263,7 +263,8 @@ document.addEventListener("DOMContentLoaded", () => {
             hideExpandedCounter: false,
             highlight: false,
             fuzzy: true,
-            mode: "dimm", // "dimm": Grayout unmatched nodes, "hide": remove unmatched nodes
+            autoExpand: false,
+            mode: "hide", // "dimm": Grayout unmatched nodes, "hide": remove unmatched nodes
         },
     });
     var invisibleRootNode = $jquery("#tree").fancytree("getRootNode");
@@ -271,24 +272,36 @@ document.addEventListener("DOMContentLoaded", () => {
         rootNode = invisibleRootNode.getFirstChild();
         rootNode.setExpanded();
     }
-    $jquery("#myButton").click(()=>{
-        $jquery("#tree").fancytree("getTree").filterNodes("title");
+
+    var delayTimer;
+    function doSearch(text) {
+        clearTimeout(delayTimer);
+        if (text.length < 3) {
+            delayTimer = setTimeout(function() {
+                $jquery("#tree").fancytree("getTree").clearFilter();
+            }, 200);            
+        }
+        else{
+            delayTimer = setTimeout(function() {
+                $jquery("#tree").fancytree("getTree").filterNodes(text);
+            }, 200);
+        }
+    }
+
+    $jquery("#searchBar").on('input',function(e){
+        doSearch($jquery("#searchBar").val());
+        // console.log(e);
+        // $jquery("#tree").fancytree("getTree").filterNodes("title");
     });
     /*************************/
     /**** Filter the Tree ****/
-    /*var KeyNoData = "__not_found__",
+    var KeyNoData = "__not_found__",
     escapeHtml = $jquery.ui.fancytree.escapeHtml;
 
     function _escapeRegex(str){
         return (str + "").replace(/([.?*+\^\$\[\]\\(){}|-])/g, "\\$1");
     }
 
-    function extractHtmlText(s){
-        if( s.indexOf(">") >= 0 ) {
-            return $jquery("<div/>").html(s).text();
-        }
-        return s;
-    }
     $jquery.ui.fancytree._FancytreeClass.prototype._applyFilterImpl = function(filter, branchMode, _opts){
         // console.log(arguments);
         if(typeof filter !== "string"){
@@ -308,68 +321,69 @@ document.addEventListener("DOMContentLoaded", () => {
         hideMode = opts.mode === "hide",
         leavesOnly = !!opts.leavesOnly && !branchMode;
 
+        var that = this;
+        var nodePrototype = Object.getPrototypeOf(that.widget.getNodeByKey("root"));
+        match = _escapeRegex(filter); // make sure a '.' is treated literally
         
-        if(typeof filter === "string"){
-            match = _escapeRegex(filter); // make sure a '.' is treated literally
-            re = new RegExp(match);
-            filter = function(node){
 
-                db.find({title: /title/ }, function(err, docs) {
-                    console.log($);
-                    console.log($jquery);
-                    console.log("testing node ", node.title, " with ", re)
-                    console.log('Found ', docs);
-                    console.log('Len ', docs.length);
-                });
-                //cursor.exec(function(err, docs) {
-                return true;
+        db.find({is_folder: true}, function(err, docs) {
+            // 1. We first get the folders from the DB to link unloaded files to tree nodes
+            docs = docs.map((doc)=>{
+                var _doc = JSON.parse(JSON.stringify(doc))
+                _doc.parent_key = doc.parent;
+                _doc.parent = null;
+                return _doc;
+            });
 
-                // var display,
-                // text = node.title,
-                // res = !!re.test(text);
-                // return res;
-            };
-        }
-
-
-        
-        this.$div.addClass("fancytree-ext-filter");
-        if( hideMode ){
-            this.$div.addClass("fancytree-ext-filter-hide");
-        } else {
-            this.$div.addClass("fancytree-ext-filter-dimm");
-        }
-        this.$div.toggleClass("fancytree-ext-filter-hide-expanders", !!opts.hideExpanders);
-        // Reset current filter
-        this.visit(function(node){
-            delete node.match;
-            delete node.titleWithHighlight;
-            node.subMatchCount = 0;
-        });
-        statusNode = this.getRootNode()._findDirectChild(KeyNoData);
-        if( statusNode ) {
-            statusNode.remove();
-        }
-
-        // Adjust node.hide, .match, and .subMatchCount properties
-        treeOpts.autoCollapse = false;  // #528
-
-        this.visit(function(node){
-            if ( leavesOnly && node.children != null ) {
-                return;
+            // 1.1. We create a map of doc_id -> doc_object
+            var nodeMap = {};
+            $jquery.each(docs, function(i, c) {
+                nodeMap[c._id] = c;
+            });
+            
+            // 1.2. We populate the docs parent field
+            for (var i = 0; i < docs.length; i++) {
+                // docs[i].obj = that.widget.getNodeByKey(docs[i]._id);
+                docs[i].parent = that.widget.getNodeByKey(docs[i].parent_key)
+                if(docs[i].parent == null){
+                    docs[i].parent = nodeMap[docs[i].parent_key];
+                }
             }
-            var res = filter(node),
-            matchedByBranch = false;
+            lookup_node_table = docs;
 
-            if( res === "skip" ) {
-                node.visit(function(c){
-                    c.match = false;
-                }, true);
-                return "skip";
+            // 2. We get actual data from the DB
+            db.find({title: {$regex: match} }, function(err, docs) {
+                resetCurrentFilter();
+
+                for (var i = 0; i < docs.length; i++) {
+                    var node = that.widget.getNodeByKey(docs[i]._id);
+                    if(node != null) {
+                        nodeMatched(node, true);
+                        continue;
+                    }
+                    node = getFirstValidParentNode(docs[i]);
+                    nodeMatched(node);
+                }
+                
+                renderCurrentFilter();
+                // console.log('Found', count, 'elements !');
+                // @todo (return the number of found elements in a promise)
+            });
+
+            function getFirstValidParentNode(node) {
+                var parent = that.widget.getNodeByKey(node.parent);
+                if(parent != null) return parent;
+                parent = nodeMap[node.parent];
+                while(Object.getPrototypeOf(parent) !== nodePrototype){
+                    parent = parent.parent;
+                }
+                return parent;
             }
-            if( res ) {
+
+            function nodeMatched(node, direct = false){
                 count++;
-                node.match = true;
+                if(direct) node.match = true;
+                else node.subMatchCount += 1;
                 node.visitParents(function(p){
                     p.subMatchCount += 1;
                     // Expand match (unless this is no real match, but only a node in a matched branch)
@@ -379,31 +393,54 @@ document.addEventListener("DOMContentLoaded", () => {
                     }
                 });
             }
+
         });
-        treeOpts.autoCollapse = prevAutoCollapse;
 
-        if( count === 0 && opts.nodata && hideMode ) {
-            statusNode = opts.nodata;
-            if( $jquery.isFunction(statusNode) ) {
-                statusNode = statusNode();
+        // Function def...
+        function resetCurrentFilter(){
+            that.$div.addClass("fancytree-ext-filter");
+            if( hideMode ){
+                that.$div.addClass("fancytree-ext-filter-hide");
+            } else {
+                that.$div.addClass("fancytree-ext-filter-dimm");
             }
-            if( statusNode === true ) {
-                statusNode = {};
-            } else if( typeof statusNode === "string" ) {
-                statusNode = { title: statusNode };
+            that.$div.toggleClass("fancytree-ext-filter-hide-expanders", !!opts.hideExpanders);
+            // Reset current filter
+            that.visit(function(node){
+                delete node.match;
+                delete node.titleWithHighlight;
+                node.subMatchCount = 0;
+            });
+            statusNode = that.getRootNode()._findDirectChild(KeyNoData);
+            if( statusNode ) {
+                statusNode.remove();
             }
-            statusNode = $jquery.extend({
-                statusNodeType: "nodata",
-                key: KeyNoData,
-                title: this.options.strings.noData
-            }, statusNode);
-
-            this.getRootNode().addNode(statusNode).match = true;
         }
-        // Redraw whole tree
-        this.render();
+        function renderCurrentFilter(){
+            if( count === 0 && opts.nodata && hideMode ) {
+                statusNode = opts.nodata;
+                if( $jquery.isFunction(statusNode) ) {
+                    statusNode = statusNode();
+                }
+                if( statusNode === true ) {
+                    statusNode = {};
+                } else if( typeof statusNode === "string" ) {
+                    statusNode = { title: statusNode };
+                }
+                statusNode = $jquery.extend({
+                    statusNodeType: "nodata",
+                    key: KeyNoData,
+                    title: that.options.strings.noData
+                }, statusNode);
+
+                that.getRootNode().addNode(statusNode).match = true;
+            }
+            // Redraw whole tree
+            that.render();    
+        }
+        
         return count;
-    };*/
+    };
 
 
     // $("#tree").fancytree("getTree").filterNodes("title", { autoExpand: false, leavesOnly: true });
