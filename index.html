@@ -19,7 +19,7 @@
     <script type="text/javascript" src="include/jquery-ui.min.js"></script>
     <script type="text/javascript" src="include/fancytree/jquery.fancytree-all.js"></script>
     <script type="text/javascript">
-      var $jquery = $.noConflict(true); 
+    var $jquery = $.noConflict(true);
     </script>
     <link href="include/fancytree/skin-lion/ui.fancytree.css" rel="stylesheet">
     <!--    /     -->
@@ -31,112 +31,136 @@
 
 <body>
     <div id="border"></div>
-    <div id="titlebar-out">
-        <div id="titlebar">
+    <div id="window">
+        <div id="titlebar-out">
+            <div id="titlebar">
+            </div>
+            <div id="cpuusage"></div>
+            <div id="titlebar-buttons"><span onclick="minimize()" class="titlebar-button"><img class="titlebar-image" src="include/imgs/minimize.png" draggable="false"/></span><span onclick="maximize()" class="titlebar-button"><img class="titlebar-image" src="include/imgs/maximize.png" draggable="false"/></span><span onclick="closewindow();" class="titlebar-button titlebar-button-close"><img class="titlebar-image" src="include/imgs/close.png" draggable="false"/></span></div>
         </div>
-        <div id="cpuusage"></div>
-        <div id="titlebar-buttons"><span onclick="minimize()" class="titlebar-button"><img class="titlebar-image" src="include/imgs/minimize.png" draggable="false"/></span><span onclick="maximize()" class="titlebar-button"><img class="titlebar-image" src="include/imgs/maximize.png" draggable="false"/></span><span onclick="closewindow();" class="titlebar-button titlebar-button-close"><img class="titlebar-image" src="include/imgs/close.png" draggable="false"/></span></div>
-    </div>
-    <div id="menubar">
-        <x-menubar>
-            <x-menuitem>
-                <x-label>File</x-label>
-                <x-menu>
-                    <x-menuitem>
-                        <x-label>New</x-label>
-                        <x-shortcut value="Control+N"></x-shortcut>
-                    </x-menuitem>
-                    <x-menuitem>
-                        <x-label>Open…</x-label>
-                        <x-shortcut value="Control+O"></x-shortcut>
-                    </x-menuitem>
-                    <hr>
-                    <x-menuitem>
-                        <x-label>Save</x-label>
-                        <x-shortcut value="Control+S"></x-shortcut>
-                    </x-menuitem>
-                    <x-menuitem>
-                        <x-label>Save as…</x-label>
-                        <x-shortcut value="Control+Shift+S"></x-shortcut>
-                    </x-menuitem>
-                </x-menu>
-            </x-menuitem>
-            <x-menuitem>
-                <x-label>Edit</x-label>
-                <x-menu>
-                    <x-menuitem>
-                        <x-icon name="undo"></x-icon>
-                        <x-label>Undo</x-label>
-                        <x-shortcut value="Control+Z"></x-shortcut>
-                    </x-menuitem>
-                    <x-menuitem disabled>
-                        <x-icon name="redo"></x-icon>
-                        <x-label>Redo</x-label>
-                        <x-shortcut value="Control+Shift+Z"></x-shortcut>
-                    </x-menuitem>
-                    <hr>
-                    <x-menuitem>
-                        <x-icon name="content-cut"></x-icon>
-                        <x-label>Cut</x-label>
-                        <x-shortcut value="Control+X"></x-shortcut>
-                    </x-menuitem>
-                    <x-menuitem>
-                        <x-icon name="content-copy"></x-icon>
-                        <x-label>Copy</x-label>
-                        <x-shortcut value="Control+C"></x-shortcut>
-                    </x-menuitem>
-                    <x-menuitem>
-                        <x-icon name="content-paste"></x-icon>
-                        <x-label>Paste</x-label>
-                        <x-shortcut value="Control+V"></x-shortcut>
-                    </x-menuitem>
-                </x-menu>
-            </x-menuitem>
-            <x-menuitem>
-                <x-label>View</x-label>
-                <x-menu>
-                    <x-menuitem selected="true">
-                        <x-label>Show ruler</x-label>
-                    </x-menuitem>
-                    <x-menuitem selected="false">
-                        <x-label>Show spelling suggestions</x-label>
-                    </x-menuitem>
-                </x-menu>
-            </x-menuitem>
-            <x-menuitem>
-                <x-label>Help</x-label>
-                <x-menu>
-                    <x-menuitem>
-                        <x-icon name="help"></x-icon>
-                        <x-label>Documentation</x-label>
-                    </x-menuitem>
-                </x-menu>
-            </x-menuitem>
-        </x-menubar>
-    </div>
-    <div id="app">
-        <div id="split-parent">
-            <div id="left-panel" class="panel">
-                <x-input id="searchBar">
-                    <x-icon name="search"></x-icon>
-                    <x-label>Search</x-label>
-                    <x-icon name="cancel" id="searchCancel" onclick="document.getElementById('searchBar').value='';"></x-icon>
-                </x-input>
-                <div id="tree-container">
-                    <div id="tree" class="noFocus fancytree-connectors">
+        <div id="menubar">
+            <x-menubar>
+                <x-menuitem>
+                    <x-label>File</x-label>
+                    <x-menu>
+                        <x-menuitem>
+                            <x-label>New</x-label>
+                            <x-shortcut value="Control+N"></x-shortcut>
+                        </x-menuitem>
+                        <x-menuitem>
+                            <x-label>Open…</x-label>
+                            <x-shortcut value="Control+O"></x-shortcut>
+                        </x-menuitem>
+                        <hr>
+                        <x-menuitem>
+                            <x-label>Save</x-label>
+                            <x-shortcut value="Control+S"></x-shortcut>
+                        </x-menuitem>
+                        <x-menuitem>
+                            <x-label>Save as…</x-label>
+                            <x-shortcut value="Control+Shift+S"></x-shortcut>
+                        </x-menuitem>
+                    </x-menu>
+                </x-menuitem>
+                <x-menuitem>
+                    <x-label>Edit</x-label>
+                    <x-menu>
+                        <x-menuitem>
+                            <x-icon name="undo"></x-icon>
+                            <x-label>Undo</x-label>
+                            <x-shortcut value="Control+Z"></x-shortcut>
+                        </x-menuitem>
+                        <x-menuitem disabled>
+                            <x-icon name="redo"></x-icon>
+                            <x-label>Redo</x-label>
+                            <x-shortcut value="Control+Shift+Z"></x-shortcut>
+                        </x-menuitem>
+                        <hr>
+                        <x-menuitem>
+                            <x-icon name="content-cut"></x-icon>
+                            <x-label>Cut</x-label>
+                            <x-shortcut value="Control+X"></x-shortcut>
+                        </x-menuitem>
+                        <x-menuitem>
+                            <x-icon name="content-copy"></x-icon>
+                            <x-label>Copy</x-label>
+                            <x-shortcut value="Control+C"></x-shortcut>
+                        </x-menuitem>
+                        <x-menuitem>
+                            <x-icon name="content-paste"></x-icon>
+                            <x-label>Paste</x-label>
+                            <x-shortcut value="Control+V"></x-shortcut>
+                        </x-menuitem>
+                    </x-menu>
+                </x-menuitem>
+                <x-menuitem>
+                    <x-label>View</x-label>
+                    <x-menu>
+                        <x-menuitem selected="true">
+                            <x-label>Show ruler</x-label>
+                        </x-menuitem>
+                        <x-menuitem selected="false">
+                            <x-label>Show spelling suggestions</x-label>
+                        </x-menuitem>
+                    </x-menu>
+                </x-menuitem>
+                <x-menuitem>
+                    <x-label>Help</x-label>
+                    <x-menu>
+                        <x-menuitem>
+                            <x-icon name="help"></x-icon>
+                            <x-label>Documentation</x-label>
+                        </x-menuitem>
+                    </x-menu>
+                </x-menuitem>
+            </x-menubar>
+        </div>
+        <div id="app">
+            <div id="split-parent">
+                <div id="left-panel" class="panel">
+                    <x-input id="searchBar">
+                        <x-icon name="search"></x-icon>
+                        <x-label>Search</x-label>
+                        <x-icon name="cancel" id="searchCancel" onclick="document.getElementById('searchBar').value='';"></x-icon>
+                    </x-input>
+                    <div id="tree-container">
+                        <div id="tree" class="noFocus fancytree-connectors">
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div id="right-panel" class="panel">
-                RIGHT
-                <x-progressbar value="0.5"></x-progressbar>
-                <x-button id="myButton">Hello my beautiful world !</x-button>
+                <div id="right-panel" class="panel">
+                    RIGHT
+                    <x-progressbar value="0.5"></x-progressbar>
+                    <x-button id="myButton">Hello my beautiful world !</x-button>
+                    <x-contextmenu>
+                        <x-menu>
+                            <x-menuitem>
+                                <x-label>Undo</x-label>
+                            </x-menuitem>
+                            <x-menuitem>
+                                <x-label>Redo</x-label>
+                            </x-menuitem>
+                            <hr>
+                            <x-menuitem>
+                                <x-label>Cut</x-label>
+                            </x-menuitem>
+                            <x-menuitem>
+                                <x-label>Copy</x-label>
+                            </x-menuitem>
+                            <x-menuitem>
+                                <x-label>Paste</x-label>
+                            </x-menuitem>
+                            <hr>
+                            <x-menuitem>
+                                <x-label>Refresh</x-label>
+                            </x-menuitem>
+                        </x-menu>
+                    </x-contextmenu>
+                </div>
             </div>
         </div>
     </div>
     <script type="text/javascript" src="index.js"></script>
-    <script type="text/javascript">
-    </script>
 </body>
 
 </html>
