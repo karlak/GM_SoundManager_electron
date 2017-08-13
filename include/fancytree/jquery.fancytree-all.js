@@ -2968,6 +2968,16 @@ $.extend(Fancytree.prototype,
 		// }
 		// TODO: return promise?
 	},
+	/** Default handling for mouse clickUp events.
+	 *
+	 * @param {EventData} ctx
+	 */
+	nodeClickUp: function(ctx) {
+		var activate, expand,
+			// event = ctx.originalEvent,
+			targetType = ctx.targetType,
+			node = ctx.node;
+	},	
 	/** Collapse all other  children of same parent.
 	 *
 	 * @param {EventData} ctx
@@ -4715,7 +4725,7 @@ $.widget("ui.fancytree",
 			} finally {
 				tree.phase = prevPhase;
 			}
-		}).on("mousedown" + ns + " dblclick" + ns, function(event){
+		}).on("mousedown" + ns + " mouseup" + ns + " dblclick" + ns, function(event){
 			// that.tree.debug("event(" + event + "): !");
 			if(opts.disabled){
 				return true;
@@ -4741,6 +4751,11 @@ $.widget("ui.fancytree",
 						return tree._triggerNodeEvent("clickPaging", ctx, event) === true;
 					}
 					return ( tree._triggerNodeEvent("click", ctx, event) === false ) ? false : tree._callHook("nodeClick", ctx);
+				case "mouseup":
+					ctx.targetType = et.type;
+					return ( tree._triggerNodeEvent("clickUp", ctx, event) === false ) ? false : tree._callHook("nodeClickUp", ctx);
+					console.log('Yeah !');
+					return;
 				case "dblclick":
 					ctx.targetType = et.type;
 					return ( tree._triggerNodeEvent("dblclick", ctx, event) === false ) ? false : tree._callHook("nodeDblclick", ctx);
