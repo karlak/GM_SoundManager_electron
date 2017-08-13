@@ -255,7 +255,7 @@ x-input[empty]>#searchCancel {
     width: calc(100% + 10px);
     overflow: none;
     /*min-height: 100%;*/
-    height: calc(100% - 3px);
+    height: calc(100% - 5px);
 }
 
 #tree-container {

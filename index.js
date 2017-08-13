@@ -282,7 +282,7 @@ document.addEventListener("DOMContentLoaded", () => {
             highlight: false,
             fuzzy: true,
             autoExpand: false,
-            mode: "hide", // "dimm": Grayout unmatched nodes, "hide": remove unmatched nodes
+            mode: "dimm", // "dimm": Grayout unmatched nodes, "hide": remove unmatched nodes
         },
     });
     var invisibleRootNode = $jquery("#tree").fancytree("getRootNode");

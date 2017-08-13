@@ -1,0 +1,8 @@
+Treeview:
+  - Rename Files/Folders
+  - Delete Files/Folders
+
+Import of the music file to the database:
+  - Assistant ?
+
+
