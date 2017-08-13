@@ -4725,7 +4725,7 @@ $.widget("ui.fancytree",
 			} finally {
 				tree.phase = prevPhase;
 			}
-		}).on("mousedown" + ns + " mouseup" + ns + " dblclick" + ns, function(event){
+		}).on("mousedown" + ns + " mouseup" + ns + " contextmenu" + ns + " dblclick" + ns, function(event){
 			// that.tree.debug("event(" + event + "): !");
 			if(opts.disabled){
 				return true;
@@ -4754,8 +4754,9 @@ $.widget("ui.fancytree",
 				case "mouseup":
 					ctx.targetType = et.type;
 					return ( tree._triggerNodeEvent("clickUp", ctx, event) === false ) ? false : tree._callHook("nodeClickUp", ctx);
-					console.log('Yeah !');
-					return;
+				case "contextmenu":
+					ctx.targetType = et.type;
+					return  ( tree._triggerNodeEvent("contextmenu", ctx, event) === false ) ? false : true;
 				case "dblclick":
 					ctx.targetType = et.type;
 					return ( tree._triggerNodeEvent("dblclick", ctx, event) === false ) ? false : tree._callHook("nodeDblclick", ctx);

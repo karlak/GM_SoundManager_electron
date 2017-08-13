@@ -1,3 +1,5 @@
+
+
         (function() {
             "use strict";
             var _Mathabs = Math.abs,
@@ -2916,9 +2918,11 @@ customElements.define("x-checkbox", XCheckboxElement)
             key: "connectedCallback",
             value: function() {
                 var m = this;
-                this._parentElement = this.parentElement || this.parentNode.host, this._parentElement.addEventListener("contextmenu", this._parentContextMenuListener = function(w) {
-                    m._onParentContextMenu(w)
-                })
+                if(!this.hasAttribute("manual")){
+                    this._parentElement = this.parentElement || this.parentNode.host, this._parentElement.addEventListener("contextmenu", this._parentContextMenuListener = function(w) {
+                        m._onParentContextMenu(w)
+                    })                    
+                }
             }
         }, {
             key: "disconnectedCallback",
@@ -2947,7 +2951,8 @@ customElements.define("x-checkbox", XCheckboxElement)
         }, {
             key: "_onOverlayPointerDown",
             value: function(m) {
-                0 === m.button && (m.preventDefault(), this.close())
+                var w = this;
+                this.close()
             }
         }, {
             key: "_onClick",
@@ -2974,15 +2979,17 @@ customElements.define("x-checkbox", XCheckboxElement)
             key: "open",
             value: function(m, w) {
                 var k = this.querySelector("x-menu");
-                !1 === k.opened && (k.openAtPoint(m, w), this["#overlay"].ownerElement = k, this["#overlay"].show(!1), k.focus())
+                !1 === k.opened && (k.openAtPoint(m, w)/*, this["#overlay"].ownerElement = k, this["#overlay"].show(!1)*/, k.focus())
+                this.myEventListener = document.body.addEventListener('pointerdown', (event) => this._onOverlayPointerDown(event), true)
             }
         }, {
             key: "close",
             value: function() {
                 var m = this;
+                document.body.removeEventListener("pointerdown", this.myEventListener, true);
                 return new Promise(async function(w) {
                     var k = m.querySelector("x-menu");
-                    await k.close(false), m["#overlay"].hide(!1);
+                    await k.close(false)/*, m["#overlay"].hide(!1)*/;
                     var _ = _closest3(m.parentNode, "[tabindex]");
                     _ && _.focus(), w()
                 })
