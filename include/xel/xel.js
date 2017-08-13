@@ -2952,6 +2952,9 @@ customElements.define("x-checkbox", XCheckboxElement)
             key: "_onOverlayPointerDown",
             value: function(m) {
                 var w = this;
+                if(w.contains(m.target))
+                    return;
+
                 this.close()
             }
         }, {
@@ -2980,7 +2983,8 @@ customElements.define("x-checkbox", XCheckboxElement)
             value: function(m, w) {
                 var k = this.querySelector("x-menu");
                 !1 === k.opened && (k.openAtPoint(m, w)/*, this["#overlay"].ownerElement = k, this["#overlay"].show(!1)*/, k.focus())
-                this.myEventListener = document.body.addEventListener('pointerdown', (event) => this._onOverlayPointerDown(event), true)
+                this.myEventListener = (event) => this._onOverlayPointerDown(event)
+                document.body.addEventListener('pointerdown', this.myEventListener, true)
             }
         }, {
             key: "close",

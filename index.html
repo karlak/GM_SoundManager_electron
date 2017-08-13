@@ -125,17 +125,39 @@
                     </x-input>
                     <div id="tree-container">
                         <div id="tree" class="noFocus fancytree-connectors">
+                        <x-contextmenu manual id="mycontext">
+                        <x-menu>
+                            <x-menuitem onclick="minimize()" >
+                                <x-label>Rename</x-label>
+                            </x-menuitem>
+                            <x-menuitem>
+                                <x-label>Delete</x-label>
+                            </x-menuitem>
+                            <hr>
+                            <x-menuitem>
+                                <x-label>Cut</x-label>
+                            </x-menuitem>
+                            <x-menuitem>
+                                <x-label>Copy</x-label>
+                            </x-menuitem>
+                            <x-menuitem>
+                                <x-label>Paste</x-label>
+                            </x-menuitem>
+                            <hr>
+                            <x-menuitem>
+                                <x-label>Refresh</x-label>
+                            </x-menuitem>
+                        </x-menu>
+                    </x-contextmenu>
                         </div>
+
                     </div>
                 </div>
                 <div id="right-panel" class="panel">
-                    RIGHT
-                    <x-progressbar value="0.5"></x-progressbar>
-                    <x-button id="myButton">Hello my beautiful world !</x-button>
-                    <x-contextmenu>
+                    RIGHT <x-contextmenu id="mycontext2">
                         <x-menu>
                             <x-menuitem>
-                                <x-label>Undo</x-label>
+                                <x-label>22222</x-label>
                             </x-menuitem>
                             <x-menuitem>
                                 <x-label>Redo</x-label>
@@ -156,6 +178,9 @@
                             </x-menuitem>
                         </x-menu>
                     </x-contextmenu>
+                    <x-progressbar value="0.5"></x-progressbar>
+                    <x-button id="myButton">Hello my beautiful world !</x-button>
+                    
                 </div>
             </div>
         </div>

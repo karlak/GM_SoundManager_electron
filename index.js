@@ -3,6 +3,7 @@ const ipc = electron.ipcRenderer;
 const remote = electron.remote;
 const app = remote.app;
 const win = remote.getCurrentWindow();
+// const menu = remote.Menu;
 
 const Datastore = remote.require('./include/nedb')
 const path = require('path');
@@ -56,7 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ipc.on('unmaximize', (event, message) => {
         document.getElementById("titlebar").classList.remove('maximized');
     })
-    var t = setInterval(update_cpuusage, 1000);
+    // var t = setInterval(update_cpuusage, 1000);
 
     /***********************/
     /******* Splitter ******/
@@ -183,6 +184,33 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         });
     }
+    var myTreeContextMenuFolder = "#mycontext";
+    // function myTreeClick(event, data) {
+    //     // console.log(event);
+    //     if(data.targetType==='title'){
+    //         if(event.button==2){
+    //             // var node = data.node;
+    //                     // myTreeContextMenuFolder[0].open(event.clientX, event.clientY);
+    //             lastRightClickedNode = data.node;
+    //         }
+    //     }
+    // }
+    function myTreeContext(event, data) {
+        var node = data.node;
+        // console.log(event);
+        if(data.targetType==='title' || data.targetType==='icon'){
+            if(node != null){
+                node.setActive(true);
+                if(node.folder){
+                    $jquery(myTreeContextMenuFolder).data('contextData', data)
+                    $jquery(myTreeContextMenuFolder)[0].open(event.clientX, event.clientY);
+                }
+                else{
+                }
+            }            
+        }
+    }
+
     $jquery("#tree").fancytree({
         source: [{
             title: "Library",
@@ -204,6 +232,9 @@ document.addEventListener("DOMContentLoaded", () => {
         },
         lazyLoad: myLazyLoad,
         collapse: myAfterCollapse,
+        // click: myTreeClick,
+        // clickUp: myTreeContext,
+        contextmenu: myTreeContext,
         extensions: ["dnd", "filter"],
         dnd: {
             // Available options with their default:
@@ -299,7 +330,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function _escapeRegex(str){
         return (str + "").replace(/([.?*+\^\$\[\]\\(){}|-])/g, "\\$1");
     }
-
+    // We override the filter function of the fancytree lib.
     $jquery.ui.fancytree._FancytreeClass.prototype._applyFilterImpl = function(filter, branchMode, _opts){
         // console.log(arguments);
         if(typeof filter !== "string"){
