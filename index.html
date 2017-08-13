@@ -125,12 +125,12 @@
                     </x-input>
                     <div id="tree-container">
                         <div id="tree" class="noFocus fancytree-connectors">
-                        <x-contextmenu manual id="mycontext">
+                        <x-contextmenu manual id="treeViewContext">
                         <x-menu>
-                            <x-menuitem onclick="minimize()" >
+                            <x-menuitem name="rename">
                                 <x-label>Rename</x-label>
                             </x-menuitem>
-                            <x-menuitem>
+                            <x-menuitem name="delete">
                                 <x-label>Delete</x-label>
                             </x-menuitem>
                             <hr>

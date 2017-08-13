@@ -184,32 +184,31 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         });
     }
-    var myTreeContextMenuFolder = "#mycontext";
-    // function myTreeClick(event, data) {
-    //     // console.log(event);
-    //     if(data.targetType==='title'){
-    //         if(event.button==2){
-    //             // var node = data.node;
-    //                     // myTreeContextMenuFolder[0].open(event.clientX, event.clientY);
-    //             lastRightClickedNode = data.node;
-    //         }
-    //     }
-    // }
+    
+    // ContextMenu
+    var myTreeContextMenuFolder = $jquery("#treeViewContext");
     function myTreeContext(event, data) {
         var node = data.node;
-        // console.log(event);
         if(data.targetType==='title' || data.targetType==='icon'){
             if(node != null){
-                node.setActive(true);
-                if(node.folder){
-                    $jquery(myTreeContextMenuFolder).data('contextData', data)
-                    $jquery(myTreeContextMenuFolder)[0].open(event.clientX, event.clientY);
+                if(myTreeContextMenuFolder.length > 0){
+                    myTreeContextMenuFolder.data('contextData', data);
+                    myTreeContextMenuFolder[0].open(event.clientX, event.clientY);
                 }
-                else{
-                }
-            }            
+            }
         }
     }
+    myTreeContextMenuFolder.on("click", "[name='rename']", (event)=>{
+        var data = $jquery(event.delegateTarget).data('contextData');
+        console.log('rename !', data);
+    })
+    myTreeContextMenuFolder.on("click", "[name='delete']", (event)=>{
+        var data = $jquery(event.delegateTarget).data('contextData');
+        console.log('delete !', data);
+    })
+
+
+
 
     $jquery("#tree").fancytree({
         source: [{
