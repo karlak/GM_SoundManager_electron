@@ -124,13 +124,16 @@
                         <x-icon name="cancel" id="searchCancel" onclick="document.getElementById('searchBar').value='';"></x-icon>
                     </x-input>
                     <div id="tree-container">
+                    <x-dialog id="mydialog"></x-dialog>
                         <div id="tree" class="noFocus fancytree-connectors">
                         <x-contextmenu manual id="treeViewContext">
                         <x-menu>
                             <x-menuitem name="rename">
+                                <x-icon name="edit"></x-icon>
                                 <x-label>Rename</x-label>
                             </x-menuitem>
                             <x-menuitem name="delete">
+                                <x-icon name="delete"></x-icon>
                                 <x-label>Delete</x-label>
                             </x-menuitem>
                             <hr>

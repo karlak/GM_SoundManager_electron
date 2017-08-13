@@ -749,6 +749,10 @@ x-menuitem img {
 x-menuitem x-icon {
   width: 16px;
   height: 16px;
+  /* added by aldricbocquet@gmail.com */
+  left: 4px;
+  top: 1px;
+  position: absolute;
 }
 x-menuitem x-icon:not([name]) {
   display: none;
@@ -776,6 +780,11 @@ x-menuitem x-swatch + x-label,
 x-menuitem x-icon[name] + x-label,
 x-menuitem x-label + x-shortcut {
   margin-left: 8px;
+}
+
+x-menuitem x-icon[name] + x-label {
+  /* added by aldricbocquet@gmail.com */
+  margin-left: 0px;
 }
 
 /*****************************************************************************************************************/

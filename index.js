@@ -191,6 +191,7 @@ document.addEventListener("DOMContentLoaded", () => {
         var node = data.node;
         if(data.targetType==='title' || data.targetType==='icon'){
             if(node != null){
+                node.setActive(true);
                 if(myTreeContextMenuFolder.length > 0){
                     myTreeContextMenuFolder.data('contextData', data);
                     myTreeContextMenuFolder[0].open(event.clientX, event.clientY);
@@ -198,11 +199,12 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
     }
-    myTreeContextMenuFolder.on("click", "[name='rename']", (event)=>{
+    myTreeContextMenuFolder.on("click", "x-menuitem[name='rename']", (event)=>{
         var data = $jquery(event.delegateTarget).data('contextData');
         console.log('rename !', data);
+        $jquery("#mydialog")[0].opened = true;
     })
-    myTreeContextMenuFolder.on("click", "[name='delete']", (event)=>{
+    myTreeContextMenuFolder.on("click", "x-menuitem[name='delete']", (event)=>{
         var data = $jquery(event.delegateTarget).data('contextData');
         console.log('delete !', data);
     })
