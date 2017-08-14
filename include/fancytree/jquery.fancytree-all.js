@@ -7389,12 +7389,6 @@ $.ui.fancytree.registerExtension({
 		this.$container.addClass("fancytree-ext-edit");
 	},
 	nodeClick: function(ctx) {
-		if( $.inArray("shift+click", ctx.options.edit.triggerStart) >= 0 ){
-			if( ctx.originalEvent.shiftKey ){
-				ctx.node.editStart();
-				return false;
-			}
-		}
 		return this._superApply(arguments);
 	},
 	nodeDblclick: function(ctx) {
@@ -7408,13 +7402,9 @@ $.ui.fancytree.registerExtension({
 		switch( ctx.originalEvent.which ) {
 		case 113: // [F2]
 			if( $.inArray("f2", ctx.options.edit.triggerStart) >= 0 ){
-				ctx.node.editStart();
-				return false;
-			}
-			break;
-		case $.ui.keyCode.ENTER:
-			if( $.inArray("mac+enter", ctx.options.edit.triggerStart) >= 0 && isMac ){
-				ctx.node.editStart();
+				// console.log("ctx",ctx);
+				var toEdit = ctx.tree.activeNode;
+				if(toEdit != null) toEdit.editStart();
 				return false;
 			}
 			break;

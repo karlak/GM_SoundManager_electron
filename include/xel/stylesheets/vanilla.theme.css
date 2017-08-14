@@ -722,7 +722,7 @@ x-menu hr:last-child {
  */
 
 x-menuitem {
-  padding: 2px 12px 2px 23px;
+  padding: 2px 12px 2px 26px;
   min-height: 20px;
   color: var(--text-color);
   --trigger-effect: none;
@@ -747,12 +747,13 @@ x-menuitem img {
 }
 
 x-menuitem x-icon {
-  width: 16px;
+/*  width: 16px;
   height: 16px;
-  /* added by aldricbocquet@gmail.com */
+*/  /* added by aldricbocquet@gmail.com */
   left: 4px;
   top: 1px;
   position: absolute;
+  color: #5b5b5b;
 }
 x-menuitem x-icon:not([name]) {
   display: none;

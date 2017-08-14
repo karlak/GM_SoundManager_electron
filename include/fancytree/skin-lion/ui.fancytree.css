@@ -15,6 +15,12 @@
  *
  * This section is automatically generated from the `skin-common.less` template.
  ******************************************************************************/
+span.pending span.fancytree-title {
+  font-style: italic;
+}
+span.pending span.fancytree-title:after {
+  content: "\2026"; /* ellipsis */
+}
 /*------------------------------------------------------------------------------
  * Helpers
  *----------------------------------------------------------------------------*/
@@ -600,6 +606,7 @@ table.fancytree-ext-columnview .fancytree-has-children span.fancytree-cv-right:h
   position: absolute;
   top: -6px;
   left: -6px;
+  cursor: default;
   min-width: 10px;
   height: 10px;
   line-height: 1;

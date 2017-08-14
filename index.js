@@ -3,6 +3,7 @@ const ipc = electron.ipcRenderer;
 const remote = electron.remote;
 const app = remote.app;
 const win = remote.getCurrentWindow();
+const dialog = remote.dialog;
 // const menu = remote.Menu;
 
 const Datastore = remote.require('./include/nedb')
@@ -194,20 +195,48 @@ document.addEventListener("DOMContentLoaded", () => {
                 node.setActive(true);
                 if(myTreeContextMenuFolder.length > 0){
                     myTreeContextMenuFolder.data('contextData', data);
-                    myTreeContextMenuFolder[0].open(event.clientX, event.clientY);
+                    myTreeContextMenuFolder.find("x-menuitem[name='delete']")[0].disabled = false;
+                    myTreeContextMenuFolder.find("x-menuitem[name='rename']")[0].disabled = false;
+                    myTreeContextMenuFolder.find("x-menuitem[name='newFolder']")[0].disabled = false;
+                    if(node.folder){
+                        if(node.key == "root"){
+                            myTreeContextMenuFolder.find("x-menuitem[name='delete']")[0].disabled = true;
+                            myTreeContextMenuFolder.find("x-menuitem[name='rename']")[0].disabled = true;
+                        }
+                    }
+                    else{
+                        myTreeContextMenuFolder.find("x-menuitem[name='newFolder']")[0].disabled = true;
+                    }
+                    // console.log(node);
+                    myTreeContextMenuFolder[0].open(event.clientX, event.clientY, node.span);
                 }
             }
         }
     }
     myTreeContextMenuFolder.on("click", "x-menuitem[name='rename']", (event)=>{
+        console.log('renaaaame');
         var data = $jquery(event.delegateTarget).data('contextData');
-        console.log('rename !', data);
-        $jquery("#mydialog")[0].opened = true;
-    })
+        console.log(data);
+        setTimeout(function() { data.node.editStart(); }, 30);
+    });
+    myTreeContextMenuFolder.on("click", "x-menuitem[name='newFolder']", (event)=>{
+        var data = $jquery(event.delegateTarget).data('contextData');
+        // data.node.editStart();
+        setTimeout(function() { data.node.editCreateNode("child", {title: "",folder: true}); }, 30);
+        
+    });
     myTreeContextMenuFolder.on("click", "x-menuitem[name='delete']", (event)=>{
         var data = $jquery(event.delegateTarget).data('contextData');
-        console.log('delete !', data);
-    })
+        var res = dialog.showMessageBox(win, {
+            message: "Are you sure you want to delete this entry ?",
+            buttons: ["Yes", "No"],
+            defaultId: 0,
+            icon: './include/imgs/delete-file_40456.png'
+        });
+        if(res == 0){
+            console.log('delete !');
+        }
+    });
 
 
 
@@ -236,7 +265,80 @@ document.addEventListener("DOMContentLoaded", () => {
         // click: myTreeClick,
         // clickUp: myTreeContext,
         contextmenu: myTreeContext,
-        extensions: ["dnd", "filter"],
+        extensions: ["dnd", "filter", "edit"],
+
+
+        edit: {
+            beforeEdit: function(event, data){
+                // `data.node` is about to be edited.
+                // Return false to prevent this.
+                return (data.node.key != "root")
+            },
+            edit: function(event, data){
+                // `data.node` switched into edit mode.
+                // The <input> element was created (available as jQuery object `data.input`) 
+                // and contains the original `data.node.title`.
+                data.input.select();
+            },
+            beforeClose: function(event, data){
+                // Editing is about to end (either cancel or save).
+                // Additional information is available:
+                // - `data.dirty`:    true if text was modified by user.
+                // - `data.input`:    The input element (jQuery object).
+                //                    `data.input.val()` returns the new node title.
+                // - `data.isNew`:    true if this node was newly created using `editCreateNode()`.
+                // - `data.orgTitle`: The previous node title text.
+                // - `data.originalEvent`:
+                //                    Contains the originating event (i.e. blur, mousdown, keydown).
+                // - `data.save`:     false if saving is not required, i.e. user pressed  
+                //                    cancel or text is unchanged.
+                //                    This value may be changed to override default behavior.
+                // Return false to prevent this (keep the editor open), for example when 
+                // validations fail.
+            },
+            save: function(event, data){
+                // Only called when the text was modified and the user pressed enter or
+                // the <input> lost focus.
+                // Additional information is available (see `beforeClose`).
+                // Return false to keep editor open, for example when validations fail.
+                // Otherwise the user input is accepted as `node.title` and the <input> 
+                // is removed.
+                // Typically we would also issue an Ajax request here to send the new data 
+                // to the server (and handle potential errors when the asynchronous request 
+                // returns).
+                var node = data.node;
+                if(data.isNew){
+                    db.insert({title: data.input.val(), is_folder: true, parent: node.parent.key}, function (err, newDocs) {
+                        if(err != null){
+                            console.error(err);
+                            node.remove();
+                        }
+                        node.key = newDocs._id;
+                        $jquery(node.span).removeClass("pending");
+                    });
+                }
+                else{
+                    db.update({_id: node.key}, {$set: {title: data.input.val()}}, {}, (err, numAffected)=>{
+                        if(err != null){
+                            console.error(err);
+                            node.setTitle(data.orgTitle);
+                        }
+                        $jquery(node.span).removeClass("pending");
+                    });    
+                }
+                return true;
+            },
+            close: function(event, data){
+                // Editor was removed.
+                // Additional information is available (see `beforeClose`).
+                if( data.save ) {
+                    $jquery(data.node.span).addClass("pending");
+                }
+            }
+        },
+
+
+
         dnd: {
             // Available options with their default:
             autoExpandMS: 400, // Expand nodes after n milliseconds of hovering
@@ -392,7 +494,8 @@ document.addEventListener("DOMContentLoaded", () => {
                         continue;
                     }
                     node = getFirstValidParentNode(docs[i]);
-                    nodeMatched(node);
+                    if(node != null)
+                        nodeMatched(node);
                 }
                 
                 renderCurrentFilter();
@@ -404,7 +507,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 var parent = that.widget.getNodeByKey(node.parent);
                 if(parent != null) return parent;
                 parent = nodeMap[node.parent];
-                while(Object.getPrototypeOf(parent) !== nodePrototype){
+                while(parent != null && Object.getPrototypeOf(parent) !== nodePrototype){
                     parent = parent.parent;
                 }
                 return parent;

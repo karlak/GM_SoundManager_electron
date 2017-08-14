@@ -2980,7 +2980,8 @@ customElements.define("x-checkbox", XCheckboxElement)
             }
         }, {
             key: "open",
-            value: function(m, w) {
+            value: function(m, w, parentNode) {
+                this.myParentNode = parentNode;
                 var k = this.querySelector("x-menu");
                 !1 === k.opened && (k.openAtPoint(m, w)/*, this["#overlay"].ownerElement = k, this["#overlay"].show(!1)*/, k.focus())
                 this.myEventListener = (event) => this._onOverlayPointerDown(event)
@@ -2995,7 +2996,10 @@ customElements.define("x-checkbox", XCheckboxElement)
                     var k = m.querySelector("x-menu");
                     await k.close(false)/*, m["#overlay"].hide(!1)*/;
                     var _ = _closest3(m.parentNode, "[tabindex]");
-                    _ && _.focus(), w()
+                    if(m.myParentNode!=null)
+                        _ = _closest3(m.myParentNode, "[tabindex]");
+                    _ && _.focus();
+                    w()
                 })
             }
         }, {
