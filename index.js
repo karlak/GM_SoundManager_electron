@@ -123,7 +123,8 @@ document.addEventListener("DOMContentLoaded", () => {
     let db_filename = path.join(app.getPath('userData'), 'something.db');
     db = new Datastore({
         filename: db_filename,
-        autoload: true
+        autoload: true,
+        compareStrings: "localeCompare",
     });
     //db.insert({hello:'world!'});
     // db.persistence.compactDatafile();

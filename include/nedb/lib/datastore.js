@@ -50,7 +50,8 @@ function Datastore (options) {
   }
 
   // String comparison function
-  this.compareStrings = options.compareStrings;
+  // this.caseSensitive  = options.caseSensitive != null ? options.caseSensitive : true;
+  this.compareStrings = options.compareStrings === "localeCompare" ? (a,b)=>{return a.localeCompare(b)} : options.compareStrings;
 
   // Persistence handling
   this.persistence = new Persistence({ db: this, nodeWebkitAppName: options.nodeWebkitAppName
