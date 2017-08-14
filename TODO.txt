@@ -1,6 +1,5 @@
 Treeview:
-  - Rename Files/Folders
-  - Delete Files/Folders
+- When moving files/folders, filter is messing up
 
 Import of the music file to the database:
   - Assistant ?

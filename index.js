@@ -153,7 +153,7 @@ document.addEventListener("DOMContentLoaded", () => {
         data.result = dfd.promise();
 
         // We find children of that 'key' node
-        var cursor = db.find({parent: parent_key}).sort({is_folder: -1, title: 1});
+        var cursor = db.find({parent: parent_key, deleted: false}).sort({is_folder: -1, title: 1});
         cursor.exec(function(err, docs) {
             // transformation of the data to fancytree format
             var loaded = docs.map((doc) => {
@@ -169,9 +169,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 return loaded_element.folder; // just check the folders
             }).map(function(loaded_element) {
                 var dfd2 = new $jquery.Deferred();
-                db.findOne({
-                    parent: loaded_element.key
-                }, function(err, doc) {
+                db.findOne({parent: loaded_element.key, deleted: false}, function(err, doc) {
                     if (doc === null) {
                         loaded_element.lazy = false;
                     }
@@ -196,6 +194,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 node.setActive(true);
                 if(myTreeContextMenuFolder.length > 0){
                     myTreeContextMenuFolder.data('contextData', data);
+
                     myTreeContextMenuFolder.find("x-menuitem[name='delete']")[0].disabled = false;
                     myTreeContextMenuFolder.find("x-menuitem[name='rename']")[0].disabled = false;
                     myTreeContextMenuFolder.find("x-menuitem[name='newFolder']")[0].disabled = false;
@@ -228,14 +227,30 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     myTreeContextMenuFolder.on("click", "x-menuitem[name='delete']", (event)=>{
         var data = $jquery(event.delegateTarget).data('contextData');
+        node = data.node;
+        // console.log(data)
+        var message = node.folder ? 
+                "Are you sure you want to delete this folder and all its content ?\n" :
+                "Are you sure you want to delete this entry ?\n";
         var res = dialog.showMessageBox(win, {
-            message: "Are you sure you want to delete this entry ?",
+            message: message,
             buttons: ["Yes", "No"],
             defaultId: 0,
             icon: './include/imgs/delete-file_40456.png'
         });
         if(res == 0){
+            // Update the doc to set the deleted flag to true
             console.log('delete !');
+            $jquery(node.span).addClass("pending");
+            db.update({_id: node.key}, {$set: {deleted: true}}, {}, (err, numAffected)=>{
+                if(err != null){
+                    console.error(err);
+                }
+                else{
+                    node.remove();
+                }
+                $jquery(node.span).removeClass("pending");
+            });
         }
     });
 
@@ -309,7 +324,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 // returns).
                 var node = data.node;
                 if(data.isNew){
-                    db.insert({title: data.input.val(), is_folder: true, parent: node.parent.key}, function (err, newDocs) {
+                    db.insert({title: data.input.val(), is_folder: true, parent: node.parent.key, deleted: false}, function (err, newDocs) {
                         if(err != null){
                             console.error(err);
                             node.remove();
@@ -325,7 +340,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             node.setTitle(data.orgTitle);
                         }
                         $jquery(node.span).removeClass("pending");
-                    });    
+                    });
                 }
                 return true;
             },
@@ -459,7 +474,7 @@ document.addEventListener("DOMContentLoaded", () => {
         match = _escapeRegex(filter); // make sure a '.' is treated literally
         
 
-        db.find({is_folder: true}, function(err, docs) {
+        db.find({is_folder: true, deleted: false}, function(err, docs) {
             // 1. We first get the folders from the DB to link unloaded files to tree nodes
             docs = docs.map((doc)=>{
                 var _doc = JSON.parse(JSON.stringify(doc))
@@ -485,7 +500,7 @@ document.addEventListener("DOMContentLoaded", () => {
             lookup_node_table = docs;
 
             // 2. We get actual data from the DB
-            db.find({title: {$regex: match} }, function(err, docs) {
+            db.find({title: {$regex: match}, deleted: false}, function(err, docs) {
                 resetCurrentFilter();
 
                 for (var i = 0; i < docs.length; i++) {
