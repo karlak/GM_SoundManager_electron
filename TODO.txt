@@ -1,5 +1,5 @@
 Treeview:
-- When moving files/folders, filter is messing up
+  - When moving a file, the search is done again completely instead of just updating the counters
 
 Import of the music file to the database:
   - Assistant ?

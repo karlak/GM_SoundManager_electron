@@ -1340,6 +1340,13 @@ FancytreeNode.prototype = /** @lends FancytreeNode# */{
 		// 	this.parent.ul.removeChild(this.li);
 		// }
 
+		// If filter extension is activated, update 
+		// the node.$subMatchBadge variable
+		if(this.$subMatchBadge != null){
+			this.$subMatchBadge.remove();
+			delete this.$subMatchBadge;
+		}
+
 		// Insert this node to target parent's child list
 		this.parent = targetParent;
 		if( targetParent.hasChildren() ) {
@@ -1414,7 +1421,7 @@ FancytreeNode.prototype = /** @lends FancytreeNode# */{
 		}
 		// TODO: fix selection state
 		// TODO: fix active state
-
+		
 /*
 		var tree = this.tree;
 		var opts = tree.options;

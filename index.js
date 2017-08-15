@@ -411,15 +411,22 @@ document.addEventListener("DOMContentLoaded", () => {
             },
             dragDrop: (targetNode, data) => {
                 data.otherNode.moveTo(targetNode, data.hitMode).then(() => {
-                    targetNode.sortChildren();
-                    targetNode.setExpanded(true);
-                    db.update({
-                        _id: data.otherNode.key
-                    }, {
-                        $set: {
-                            parent: targetNode.key
-                        }
-                    }, {});
+                    //
+                    db.update({_id: data.otherNode.key}, {$set: {parent: targetNode.key}}, {}, ()=>{
+                        targetNode.setExpanded(true);
+                        
+                        targetNode.sortChildren((a, b) => {
+                            if(a.folder!=b.folder){
+                                return a.folder ? -1 : 1;
+                            }
+                            var x = a.title.toLowerCase(),
+                                y = b.title.toLowerCase();
+                            return x === y ? 0 : x > y ? 1 : -1;
+                        });
+                        doSearch($jquery("#searchBar").val());
+
+                        
+                    });
                 });
             },
             dragLeave: (targetNode, data) => {
