@@ -68,7 +68,6 @@ document.addEventListener("DOMContentLoaded", () => {
         gutterSize: 5,
         snapOffset: 0,
         elementStyle: function(dimension, size, gutterSize, num = -1) {
-            // console.log(num);
             if (typeof size === 'string' || size instanceof String) {
                 if (size.indexOf('%') > 0 || size.indexOf('px') > 0) {
                     var ret = [];
@@ -137,7 +136,7 @@ document.addEventListener("DOMContentLoaded", () => {
     /********TreeView********/
     function myAfterCollapse(event, data) {
         if (data.node.children != null && data.node.children.length > 0) {
-            console.log("resetLazy");
+            // console.log("resetLazy");
             data.node.resetLazy();
         }
         return true;
@@ -146,7 +145,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function myLazyLoad(event, data) {
         var node = data.node;
         var parent_key = node.key;
-        console.log("Lazy load for key: ", parent_key);
+        // console.log("Lazy load for key: ", parent_key);
 
 
         var dfd = new $jquery.Deferred();
@@ -157,12 +156,16 @@ document.addEventListener("DOMContentLoaded", () => {
         cursor.exec(function(err, docs) {
             // transformation of the data to fancytree format
             var loaded = docs.map((doc) => {
-                return {
+                var ret = {
                     title: doc.title,
                     folder: doc.is_folder,
                     key: doc._id,
                     lazy: doc.is_folder
                 };
+                if(doc.type!="none"){
+                    ret.icon = doc.type;
+                }
+                return ret;
             });
             // checking new elements for children (to set or remove the lazy flag)
             var promises = loaded.filter(function(loaded_element) {
@@ -177,7 +180,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 });
                 return dfd2.promise();
             });
-            // console.log("promises: ", promises);
 
             $jquery.when.apply($jquery, promises).then(function() {
                 dfd.resolve(loaded);
@@ -207,28 +209,23 @@ document.addEventListener("DOMContentLoaded", () => {
                     else{
                         myTreeContextMenuFolder.find("x-menuitem[name='newFolder']")[0].disabled = true;
                     }
-                    // console.log(node);
                     myTreeContextMenuFolder[0].open(event.clientX, event.clientY, node.span);
                 }
             }
         }
     }
     myTreeContextMenuFolder.on("click", "x-menuitem[name='rename']", (event)=>{
-        console.log('renaaaame');
         var data = $jquery(event.delegateTarget).data('contextData');
-        console.log(data);
         setTimeout(function() { data.node.editStart(); }, 30);
     });
     myTreeContextMenuFolder.on("click", "x-menuitem[name='newFolder']", (event)=>{
         var data = $jquery(event.delegateTarget).data('contextData');
-        // data.node.editStart();
         setTimeout(function() { data.node.editCreateNode("child", {title: "",folder: true}); }, 30);
         
     });
     myTreeContextMenuFolder.on("click", "x-menuitem[name='delete']", (event)=>{
         var data = $jquery(event.delegateTarget).data('contextData');
         node = data.node;
-        // console.log(data)
         var message = node.folder ? 
                 "Are you sure you want to delete this folder and all its content ?\n" :
                 "Are you sure you want to delete this entry ?\n";
@@ -240,7 +237,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
         if(res == 0){
             // Update the doc to set the deleted flag to true
-            console.log('delete !');
             $jquery(node.span).addClass("pending");
             db.update({_id: node.key}, {$set: {deleted: true}}, {}, (err, numAffected)=>{
                 if(err != null){
@@ -458,7 +454,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     // We override the filter function of the fancytree lib.
     $jquery.ui.fancytree._FancytreeClass.prototype._applyFilterImpl = function(filter, branchMode, _opts){
-        // console.log(arguments);
         if(typeof filter !== "string"){
             console.error('Argument type not handled ! String expected, got', typeof filter);
             return;
@@ -522,8 +517,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
                 
                 renderCurrentFilter();
-                // console.log('Found', count, 'elements !');
-                // @todo (return the number of found elements in a promise)
+                // @todo (return the number of found elements in a promise?)
             });
 
             function getFirstValidParentNode(node) {

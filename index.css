@@ -272,6 +272,23 @@ input.fancytree-edit-input::selection {
     background: #4aa2ff;
 }
 
+span.fancytree-custom-icon.music {
+    background-image: url(./include/imgs/music2.png);
+}
+span.fancytree-custom-icon.sound {
+    background-image: url(./include/imgs/sound.png);
+}
+span.fancytree-custom-icon.soundboard {
+    background-image: url(./include/imgs/soundboard.png);
+}
+
+span.fancytree-custom-icon {
+    width: 19px;
+    height: 16px;
+    margin-left: 2px;
+    margin-right: -2px;
+}
+
 .noFocus :focus {
     outline: none;
 }
