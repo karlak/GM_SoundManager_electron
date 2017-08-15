@@ -249,6 +249,29 @@ x-card {
     overflow-x: hidden;
 }
 
+span.fancytree-title {
+    height: 16px;
+}
+input.fancytree-edit-input {
+    margin: 0;
+    margin-top: -10px;
+    padding: 0px 0px 0px 0px;
+    height: 16px;
+    border-width: 0;
+    font-size: 10pt;
+    font-family: tahoma, arial, helvetica;
+    min-width: 100px;
+}
+input.fancytree-edit-input:focus {
+    outline: -webkit-focus-ring-color auto 5px;
+    outline-color: -webkit-focus-ring-color;
+    outline-style: auto;
+    outline-width: 5px;
+}
+input.fancytree-edit-input::selection {
+    background: #4aa2ff;
+}
+
 .noFocus :focus {
     outline: none;
 }

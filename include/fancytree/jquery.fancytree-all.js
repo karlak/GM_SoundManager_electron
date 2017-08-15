@@ -7375,7 +7375,7 @@ $.ui.fancytree.registerExtension({
 	options: {
 		adjustWidthOfs: 4,   // null: don't adjust input size to content
 		allowEmpty: false,   // Prevent empty input
-		inputCss: {minWidth: "3em"},
+		inputCss: {},
 		// triggerCancel: ["esc", "tab", "click"],
 		// triggerStart: ["f2", "dblclick", "shift+click", "mac+enter"],
 		triggerStart: ["f2", "shift+click", "mac+enter"],
