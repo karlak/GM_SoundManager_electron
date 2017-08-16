@@ -16,20 +16,24 @@ document.body.onmousedown = e => {
     if (e.button === 1) return false;
 };
 
+var canClose = false;
+window.onbeforeunload = (e) => {
+	if(!canClose){
+    	e.returnValue = false
+    	win.hide();
+	}
+}
 
-win.on('close', (event) => {});
-
-
-ipc.on('jobNewSound', (event, message) => {
-    console.log("!!!!");
-    jobs.push({ type: 'jobNewSound', data: JSON.parse(message) });
+ipc.on('newJob', (event, message) => {
+	var rec = JSON.parse(message);
+    jobs.push({type: rec.type, data: rec.data});
     if (jobs.length <= 1) {
         doNextJobs();
     }
 })
 
-function sendParent(type, data) {
-    parentWin.webContents.send(type, JSON.stringify(data));
+function sendParent(channel, data) {
+    parentWin.webContents.send(channel, JSON.stringify(data));
 }
 
 function doNextJobs() {
@@ -37,6 +41,10 @@ function doNextJobs() {
 	while(jobs.length > 0){
 	    var job = jobs.shift();
 	    switch (job.type) {
+	        case "jobClose":
+	        	canClose = true;
+	        	win.close();
+	            break;
 	        case "jobNewSound":
 	            console.log("JobNewSound job started!", job.data);
 	            break;

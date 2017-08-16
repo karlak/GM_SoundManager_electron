@@ -669,7 +669,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     function newJob(type, data) {
         if(workerWinReady){
-            workerWin.webContents.send(type, JSON.stringify(data));
+            workerWin.webContents.send('newJob', JSON.stringify({type: type, data: data}));
         }
         else{
             console.error("Tried to create a job before the worker being ready !")
@@ -677,7 +677,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     createWorkerWindow();
     window.onbeforeunload = (e) => {
-        workerWin.close();
+        newJob("jobClose", "");
     }
     var workerWinReady = false;
     $jquery("#showWorker").click(()=>{
