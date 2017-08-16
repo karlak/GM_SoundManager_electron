@@ -3,6 +3,7 @@ Treeview:
 
 Import of the music file to the database:
   - Assistant ?
+  - From Youtube or other streaming websites ?
 
 Global keyboard shortcut that show a command-window like sublimetext, even if the app is minimized ?
 

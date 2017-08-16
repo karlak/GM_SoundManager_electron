@@ -9,6 +9,8 @@ const dialog = remote.dialog;
 const Datastore = remote.require('./include/nedb')
 const path = require('path');
 var db;
+let assistWin;
+let workerWin;
 
 // Prevents the middle click scroll behavior
 document.body.onmousedown = e => {
@@ -612,11 +614,101 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     // loopFinder();
 
-    // $("#tree").fancytree("getTree").filterNodes("title", { autoExpand: false, leavesOnly: true });
-    // $("#tree").fancytree("getTree").filterBranches("title");
+
+    /*************************/
+    /*   Import Assistant    */
+    const url = require('url')
+    function createAssistantWindow(){
+        assistWin = new remote.BrowserWindow({
+            'parent': remote.getCurrentWindow(),
+            'modal': true,
+            'width': 800,
+            'height': 600,
+            'frame': true,
+            'show': true,
+            'backgroundColor': '#FFF',
+            'transparent': false,
+            'fullscreenable': false,
+            'resizable': false,
+            'minimizable': false,
+            'maximizable': false,
+            'skipTaskbar': true,
+
+        });
+        assistWin.loadURL(url.format({
+            pathname: path.join(__dirname, 'assistant.html'),
+            protocol: 'file:',
+            slashes: true
+        }));
+    }
+    // createAssistantWindow();
+
+    /************************/
+    /*        Worker        */
+    function createWorkerWindow(){
+        workerWin = new remote.BrowserWindow({
+            'parent': remote.getCurrentWindow(),
+            'modal': false,
+            'width': 800,
+            'height': 600,
+            'frame': true,
+            'show': false,
+            'backgroundColor': '#FFF',
+            'transparent': false,
+            'fullscreenable': false,
+            'resizable': false,
+            'minimizable': true,
+            'maximizable': false,
+            'skipTaskbar': false,
+        });
+        workerWin.loadURL(url.format({
+            pathname: path.join(__dirname, 'worker.html'),
+            protocol: 'file:',
+            slashes: true
+        }));
+    }
+    function newJob(type, data) {
+        if(workerWinReady){
+            workerWin.webContents.send(type, JSON.stringify(data));
+        }
+        else{
+            console.error("Tried to create a job before the worker being ready !")
+        }
+    }
+    createWorkerWindow();
+    window.onbeforeunload = (e) => {
+        workerWin.close();
+    }
+    var workerWinReady = false;
+    $jquery("#showWorker").click(()=>{
+        workerWin.show();
+    });
+    ipc.on('workerError', (event, message) => {
+        console.error("workerError!", JSON.parse(message));
+    });
+    ipc.on('workerWorking', (event, message) => {
+        data = JSON.parse(message)
+        if(data==true){
+            console.log("worker working... (duh!)");
+        }
+        else{
+            console.log("worker finished working !");
+        }
+    });
+    workerWin.webContents.on('dom-ready', function () {
+        workerWinReady = true;
+        //
+        newJob("jobNewSound", "messageZbra!");
+    });
+    
+    /*************************/
+    /* Importing audio files */
+
+
     /************************/
     /*** Show the app div ***/
     document.body.classList.add('loaded');
+
 
 });
 

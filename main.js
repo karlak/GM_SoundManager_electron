@@ -85,7 +85,7 @@ function createWindow() {
 
     }
     var checkWindowLeaveTimer = setInterval(checkWindowLeaveEvent, 50);
-
+    win.show();
     win.on('closed', () => {
         clearInterval(checkWindowLeaveTimer);
         win = null;
@@ -101,6 +101,9 @@ function createWindow() {
 
 }
 
+// electron.app.on('browser-window-created',function(e,window) {
+//     window.setMenu(null);
+// });
 
 app.on('ready', () => {
     screen = electron.screen;
