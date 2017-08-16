@@ -44,12 +44,21 @@
                     <x-label>File</x-label>
                     <x-menu>
                         <x-menuitem>
-                            <x-label>New</x-label>
-                            <x-shortcut value="Control+N"></x-shortcut>
+                            <x-label>Import</x-label>
+                            <x-menu>
+                                <x-menuitem id="importSound">
+                                    <x-label>Sound</x-label>
+                                </x-menuitem>
+                                <x-menuitem id="importMusic">
+                                    <x-label>Music</x-label>
+                                </x-menuitem>
+                                <x-menuitem id="importLoopingMusic">
+                                    <x-label>Looping Music</x-label>
+                                </x-menuitem>
+                            </x-menu>
                         </x-menuitem>
                         <x-menuitem>
                             <x-label>Open…</x-label>
-                            <x-shortcut value="Control+O"></x-shortcut>
                         </x-menuitem>
                         <hr>
                         <x-menuitem>
@@ -59,37 +68,6 @@
                         <x-menuitem>
                             <x-label>Save as…</x-label>
                             <x-shortcut value="Control+Shift+S"></x-shortcut>
-                        </x-menuitem>
-                    </x-menu>
-                </x-menuitem>
-                <x-menuitem>
-                    <x-label>Edit</x-label>
-                    <x-menu>
-                        <x-menuitem>
-                            <x-icon name="undo"></x-icon>
-                            <x-label>Undo</x-label>
-                            <x-shortcut value="Control+Z"></x-shortcut>
-                        </x-menuitem>
-                        <x-menuitem disabled>
-                            <x-icon name="redo"></x-icon>
-                            <x-label>Redo</x-label>
-                            <x-shortcut value="Control+Shift+Z"></x-shortcut>
-                        </x-menuitem>
-                        <hr>
-                        <x-menuitem>
-                            <x-icon name="content-cut"></x-icon>
-                            <x-label>Cut</x-label>
-                            <x-shortcut value="Control+X"></x-shortcut>
-                        </x-menuitem>
-                        <x-menuitem>
-                            <x-icon name="content-copy"></x-icon>
-                            <x-label>Copy</x-label>
-                            <x-shortcut value="Control+C"></x-shortcut>
-                        </x-menuitem>
-                        <x-menuitem>
-                            <x-icon name="content-paste"></x-icon>
-                            <x-label>Paste</x-label>
-                            <x-shortcut value="Control+V"></x-shortcut>
                         </x-menuitem>
                     </x-menu>
                 </x-menuitem>
@@ -121,31 +99,31 @@
                         <x-icon name="cancel" id="searchCancel" onclick="document.getElementById('searchBar').value='';"></x-icon>
                     </x-input>
                     <div id="tree-container">
-                    <x-dialog id="mydialog"></x-dialog>
+                        <x-dialog id="mydialog"></x-dialog>
                         <div id="tree" class="noFocus fancytree-connectors">
-                        <x-contextmenu manual id="treeViewContext">
-                        <x-menu>
-                            <x-menuitem name="rename">
-                                <x-icon name="edit"></x-icon>
-                                <x-label>Rename</x-label>
-                            </x-menuitem>
-                            <x-menuitem name="delete">
-                                <x-icon name="delete"></x-icon>
-                                <x-label>Delete</x-label>
-                            </x-menuitem>
-                            <hr>
-                            <x-menuitem name="newFolder">
-                                <x-icon name="create-new-folder"></x-icon>
-                                <x-label>New Folder</x-label>
-                            </x-menuitem>
-                        </x-menu>
-                    </x-contextmenu>
+                            <x-contextmenu manual id="treeViewContext">
+                                <x-menu>
+                                    <x-menuitem name="rename">
+                                        <x-icon name="edit"></x-icon>
+                                        <x-label>Rename</x-label>
+                                    </x-menuitem>
+                                    <x-menuitem name="delete">
+                                        <x-icon name="delete"></x-icon>
+                                        <x-label>Delete</x-label>
+                                    </x-menuitem>
+                                    <hr>
+                                    <x-menuitem name="newFolder">
+                                        <x-icon name="create-new-folder"></x-icon>
+                                        <x-label>New Folder</x-label>
+                                    </x-menuitem>
+                                </x-menu>
+                            </x-contextmenu>
                         </div>
-
                     </div>
                 </div>
                 <div id="right-panel" class="panel">
-                    RIGHT <x-contextmenu id="mycontext2">
+                    RIGHT
+                    <x-contextmenu id="mycontext2">
                         <x-menu>
                             <x-menuitem>
                                 <x-label>22222</x-label>
@@ -171,7 +149,6 @@
                     </x-contextmenu>
                     <x-progressbar value="0.5"></x-progressbar>
                     <x-button id="myButton">Hello my beautiful world !</x-button>
-                    
                 </div>
             </div>
         </div>

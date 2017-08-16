@@ -683,26 +683,45 @@ document.addEventListener("DOMContentLoaded", () => {
     $jquery("#showWorker").click(()=>{
         workerWin.show();
     });
-    ipc.on('workerError', (event, message) => {
-        console.error("workerError!", JSON.parse(message));
-    });
-    ipc.on('workerWorking', (event, message) => {
-        data = JSON.parse(message)
-        if(data==true){
-            console.log("worker working... (duh!)");
-        }
-        else{
-            console.log("worker finished working !");
+    ipc.on('worker_msg', (event, message) => {
+        var message = JSON.parse(message);
+        switch (message.type) {
+            case 'workerError':
+                console.error("workerError!", message.data);
+                break;
+            case 'workerWorking':
+                if(message.data==true){
+                    console.log("worker working... (duh!)");
+                }
+                else{
+                    console.log("worker finished working !");
+                }
+                break;
         }
     });
     workerWin.webContents.on('dom-ready', function () {
         workerWinReady = true;
         //
-        newJob("jobNewSound", "messageZbra!");
     });
     
     /*************************/
     /* Importing audio files */
+
+    $jquery("#importSound").click((event)=>{
+        var options = {
+            title: "Import sound...",
+            filters: [
+                {name: 'Audio files', extensions: ['ogg', 'mp3']},
+            ],
+            properties: ["openFile", "multiSelections"],
+        }
+        dialog.showOpenDialog(win, options, (filePaths)=>{
+            // console.log(filePaths);
+            for (var i = 0; i < filePaths.length; i++) {
+                newJob("jobNewSound", filePaths[i]);
+            }
+        });
+    });
 
 
     /************************/

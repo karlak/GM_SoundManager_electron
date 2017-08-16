@@ -1,9 +1,18 @@
+const path = require('path')
+const mkdirp = require('mkdirp');
 const electron = require('electron');
 const ipc = electron.ipcRenderer;
 const remote = electron.remote;
-// const app = remote.app;
+const app = remote.app;
 const win = remote.getCurrentWindow();
 const parentWin = win.getParentWindow();
+const path_sounds = path.join(app.getPath("userData"), 'audioData', 'sounds')
+const path_musics = path.join(app.getPath("userData"), 'audioData', 'musics')
+const path_loops  = path.join(app.getPath("userData"), 'audioData', 'loops')
+mkdirp(path_sounds);
+mkdirp(path_musics);
+mkdirp(path_loops);
+console.log(path_loops);
 // const dialog = remote.dialog;
 // const menu = remote.Menu;
 
@@ -32,8 +41,8 @@ ipc.on('newJob', (event, message) => {
     }
 })
 
-function sendParent(channel, data) {
-    parentWin.webContents.send(channel, JSON.stringify(data));
+function sendParent(type, data) {
+    parentWin.webContents.send("worker_msg", JSON.stringify({type: type, data: data}));
 }
 
 function doNextJobs() {
@@ -50,10 +59,17 @@ function doNextJobs() {
 	            break;
 	        default:
 	            console.error("Job unknown !");
-	            sendParent("workerError", "Tried to start an unknown job !");
+	            sendParent("workerError", "Tried to start an unknown job ! ["+job.type+"]");
 	    }
 	}
 	sendParent("workerWorking", false);
 }
 
 document.addEventListener("DOMContentLoaded", () => {});
+
+
+// Debug Functions
+function sleepFor( sleepDuration ){
+    var now = new Date().getTime();
+    while(new Date().getTime() < now + sleepDuration){ /* do nothing */ } 
+}
