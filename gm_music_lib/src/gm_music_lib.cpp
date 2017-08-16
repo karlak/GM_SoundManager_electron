@@ -408,11 +408,11 @@ NAN_METHOD(GM_Music_SeekFrame){
 // void SoundManager_Music_seekFrame(int music_id, unsigned long long frame);
 
 NAN_MODULE_INIT(Init) {
-    Export(target, "add", Add);
-    Export(target, "initialize", GM_Initialize);
-    Export(target, "terminate", GM_Terminate);
-    Export(target, "getDevicesInfo", GM_GetDevicesInfo);
-    Export(target, "openStream",             GM_OpenStream);
+    // Export(target, "add", Add);
+    Export(target, "initialize",                    GM_Initialize);
+    Export(target, "terminate",                     GM_Terminate);
+    Export(target, "getDevicesInfo",                GM_GetDevicesInfo);
+    Export(target, "openStream",                    GM_OpenStream);
     Export(target, "openDefaultStream",             GM_OpenDefaultStream);
     Export(target, "closeStream",                   GM_CloseStream);
     Export(target, "getGlobalGain",                 GM_GetGlobalGain);

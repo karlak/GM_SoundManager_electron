@@ -593,6 +593,25 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
 
+    /**********************/
+    /*     LoopFinder     */
+
+    var spawn = require('child_process').spawn;
+    function loopFinder(){
+        var child = spawn('loopFinder.exe', 
+            ['Yuki Kajiura - I talk to the rain.ogg','./'],
+            {cwd: './include/loopfinder/'}
+        );
+
+        child.stdout.on( 'data', data => {
+            console.log( `stdout: ${data}` );
+        });
+
+        // or if you want to send output elsewhere
+        // child.stdout.pipe(dest);
+    }
+    // loopFinder();
+
     // $("#tree").fancytree("getTree").filterNodes("title", { autoExpand: false, leavesOnly: true });
     // $("#tree").fancytree("getTree").filterBranches("title");
     /************************/

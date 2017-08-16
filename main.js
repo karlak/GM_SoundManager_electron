@@ -7,6 +7,8 @@ const path = require('path')
 const url = require('url')
 const windowStateKeeper = require('electron-window-state');
 gm_music = require('./gm_music_lib/bin/win32-x64-53/gm_music_lib.node');
+gm_music.initialize();
+gm_music.openDefaultStream();
 
 let win
 
@@ -104,7 +106,11 @@ app.on('ready', () => {
     screen = electron.screen;
     createWindow();
 });
-app.on('window-all-closed', app.quit)
+app.on('window-all-closed', () => {
+    gm_music.closeStream();
+    gm_music.terminate();
+    app.quit()
+})
 app.on('activate', () => {})
 
 const ipc = require('electron').ipcMain
