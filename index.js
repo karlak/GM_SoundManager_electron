@@ -4,9 +4,10 @@ const remote = electron.remote;
 const app = remote.app;
 const win = remote.getCurrentWindow();
 const dialog = remote.dialog;
+var rootNode;
 // const menu = remote.Menu;
 
-const Datastore = remote.require('./include/nedb')
+// const Datastore = remote.require('./include/nedb')
 const path = require('path');
 var db;
 let assistWin;
@@ -121,18 +122,8 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     /************************/
     /********Database********/
-    let db_filename = path.join(app.getPath('userData'), 'something.db');
-    db = new Datastore({
-        filename: db_filename,
-        autoload: true,
-        compareStrings: "localeCompare",
-    });
-    //db.insert({hello:'world!'});
-    // db.persistence.compactDatafile();
-    // db.find({}, function (err, docs) {
-    //     console.log(docs);
-    // });
-
+    db = remote.getGlobal("db");
+    
 
     /************************/
     /********TreeView********/
@@ -686,22 +677,24 @@ document.addEventListener("DOMContentLoaded", () => {
     ipc.on('worker_msg', (event, message) => {
         var message = JSON.parse(message);
         switch (message.type) {
-            case 'workerError':
+            case 'error':
                 console.error("workerError!", message.data);
                 break;
-            case 'workerWorking':
-                if(message.data==true){
-                    console.log("worker working... (duh!)");
-                }
-                else{
-                    console.log("worker finished working !");
-                }
+            case '_jobNewSound':
+                rootNode.addNode({title: message.data.title,
+                    folder: false,
+                    key: message.data.key,
+                    lazy: false,
+                    icon: 'sound',
+                });
+                break;
+            case 'working':
+                console.log("worker working...", message.data);
                 break;
         }
     });
     workerWin.webContents.on('dom-ready', function () {
         workerWinReady = true;
-        //
     });
     
     /*************************/
@@ -716,6 +709,8 @@ document.addEventListener("DOMContentLoaded", () => {
             properties: ["openFile", "multiSelections"],
         }
         dialog.showOpenDialog(win, options, (filePaths)=>{
+            if(filePaths==null)
+                return;
             // console.log(filePaths);
             for (var i = 0; i < filePaths.length; i++) {
                 newJob("jobNewSound", filePaths[i]);

@@ -12,6 +12,18 @@ gm_music.openDefaultStream();
 
 let win
 
+
+/************************/
+/********Database********/
+const Datastore = require('./include/nedb')
+let db_filename = path.join(app.getPath('userData'), 'something.db');
+db = new Datastore({
+    filename: db_filename,
+    autoload: true,
+    compareStrings: "localeCompare",
+});
+/***********************/
+
 function createWindow() {
     let mainWindowState = windowStateKeeper({
         defaultWidth: 800,

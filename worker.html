@@ -3,10 +3,23 @@
 
 <head>
     <meta charset="UTF-8">
+    <script>
+    if (typeof module === 'object') {
+        window.module = module;
+        module = undefined;
+    }
+    </script>
+    <script type="text/javascript" src="include/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript">
+    var $jquery = $.noConflict(true);
+    </script>
+    <script>
+    if (window.module) module = window.module;
+    </script>
 </head>
 
 <body>
-    WORKERdsqd
+    WORKER
     <script type="text/javascript" src="worker.js"></script>
 </body>
 
