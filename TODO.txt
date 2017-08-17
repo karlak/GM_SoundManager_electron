@@ -12,6 +12,8 @@ Import of the music file to the database:
 
 Global keyboard shortcut that show a command-window like sublimetext, even if the app is minimized ?
 
+Portable version
+
 Librosa turns out to be very slow to do what I want, maybe translate the loop detection algorithm in essentia/yaafe ?
 	- http://essentia.upf.edu/documentation/
 	- http://yaafe.sourceforge.net/manual.html

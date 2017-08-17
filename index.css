@@ -1,4 +1,13 @@
-:root {}
+:root {
+    --input-margin-right: 22px;
+    --window-border-bottom: 5px;
+    --window-border-bottom-max: 1px;
+    --window-border: 1px 5px var(--window-border-bottom) 5px;
+    --window-border-max: 1px 2px var(--window-border-bottom-max) 2px;
+    --window-margin: 1px 4px var(--window-border-bottom) 4px;
+    --window-margin-max: 1px 1px var(--window-border-bottom-max) 1px;
+    --title-bar-color: #009688;
+}
 
 body {
     overflow: hidden;
@@ -13,17 +22,26 @@ body {
     z-index: 110;
 
     border-style: solid;
-    border-width: 1px;
-    border-color: #6785A4;
+    border-width: var(--window-border);
+    border-color: var(--title-bar-color);
+    /*border-color: #6785A4;*/
 
     pointer-events: none;
+}
+#border.maximized {
+    border-width: var(--window-border-max);
 }
 
 #window {
     display: flex;
     flex-direction: column;
     margin: unset;
-    height: 100%;
+    margin: var(--window-margin);
+    height: calc(100% - var(--window-border-bottom));
+}
+#window.maximized {
+    margin: var(--window-margin-max);
+    height: calc(100% - var(--window-border-bottom-max));
 }
 
 #cpuusage {
@@ -81,10 +99,10 @@ body {
     cursor: default;
     height: 33px;
     min-height: 33px;
-    background-color: #8FB9E6;
-    border-bottom-style: solid;
+    background-color: var(--title-bar-color);
+    /*border-bottom-style: solid;
     border-bottom-width: 1px;
-    border-bottom-color: #6785A4;
+    border-bottom-color: #6785A4;*/
     z-index: 101;
 }
 
@@ -94,7 +112,7 @@ body {
     right: 5px;
     top: 5px;
     height: 27px;
-    background-color: #8FB9E6;
+    background-color: var(--title-bar-color);
     -webkit-app-region: drag;
 }
 
@@ -107,7 +125,8 @@ body {
 
 #menubar {
     margin-top: -1px;
-    margin-bottom: -1px;
+    /*margin-bottom: -1px;*/
+    display: none;
 }
 
 @keyframes body_fadein {
@@ -133,6 +152,7 @@ body.loaded {
 }
 
 #app {
+    margin-top: -1px;
     flex-grow: 1;
     -webkit-user-select: none;
     display: flex;

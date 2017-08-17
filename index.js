@@ -52,15 +52,23 @@ function update_cpuusage(argument) {
 ///////////////////////////////////////
 
 document.addEventListener("DOMContentLoaded", () => {
-    win.show();
-    check_position();
 
+    win.show();
     ipc.on('maximize', (event, message) => {
         document.getElementById("titlebar").classList.add('maximized');
+        document.getElementById("border").classList.add('maximized');
+        document.getElementById("window").classList.add('maximized');
     })
     ipc.on('unmaximize', (event, message) => {
         document.getElementById("titlebar").classList.remove('maximized');
+        document.getElementById("border").classList.remove('maximized');
+        document.getElementById("window").classList.remove('maximized');
     })
+    if(win.isMaximized()){
+        document.getElementById("titlebar").classList.add('maximized');
+        document.getElementById("border").classList.add('maximized');
+        document.getElementById("window").classList.add('maximized');
+    }
     // var t = setInterval(update_cpuusage, 1000);
 
     /***********************/
