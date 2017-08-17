@@ -103,6 +103,21 @@
                         <div id="tree" class="noFocus fancytree-connectors">
                             <x-contextmenu manual id="treeViewContext">
                                 <x-menu>
+                                    <x-menuitem>
+                                        <x-icon name="edit"></x-icon>
+                                        <x-label>Add</x-label>
+                                        <x-menu>
+                                            <x-menuitem name="addSound">
+                                                <x-label>Sound</x-label>
+                                            </x-menuitem>
+                                            <x-menuitem name="addMusic">
+                                                <x-label>Music</x-label>
+                                            </x-menuitem>
+                                            <x-menuitem name="addLoopingMusic">
+                                                <x-label>Looping Music</x-label>
+                                            </x-menuitem>
+                                        </x-menu>
+                                    </x-menuitem>
                                     <x-menuitem name="rename">
                                         <x-icon name="edit"></x-icon>
                                         <x-label>Rename</x-label>

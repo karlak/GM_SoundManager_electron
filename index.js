@@ -18,13 +18,6 @@ document.body.onmousedown = e => {
     if (e.button === 1) return false;
 };
 
-function check_position() {
-    var pos = win.getPosition();
-    if (pos[0] == -4000 && pos[1] == -4000) {
-        win.center();
-    }
-}
-
 function minimize() {
     win.minimize();
 }
@@ -32,7 +25,6 @@ function minimize() {
 function maximize() {
     if (win.isMaximized()) {
         win.unmaximize();
-        check_position();
     } else {
         win.maximize();
     }
@@ -109,29 +101,29 @@ document.addEventListener("DOMContentLoaded", () => {
         if (event.key == 'Escape')
             document.getElementById("searchBar").value = '';
     });
-    
+
     var delayTimer;
+
     function doSearch(text) {
         clearTimeout(delayTimer);
         if (text.length < 3) {
             delayTimer = setTimeout(function() {
                 $jquery("#tree").fancytree("getTree").clearFilter();
             }, 300);
-        }
-        else{
+        } else {
             delayTimer = setTimeout(function() {
                 $jquery("#tree").fancytree("getTree").filterNodes(text);
             }, 300);
         }
     }
 
-    $jquery("#searchBar").on('input',function(e){
+    $jquery("#searchBar").on('input', function(e) {
         doSearch($jquery("#searchBar").val());
     });
     /************************/
     /********Database********/
     db = remote.getGlobal("db");
-    
+
 
     /************************/
     /********TreeView********/
@@ -153,7 +145,7 @@ document.addEventListener("DOMContentLoaded", () => {
         data.result = dfd.promise();
 
         // We find children of that 'key' node
-        var cursor = db.find({parent: parent_key, deleted: false}).sort({is_folder: -1, title: 1});
+        var cursor = db.find({ parent: parent_key, deleted: false }).sort({ is_folder: -1, title: 1 });
         cursor.exec(function(err, docs) {
             // transformation of the data to fancytree format
             var loaded = docs.map((doc) => {
@@ -163,7 +155,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     key: doc._id,
                     lazy: doc.is_folder
                 };
-                if(doc.type!="none"){
+                if (doc.type != "none") {
                     ret.icon = doc.type;
                 }
                 return ret;
@@ -173,7 +165,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 return loaded_element.folder; // just check the folders
             }).map(function(loaded_element) {
                 var dfd2 = new $jquery.Deferred();
-                db.findOne({parent: loaded_element.key, deleted: false}, function(err, doc) {
+                db.findOne({ parent: loaded_element.key, deleted: false }, function(err, doc) {
                     if (doc === null) {
                         loaded_element.lazy = false;
                     }
@@ -187,68 +179,89 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         });
     }
-    
+
     // ContextMenu
     var myTreeContextMenuFolder = $jquery("#treeViewContext");
+
     function myTreeContext(event, data) {
         var node = data.node;
-        if(data.targetType==='title' || data.targetType==='icon'){
-            if(node != null){
+        if (data.targetType === 'title' || data.targetType === 'icon') {
+            if (node != null) {
                 node.setActive(true);
-                if(myTreeContextMenuFolder.length > 0){
+                if (myTreeContextMenuFolder.length > 0) {
                     myTreeContextMenuFolder.data('contextData', data);
 
                     myTreeContextMenuFolder.find("x-menuitem[name='delete']")[0].disabled = false;
                     myTreeContextMenuFolder.find("x-menuitem[name='rename']")[0].disabled = false;
                     myTreeContextMenuFolder.find("x-menuitem[name='newFolder']")[0].disabled = false;
-                    if(node.folder){
-                        if(node.key == "root"){
+                    myTreeContextMenuFolder.find("x-menuitem[name='addSound']")[0].disabled = false;
+                    if (node.folder) {
+                        if (node.key == "root") {
                             myTreeContextMenuFolder.find("x-menuitem[name='delete']")[0].disabled = true;
                             myTreeContextMenuFolder.find("x-menuitem[name='rename']")[0].disabled = true;
                         }
-                    }
-                    else{
+                    } else {
                         myTreeContextMenuFolder.find("x-menuitem[name='newFolder']")[0].disabled = true;
+                        myTreeContextMenuFolder.find("x-menuitem[name='addSound']")[0].disabled = true;
                     }
                     myTreeContextMenuFolder[0].open(event.clientX, event.clientY, node.span);
                 }
             }
         }
     }
-    myTreeContextMenuFolder.on("click", "x-menuitem[name='rename']", (event)=>{
+    myTreeContextMenuFolder.on("click", "x-menuitem[name='rename']", (event) => {
         var data = $jquery(event.delegateTarget).data('contextData');
         setTimeout(function() { data.node.editStart(); }, 30);
     });
-    myTreeContextMenuFolder.on("click", "x-menuitem[name='newFolder']", (event)=>{
+    myTreeContextMenuFolder.on("click", "x-menuitem[name='newFolder']", (event) => {
         var data = $jquery(event.delegateTarget).data('contextData');
-        setTimeout(function() { data.node.editCreateNode("child", {title: "",folder: true}); }, 30);
-        
+        setTimeout(function() { data.node.editCreateNode("child", { title: "", folder: true }); }, 30);
+
     });
-    myTreeContextMenuFolder.on("click", "x-menuitem[name='delete']", (event)=>{
+    myTreeContextMenuFolder.on("click", "x-menuitem[name='delete']", (event) => {
         var data = $jquery(event.delegateTarget).data('contextData');
         node = data.node;
-        var message = node.folder ? 
-                "Are you sure you want to delete this folder and all its content ?\n" :
-                "Are you sure you want to delete this entry ?\n";
+        var message = node.folder ?
+            "Are you sure you want to delete this folder and all its content ?\n" :
+            "Are you sure you want to delete this entry ?\n";
         var res = dialog.showMessageBox(win, {
             message: message,
             buttons: ["Yes", "No"],
             defaultId: 0,
             icon: './include/imgs/delete-file_40456.png'
         });
-        if(res == 0){
+        if (res == 0) {
             // Update the doc to set the deleted flag to true
             $jquery(node.span).addClass("pending");
-            db.update({_id: node.key}, {$set: {deleted: true}}, {}, (err, numAffected)=>{
-                if(err != null){
+            db.update({ _id: node.key }, { $set: { deleted: true } }, {}, (err, numAffected) => {
+                if (err != null) {
                     console.error(err);
-                }
-                else{
+                } else {
                     node.remove();
                 }
                 $jquery(node.span).removeClass("pending");
             });
         }
+    });
+    myTreeContextMenuFolder.on("click", "x-menuitem[name='addSound']", (event) => {
+        var data = $jquery(event.delegateTarget).data('contextData');
+        // setTimeout(function() { data.node.editCreateNode("child", { title: "", folder: true }); }, 30);
+
+        var options = {
+            title: "Import sound...",
+            filters: [
+                { name: 'Audio files', extensions: ['ogg', 'mp3', 'flac'] },
+            ],
+            properties: ["openFile", "multiSelections"],
+        }
+        dialog.showOpenDialog(win, options, (filePaths) => {
+            if (filePaths == null)
+                return;
+
+            for (var i = 0; i < filePaths.length; i++) {
+                newJob("jobNewSound", {path: filePaths[i], parent_key: data.node.key});
+            }
+        });
     });
 
 
@@ -282,18 +295,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
         edit: {
-            beforeEdit: function(event, data){
+            beforeEdit: function(event, data) {
                 // `data.node` is about to be edited.
                 // Return false to prevent this.
                 return (data.node.key != "root")
             },
-            edit: function(event, data){
+            edit: function(event, data) {
                 // `data.node` switched into edit mode.
                 // The <input> element was created (available as jQuery object `data.input`) 
                 // and contains the original `data.node.title`.
                 data.input.select();
             },
-            beforeClose: function(event, data){
+            beforeClose: function(event, data) {
                 // Editing is about to end (either cancel or save).
                 // Additional information is available:
                 // - `data.dirty`:    true if text was modified by user.
@@ -309,7 +322,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 // Return false to prevent this (keep the editor open), for example when 
                 // validations fail.
             },
-            save: function(event, data){
+            save: function(event, data) {
                 // Only called when the text was modified and the user pressed enter or
                 // the <input> lost focus.
                 // Additional information is available (see `beforeClose`).
@@ -320,19 +333,18 @@ document.addEventListener("DOMContentLoaded", () => {
                 // to the server (and handle potential errors when the asynchronous request 
                 // returns).
                 var node = data.node;
-                if(data.isNew){
-                    db.insert({title: data.input.val(), is_folder: true, parent: node.parent.key, deleted: false}, function (err, newDocs) {
-                        if(err != null){
+                if (data.isNew) {
+                    db.insert({ title: data.input.val(), is_folder: true, parent: node.parent.key, deleted: false }, function(err, newDocs) {
+                        if (err != null) {
                             console.error(err);
                             node.remove();
                         }
                         node.key = newDocs._id;
                         $jquery(node.span).removeClass("pending");
                     });
-                }
-                else{
-                    db.update({_id: node.key}, {$set: {title: data.input.val()}}, {}, (err, numAffected)=>{
-                        if(err != null){
+                } else {
+                    db.update({ _id: node.key }, { $set: { title: data.input.val() } }, {}, (err, numAffected) => {
+                        if (err != null) {
                             console.error(err);
                             node.setTitle(data.orgTitle);
                         }
@@ -341,10 +353,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
                 return true;
             },
-            close: function(event, data){
+            close: function(event, data) {
                 // Editor was removed.
                 // Additional information is available (see `beforeClose`).
-                if( data.save ) {
+                if (data.save) {
                     $jquery(data.node.span).addClass("pending");
                 }
             }
@@ -409,11 +421,11 @@ document.addEventListener("DOMContentLoaded", () => {
             dragDrop: (targetNode, data) => {
                 data.otherNode.moveTo(targetNode, data.hitMode).then(() => {
                     //
-                    db.update({_id: data.otherNode.key}, {$set: {parent: targetNode.key}}, {}, ()=>{
+                    db.update({ _id: data.otherNode.key }, { $set: { parent: targetNode.key } }, {}, () => {
                         targetNode.setExpanded(true);
-                        
+
                         targetNode.sortChildren((a, b) => {
-                            if(a.folder!=b.folder){
+                            if (a.folder != b.folder) {
                                 return a.folder ? -1 : 1;
                             }
                             var x = a.title.toLowerCase(),
@@ -422,7 +434,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         });
                         doSearch($jquery("#searchBar").val());
 
-                        
+
                     });
                 });
             },
@@ -448,14 +460,14 @@ document.addEventListener("DOMContentLoaded", () => {
     /*************************/
     /**** Filter the Tree ****/
     var KeyNoData = "__not_found__",
-    escapeHtml = $jquery.ui.fancytree.escapeHtml;
+        escapeHtml = $jquery.ui.fancytree.escapeHtml;
 
-    function _escapeRegex(str){
+    function _escapeRegex(str) {
         return (str + "").replace(/([.?*+\^\$\[\]\\(){}|-])/g, "\\$1");
     }
     // We override the filter function of the fancytree lib.
-    $jquery.ui.fancytree._FancytreeClass.prototype._applyFilterImpl = function(filter, branchMode, _opts){
-        if(typeof filter !== "string"){
+    $jquery.ui.fancytree._FancytreeClass.prototype._applyFilterImpl = function(filter, branchMode, _opts) {
+        if (typeof filter !== "string") {
             console.error('Argument type not handled ! String expected, got', typeof filter);
             return;
         }
@@ -464,22 +476,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
         branchMode = false;
         var match, statusNode, re, reHighlight,
-        count = 0,
-        treeOpts = this.options,
-        escapeTitles = treeOpts.escapeTitles,
-        prevAutoCollapse = treeOpts.autoCollapse,
-        opts = $jquery.extend({}, treeOpts.filter, _opts),
-        hideMode = opts.mode === "hide",
-        leavesOnly = !!opts.leavesOnly && !branchMode;
+            count = 0,
+            treeOpts = this.options,
+            escapeTitles = treeOpts.escapeTitles,
+            prevAutoCollapse = treeOpts.autoCollapse,
+            opts = $jquery.extend({}, treeOpts.filter, _opts),
+            hideMode = opts.mode === "hide",
+            leavesOnly = !!opts.leavesOnly && !branchMode;
 
         var that = this;
         var nodePrototype = Object.getPrototypeOf(that.widget.getNodeByKey("root"));
         match = _escapeRegex(filter); // make sure a '.' is treated literally
-        
 
-        db.find({is_folder: true, deleted: false}, function(err, docs) {
+
+        db.find({ is_folder: true, deleted: false }, function(err, docs) {
             // 1. We first get the folders from the DB to link unloaded files to tree nodes
-            docs = docs.map((doc)=>{
+            docs = docs.map((doc) => {
                 var _doc = JSON.parse(JSON.stringify(doc))
                 _doc.parent_key = doc.parent;
                 _doc.parent = null;
@@ -491,55 +503,55 @@ document.addEventListener("DOMContentLoaded", () => {
             $jquery.each(docs, function(i, c) {
                 nodeMap[c._id] = c;
             });
-            
+
             // 1.2. We populate the docs parent field
             for (var i = 0; i < docs.length; i++) {
                 // docs[i].obj = that.widget.getNodeByKey(docs[i]._id);
                 docs[i].parent = that.widget.getNodeByKey(docs[i].parent_key)
-                if(docs[i].parent == null){
+                if (docs[i].parent == null) {
                     docs[i].parent = nodeMap[docs[i].parent_key];
                 }
             }
             lookup_node_table = docs;
 
             // 2. We get actual data from the DB
-            db.find({title: {$regex: match}, deleted: false}, function(err, docs) {
+            db.find({ title: { $regex: match, $options: "i" }, deleted: false }, function(err, docs) {
                 resetCurrentFilter();
 
                 for (var i = 0; i < docs.length; i++) {
                     var node = that.widget.getNodeByKey(docs[i]._id);
-                    if(node != null) {
+                    if (node != null) {
                         nodeMatched(node, true);
                         continue;
                     }
                     node = getFirstValidParentNode(docs[i]);
-                    if(node != null)
+                    if (node != null)
                         nodeMatched(node);
                 }
-                
+
                 renderCurrentFilter();
                 // @todo (return the number of found elements in a promise?)
             });
 
             function getFirstValidParentNode(node) {
                 var parent = that.widget.getNodeByKey(node.parent);
-                if(parent != null) return parent;
+                if (parent != null) return parent;
                 parent = nodeMap[node.parent];
-                while(parent != null && Object.getPrototypeOf(parent) !== nodePrototype){
+                while (parent != null && Object.getPrototypeOf(parent) !== nodePrototype) {
                     parent = parent.parent;
                 }
                 return parent;
             }
 
-            function nodeMatched(node, direct = false){
+            function nodeMatched(node, direct = false) {
                 count++;
-                if(direct) node.match = true;
+                if (direct) node.match = true;
                 else node.subMatchCount += 1;
-                node.visitParents(function(p){
+                node.visitParents(function(p) {
                     p.subMatchCount += 1;
                     // Expand match (unless this is no real match, but only a node in a matched branch)
-                    if( opts.autoExpand && !matchedByBranch && !p.expanded ) {
-                        p.setExpanded(true, {noAnimation: true, noEvents: true, scrollIntoView: false});
+                    if (opts.autoExpand && !matchedByBranch && !p.expanded) {
+                        p.setExpanded(true, { noAnimation: true, noEvents: true, scrollIntoView: false });
                         p._filterAutoExpanded = true;
                     }
                 });
@@ -548,34 +560,35 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         // Function def...
-        function resetCurrentFilter(){
+        function resetCurrentFilter() {
             that.$div.addClass("fancytree-ext-filter");
-            if( hideMode ){
+            if (hideMode) {
                 that.$div.addClass("fancytree-ext-filter-hide");
             } else {
                 that.$div.addClass("fancytree-ext-filter-dimm");
             }
             that.$div.toggleClass("fancytree-ext-filter-hide-expanders", !!opts.hideExpanders);
             // Reset current filter
-            that.visit(function(node){
+            that.visit(function(node) {
                 delete node.match;
                 delete node.titleWithHighlight;
                 node.subMatchCount = 0;
             });
             statusNode = that.getRootNode()._findDirectChild(KeyNoData);
-            if( statusNode ) {
+            if (statusNode) {
                 statusNode.remove();
             }
         }
-        function renderCurrentFilter(){
-            if( count === 0 && opts.nodata && hideMode ) {
+
+        function renderCurrentFilter() {
+            if (count === 0 && opts.nodata && hideMode) {
                 statusNode = opts.nodata;
-                if( $jquery.isFunction(statusNode) ) {
+                if ($jquery.isFunction(statusNode)) {
                     statusNode = statusNode();
                 }
-                if( statusNode === true ) {
+                if (statusNode === true) {
                     statusNode = {};
-                } else if( typeof statusNode === "string" ) {
+                } else if (typeof statusNode === "string") {
                     statusNode = { title: statusNode };
                 }
                 statusNode = $jquery.extend({
@@ -587,9 +600,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 that.getRootNode().addNode(statusNode).match = true;
             }
             // Redraw whole tree
-            that.render();    
+            that.render();
         }
-        
+
         return count;
     };
 
@@ -598,14 +611,12 @@ document.addEventListener("DOMContentLoaded", () => {
     /*     LoopFinder     */
 
     var spawn = require('child_process').spawn;
-    function loopFinder(){
-        var child = spawn('loopFinder.exe', 
-            ['Yuki Kajiura - I talk to the rain.ogg','./'],
-            {cwd: './include/loopfinder/'}
-        );
 
-        child.stdout.on( 'data', data => {
-            console.log( `stdout: ${data}` );
+    function loopFinder() {
+        var child = spawn('loopFinder.exe', ['Yuki Kajiura - I talk to the rain.ogg', './'], { cwd: './include/loopfinder/' });
+
+        child.stdout.on('data', data => {
+            console.log(`stdout: ${data}`);
         });
 
         // or if you want to send output elsewhere
@@ -617,7 +628,8 @@ document.addEventListener("DOMContentLoaded", () => {
     /*************************/
     /*   Import Assistant    */
     const url = require('url')
-    function createAssistantWindow(){
+
+    function createAssistantWindow() {
         assistWin = new remote.BrowserWindow({
             'parent': remote.getCurrentWindow(),
             'modal': true,
@@ -644,7 +656,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     /************************/
     /*        Worker        */
-    function createWorkerWindow(){
+    function createWorkerWindow() {
         workerWin = new remote.BrowserWindow({
             'parent': remote.getCurrentWindow(),
             'modal': false,
@@ -666,11 +678,11 @@ document.addEventListener("DOMContentLoaded", () => {
             slashes: true
         }));
     }
+
     function newJob(type, data) {
-        if(workerWinReady){
-            workerWin.webContents.send('newJob', JSON.stringify({type: type, data: data}));
-        }
-        else{
+        if (workerWinReady) {
+            workerWin.webContents.send('newJob', JSON.stringify({ type: type, data: data }));
+        } else {
             console.error("Tried to create a job before the worker being ready !")
         }
     }
@@ -679,7 +691,7 @@ document.addEventListener("DOMContentLoaded", () => {
         newJob("jobClose", "");
     }
     var workerWinReady = false;
-    $jquery("#showWorker").click(()=>{
+    $jquery("#showWorker").click(() => {
         workerWin.show();
     });
     ipc.on('worker_msg', (event, message) => {
@@ -689,7 +701,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 console.error("workerError!", message.data);
                 break;
             case '_jobNewSound':
-                rootNode.addNode({title: message.data.title,
+                var parent_node = $jquery("#tree").fancytree("getTree").getNodeByKey(message.data.parent_key);
+                if(parent_node==null || (parent_node.lazy && parent_node.children==null))
+                    return;
+                parent_node.addNode({
+                    title: message.data.title,
                     folder: false,
                     key: message.data.key,
                     lazy: false,
@@ -701,27 +717,27 @@ document.addEventListener("DOMContentLoaded", () => {
                 break;
         }
     });
-    workerWin.webContents.on('dom-ready', function () {
+    workerWin.webContents.on('dom-ready', function() {
         workerWinReady = true;
     });
-    
+
     /*************************/
     /* Importing audio files */
 
-    $jquery("#importSound").click((event)=>{
+    $jquery("#importSound").click((event) => {
         var options = {
             title: "Import sound...",
             filters: [
-                {name: 'Audio files', extensions: ['ogg', 'mp3']},
+                { name: 'Audio files', extensions: ['ogg', 'mp3'] },
             ],
             properties: ["openFile", "multiSelections"],
         }
-        dialog.showOpenDialog(win, options, (filePaths)=>{
-            if(filePaths==null)
+        dialog.showOpenDialog(win, options, (filePaths) => {
+            if (filePaths == null)
                 return;
             // console.log(filePaths);
             for (var i = 0; i < filePaths.length; i++) {
-                newJob("jobNewSound", filePaths[i]);
+                newJob("jobNewSound", {path: filePaths[i], parent_key: "root"});
             }
         });
     });
@@ -736,7 +752,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 // Debug Functions
-function sleepFor( sleepDuration ){
+function sleepFor(sleepDuration) {
     var now = new Date().getTime();
-    while(new Date().getTime() < now + sleepDuration){ /* do nothing */ } 
+    while (new Date().getTime() < now + sleepDuration) { /* do nothing */ }
 }

@@ -72,7 +72,7 @@ function doNextJobs(job) {
             dfdJob.resolve();
             break;
         case "jobNewSound":
-            console.log("JobNewSound job started!", job.data);
+            // console.log("JobNewSound job started!", job.data);
             jobNewSound(job.data, dfdJob);
             break;
         default:
@@ -84,19 +84,22 @@ function doNextJobs(job) {
     return dfdJob.promise();
 }
 
-function jobNewSound(input_path, dfd) {
+function jobNewSound(data, dfd) {
+	//{path: filePaths[i], parent_key: data.node.key}
+	input_path = data.path;
+	parent_key = data.parent_key;
     // Convert the file to the right type and copy the result in the right folder, with a generated unique name.
     // 1. Define the name
     // 1.1 Create an entry in the db which is labeled 'deleted' to get the id
     input_info = path.parse(input_path);
-    db.insert({ title: input_info.name, is_folder: false, parent: "root", deleted: true, type: "sound" }, function(err, newDocs) {
+    db.insert({ title: input_info.name, is_folder: false, parent: parent_key, deleted: true, type: "sound" }, function(err, newDocs) {
     	if(err!=null){
     		sendParent("error", "[" + input_path + "] Error while inserting an entry in the database !")
 			dfd.resolve();
     		return;
     	}
         var key = newDocs._id;
-        console.log("Converting the file...");
+        console.log("Converting the file...", input_info.name);
 
         //sox "Yuki Kajiura - I talk to the rain.ogg" -r 44100 -t ogg "ouuuut"
         var child = spawn('sox.exe', [input_path, '-r', '44100', '-t', 'ogg', path.join(path_sounds, key)], { cwd: './include/sox/' });
@@ -115,7 +118,7 @@ function jobNewSound(input_path, dfd) {
             	if(err!=null){
             		sendParent("error", "[" + input_path + "] Error while updating the database !")
             	}
-            	sendParent('_jobNewSound', {title: input_info.name, key: key});
+            	sendParent('_jobNewSound', {title: input_info.name, key: key, parent_key: parent_key});
 				dfd.resolve();
             });
         });
