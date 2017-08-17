@@ -53,9 +53,12 @@ ipc.on('newJob', (event, message) => {
     var rec = JSON.parse(message);
 	
     values.push(rec);
+    // if(values.length)
+    sendParent("working", values.length)
+
     dfdNext = dfdNext.then(function () {
     	var value = values.shift();
-    	return doNextJobs({ type: value.type, data: value.data });
+    	return doNextJobs({ type: value.type, data: value.data }).then(()=>{sendParent("working", values.length)});
     });
 })
 
@@ -80,7 +83,7 @@ function doNextJobs(job) {
             sendParent("error", "Tried to start an unknown job ! [" + job.type + "]");
             dfdJob.resolve();
     }
-    sendParent("working", values.length)
+    // sendParent("working", values.length)
     return dfdJob.promise();
 }
 

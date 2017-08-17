@@ -691,7 +691,7 @@ document.addEventListener("DOMContentLoaded", () => {
         newJob("jobClose", "");
     }
     var workerWinReady = false;
-    $jquery("#showWorker").click(() => {
+    $jquery("#workInfoImg").click(() => {
         workerWin.show();
     });
     ipc.on('worker_msg', (event, message) => {
@@ -714,6 +714,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 break;
             case 'working':
                 console.log("worker working...", message.data);
+                if(message.data>0){
+                    $jquery("#workInfoImg").addClass('active');
+                }
+                else{
+                    $jquery("#workInfoImg").removeClass('active');
+                }
                 break;
         }
     });
@@ -747,7 +753,9 @@ document.addEventListener("DOMContentLoaded", () => {
     /*** Show the app div ***/
     document.body.classList.add('loaded');
 
-
+    $jquery("#myButton").click(()=>{
+        $jquery("#workInfo").toggleClass('active');
+    });
 });
 
 

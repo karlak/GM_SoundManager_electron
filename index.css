@@ -32,6 +32,46 @@ body {
     border-width: var(--window-border-max);
 }
 
+#workInfo {
+
+    z-index: 109;
+    height: 80px;
+    width: 80px;
+    background-color: #009688;
+    position: absolute;
+    right: -51px;
+    bottom: -51px;
+
+    transform: scale(0);
+    border-radius: 30px;
+    transition: all .5s;
+}
+#workInfo.active {
+    transform: scale(1);
+    border-radius: 10px;
+}
+#workInfo img {
+    -webkit-user-drag: none;
+    -webkit-user-select: none;
+    
+    position: absolute;
+    left: 2px;
+    top: 2px;
+    cursor: pointer;
+}
+#workInfo img.active{
+    pointer-events: auto;
+    animation: rotate 6s linear infinite;
+}
+@keyframes rotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
 #window {
     display: flex;
     flex-direction: column;
