@@ -20,7 +20,7 @@ var db = remote.getGlobal("db");
 // const dialog = remote.dialog;
 // const menu = remote.Menu;
 
-win.webContents.openDevTools();
+// win.webContents.openDevTools();
 
 
 // Prevents the middle click scroll behavior
@@ -36,10 +36,35 @@ window.onbeforeunload = (e) => {
     }
 }
 
-function done(){
-	return $jquery.when();
+function addTableElem(_type, desc) {
+	var entryType = $jquery("<td name='type'/>");
+		entryType.text('['+_type+']');
+
+	var entryDesc = $jquery("<td name='desc'/>");
+		entryDesc.text(desc);
+
+	var entryResult = $jquery("<td name='res'/>");
+		entryResult.text("...");
+
+	var line = $jquery("<tr/>")
+		line.append(entryType);
+		line.append(entryDesc);
+		line.append(entryResult);
+
+    $jquery('#table').append(line);
+    return line;
 }
 
+function getJobDesc(message) {
+	switch (message.type) {
+        case "jobClose":
+			return "Close this window.";
+        case "jobNewSound":
+			return "Import the sound file '"+message.data.path+"'";
+        default:
+			return "@todo: add job description";
+    }
+}
 
 var dfd = $jquery.Deferred()  // Master deferred
 var dfdNext = dfd; // Next deferred in the chain
@@ -52,13 +77,25 @@ dfd.resolve();
 ipc.on('newJob', (event, message) => {
     var rec = JSON.parse(message);
 	
-    values.push(rec);
-    // if(values.length)
+    var tableLine = addTableElem(rec.type, getJobDesc(rec));
+    values.push([rec, tableLine]);
+    
     sendParent("working", values.length)
-
+	
     dfdNext = dfdNext.then(function () {
     	var value = values.shift();
-    	return doNextJobs({ type: value.type, data: value.data }).then(()=>{sendParent("working", values.length)});
+    	return doNextJobs({ type: value[0].type, data: value[0].data }).then((res)=>{
+    		sendParent("working", values.length)
+    		if (res.ok) {
+    			value[1].find("td[name='res']").text("ok");
+    			value[1].addClass("ok");
+    		}else{
+    			value[1].find("td[name='res']").text("err");
+    			var errLine = $jquery("<tr class='error' />");
+    			errLine.append($jquery("<td colspan='3' />").text(res.msg));
+    			value[1].after(errLine);
+    		}
+    	});
     });
 })
 
@@ -72,7 +109,7 @@ function doNextJobs(job) {
         case "jobClose":
             canClose = true;
             win.close();
-            dfdJob.resolve();
+            dfdJob.resolve({ok: true, msg: ""});
             break;
         case "jobNewSound":
             // console.log("JobNewSound job started!", job.data);
@@ -81,7 +118,7 @@ function doNextJobs(job) {
         default:
             console.error("Job unknown !");
             sendParent("error", "Tried to start an unknown job ! [" + job.type + "]");
-            dfdJob.resolve();
+            dfdJob.resolve({ok: false, msg: "Tried to run an unknown job ! [" + job.type + "]"});
     }
     // sendParent("working", values.length)
     return dfdJob.promise();
@@ -98,7 +135,7 @@ function jobNewSound(data, dfd) {
     db.insert({ title: input_info.name, is_folder: false, parent: parent_key, deleted: true, type: "sound" }, function(err, newDocs) {
     	if(err!=null){
     		sendParent("error", "[" + input_path + "] Error while inserting an entry in the database !")
-			dfd.resolve();
+			dfd.resolve({ok: false, msg: "Error while inserting an entry in the database"});
     		return;
     	}
         var key = newDocs._id;
@@ -113,7 +150,7 @@ function jobNewSound(data, dfd) {
                     console.log(`stderr: ${data}`);
                 });
                 sendParent("error", "[" + input_path + "] Error while converting file " + input_info.name + " !");
-				dfd.resolve();
+				dfd.resolve({ok: false, msg: "Error while converting file"});
                 return;
             }
             console.log("Converted !");
@@ -122,7 +159,7 @@ function jobNewSound(data, dfd) {
             		sendParent("error", "[" + input_path + "] Error while updating the database !")
             	}
             	sendParent('_jobNewSound', {title: input_info.name, key: key, parent_key: parent_key});
-				dfd.resolve();
+				dfd.resolve({ok: true, msg: ""});
             });
         });
     });

@@ -1,6 +1,5 @@
 Treeview:
   - When moving a file, the search is done again completely instead of just updating the counters
-  - ContextMenu option to import in any folder.
 
 Worker UI
   - Let the user cancel jobs.
