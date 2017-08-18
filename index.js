@@ -194,7 +194,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     myTreeContextMenuFolder.find("x-menuitem[name='delete']")[0].disabled = false;
                     myTreeContextMenuFolder.find("x-menuitem[name='rename']")[0].disabled = false;
                     myTreeContextMenuFolder.find("x-menuitem[name='newFolder']")[0].disabled = false;
-                    myTreeContextMenuFolder.find("x-menuitem[name='addSound']")[0].disabled = false;
+                    myTreeContextMenuFolder.find("x-menuitem[name='addMenu']")[0].disabled = false;
                     if (node.folder) {
                         if (node.key == "root") {
                             myTreeContextMenuFolder.find("x-menuitem[name='delete']")[0].disabled = true;
@@ -202,7 +202,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         }
                     } else {
                         myTreeContextMenuFolder.find("x-menuitem[name='newFolder']")[0].disabled = true;
-                        myTreeContextMenuFolder.find("x-menuitem[name='addSound']")[0].disabled = true;
+                        myTreeContextMenuFolder.find("x-menuitem[name='addMenu']")[0].disabled = true;
                     }
                     myTreeContextMenuFolder[0].open(event.clientX, event.clientY, node.span);
                 }
@@ -692,6 +692,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     var workerWinReady = false;
     $jquery("#workInfoImg").click(() => {
+        $jquery("#workInfoImg").removeClass('error');        
         workerWin.show();
     });
     ipc.on('worker_msg', (event, message) => {
@@ -699,6 +700,7 @@ document.addEventListener("DOMContentLoaded", () => {
         switch (message.type) {
             case 'error':
                 console.error("workerError!", message.data);
+                $jquery("#workInfoImg").addClass('error');
                 break;
             case '_jobNewSound':
                 var parent_node = $jquery("#tree").fancytree("getTree").getNodeByKey(message.data.parent_key);

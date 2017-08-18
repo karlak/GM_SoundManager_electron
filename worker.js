@@ -90,6 +90,7 @@ ipc.on('newJob', (event, message) => {
     			value[1].find("td[name='res']").text("ok");
     			value[1].addClass("ok");
     		}else{
+    			sendParent("error", res.msg);
     			value[1].addClass("nok");
     			value[1].find("td[name='res']").text("err");
     			var errLine = $jquery("<tr class='error' />");
@@ -113,15 +114,13 @@ function doNextJobs(job) {
             dfdJob.resolve({ok: true, msg: ""});
             break;
         case "jobNewSound":
-            // console.log("JobNewSound job started!", job.data);
             jobNewSound(job.data, dfdJob);
             break;
         default:
             console.error("Job unknown !");
-            sendParent("error", "Tried to start an unknown job ! [" + job.type + "]");
+            // sendParent("error", "Tried to start an unknown job ! [" + job.type + "]");
             dfdJob.resolve({ok: false, msg: "Tried to run an unknown job ! [" + job.type + "]"});
     }
-    // sendParent("working", values.length)
     return dfdJob.promise();
 }
 
@@ -135,14 +134,12 @@ function jobNewSound(data, dfd) {
     input_info = path.parse(input_path);
     db.insert({ title: input_info.name, is_folder: false, parent: parent_key, deleted: true, type: "sound" }, function(err, newDocs) {
     	if(err!=null){
-    		sendParent("error", "[" + input_path + "] Error while inserting an entry in the database !")
-			dfd.resolve({ok: false, msg: "Error while inserting an entry in the database"});
+			dfd.resolve({ok: false, msg: "Error while inserting the entry in the database"});
     		return;
     	}
         var key = newDocs._id;
         console.log("Converting the file...", input_info.name);
 
-        //sox "Yuki Kajiura - I talk to the rain.ogg" -r 44100 -t ogg "ouuuut"
         var child = spawn('sox.exe', [input_path, '-r', '44100', '-t', 'ogg', path.join(path_sounds, key)], { cwd: './include/sox/' });
 
         child.on('exit', function(code) {
@@ -150,17 +147,18 @@ function jobNewSound(data, dfd) {
                 child.stderr.on('data', data => {
                     console.log(`stderr: ${data}`);
                 });
-                sendParent("error", "[" + input_path + "] Error while converting file " + input_info.name + " !");
-				dfd.resolve({ok: false, msg: "Error while converting file"});
+				dfd.resolve({ok: false, msg: "Error while converting the file"});
                 return;
             }
             console.log("Converted !");
             db.update({_id: key}, {$set: {deleted: false}}, {}, (err, numAffected)=>{
             	if(err!=null){
-            		sendParent("error", "[" + input_path + "] Error while updating the database !")
+					dfd.resolve({ok: false, msg: "Error while updating the database entry !"});
+                	return;
             	}
             	sendParent('_jobNewSound', {title: input_info.name, key: key, parent_key: parent_key});
 				dfd.resolve({ok: true, msg: ""});
+				return;
             });
         });
     });
