@@ -90,6 +90,7 @@ ipc.on('newJob', (event, message) => {
     			value[1].find("td[name='res']").text("ok");
     			value[1].addClass("ok");
     		}else{
+    			value[1].addClass("nok");
     			value[1].find("td[name='res']").text("err");
     			var errLine = $jquery("<tr class='error' />");
     			errLine.append($jquery("<td colspan='3' />").text(res.msg));

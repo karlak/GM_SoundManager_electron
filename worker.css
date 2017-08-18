@@ -31,7 +31,19 @@ tr.ok {
     background-color: #B9FDB3;
 }
 
-tr.error {
+tr.nok {
     background-color: #ffafaf;
+}
+tr.error {
+	background-color: #ffafaf;
+}
+tr.error td{
     padding-left: 50px;
+}
+
+.empty {
+	z-index: -10;
+	position: absolute;
+	top: 0px;
+	left: 0px;
 }
