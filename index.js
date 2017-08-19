@@ -5,6 +5,7 @@ const app = remote.app;
 const win = remote.getCurrentWindow();
 const dialog = remote.dialog;
 var rootNode;
+var fs = require('fs');
 // const menu = remote.Menu;
 
 // const Datastore = remote.require('./include/nedb')
@@ -678,6 +679,9 @@ document.addEventListener("DOMContentLoaded", () => {
             slashes: true
         }));
     }
+    $jquery("#myButton").click(()=>{
+        $jquery("#workInfo").toggleClass('active');
+    });
 
     function newJob(type, data) {
         if (workerWinReady) {
@@ -755,9 +759,32 @@ document.addEventListener("DOMContentLoaded", () => {
     /*** Show the app div ***/
     document.body.classList.add('loaded');
 
-    $jquery("#myButton").click(()=>{
-        $jquery("#workInfo").toggleClass('active');
-    });
+    /************************/
+    /**  Load HTML Module  **/
+    ModuleList = [];
+    ModuleRegisterFuncs = [];
+    function getModule(module) {
+        if(ModuleList[module] == null){
+            console.log("Loading module...", module);
+            // var script = $jquery('<script type="text/javascript" src="'+module+'.js"></script>');
+            // $jquery("body").append(script);
+            var dfd = $jquery.getScript('./modules/'+module+'.js');
+
+            var file_content = fs.readFileSync('./modules/'+module+'.html', "utf8");
+            ModuleList[module] = {html: $jquery(file_content), registerDfd: dfd};
+            
+        }
+        var element = ModuleList[module].html.clone();
+        ModuleList[module].registerDfd.then(()=>{
+            ModuleRegisterFuncs[module](element);
+        });
+        return element;
+    }
+    $jquery("#right-panel").append(getModule("mixerElement"));
+    $jquery("#right-panel").append(getModule("mixerElement"));
+    $jquery("#right-panel").append(getModule("mixerElement"));
+    $jquery("#right-panel").append(getModule("mixerElement"));
+    // mixerElementRegister();
 });
 
 
