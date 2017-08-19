@@ -440,6 +440,9 @@ input[type=range].custom_range:focus::-webkit-slider-runnable-track {
 .sliderVolume .noUi-connect {
     background: var(--slider-track-color);
 }
+ .noUi-handle:after{
+    background: var(--slider-track-color);
+}
 .sliderVolume {
     margin-top: 20px;
 }
