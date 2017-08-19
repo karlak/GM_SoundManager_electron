@@ -1,11 +1,9 @@
 <x-card class="mixerElement" onload="mixerElementRegister()">
-    <div>
-        <h5>SoundTitlesdsdsdsddsdsd</h5>
-        <center>
-            <input type="range" class="custom_range verticalize volumeSlider" min="0" max="100" step="1" value="0">
-        </center>
-        
-        <center><input type="range" class="custom_range balanceSlider" min="-1" max="1" step="0.01" value="0" ></center>
-
-    </div>
+    <h5>SoundTitlesdsdsdsddsdsd</h5>
+    <center class="volumeContainer">
+        <div class="sliderVolume" style="height:150px;"/>
+    </center>
+    <center class="balanceContainer" style="height: 40px;">
+        <div class="sliderBalance" style="top: 15px;" />
+    </center>
 </x-card>

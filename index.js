@@ -763,7 +763,7 @@ document.addEventListener("DOMContentLoaded", () => {
     /**  Load HTML Module  **/
     ModuleList = [];
     ModuleRegisterFuncs = [];
-    function getModule(module) {
+    function getModule(module, args) {
         if(ModuleList[module] == null){
             console.log("Loading module...", module);
             // var script = $jquery('<script type="text/javascript" src="'+module+'.js"></script>');
@@ -776,15 +776,18 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         var element = ModuleList[module].html.clone();
         ModuleList[module].registerDfd.then(()=>{
-            ModuleRegisterFuncs[module](element);
+            ModuleRegisterFuncs[module](element, args);
         });
         return element;
     }
-    $jquery("#right-panel").append(getModule("mixerElement"));
+    $jquery("#right-panel").append(getModule("mixerElement", {id: 10, volume: 7}));
     $jquery("#right-panel").append(getModule("mixerElement"));
     $jquery("#right-panel").append(getModule("mixerElement"));
     $jquery("#right-panel").append(getModule("mixerElement"));
     // mixerElementRegister();
+
+    ///////////
+
 });
 
 

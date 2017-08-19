@@ -8,7 +8,7 @@
     --window-margin-max: 1px 1px var(--window-border-bottom-max) 1px;
     --title-bar-color: #009688;
 
-    --slider-track-color: #338ef0;
+    --slider-track-color: var(--title-bar-color);
     cursor: default;
 }
 
@@ -401,14 +401,14 @@ input[type=range].custom_range:focus::-webkit-slider-runnable-track {
 
 /*************/
 
-.verticalize{
+/*.verticalize{
     position: absolute;
     transform-origin: right;
     transform:translate(-100%, -47px) rotate(270deg);
 }
-
+*/
 .mixerElement{
-    width: 100px;
+    width: 150px;
     height: 300px;
 
     margin: 4px;
@@ -419,25 +419,14 @@ input[type=range].custom_range:focus::-webkit-slider-runnable-track {
 
     background: white;
 }
-
-.volumeSlider{
-    padding: 47px 0;
-    margin-left: 0;
-    width: 160px;
-}
-.balanceSlider{
-    position: absolute;
-    transform:translate(-50%,0);
-    width: 90px;
-    top: 210px;
-    --slider-track-color: red;
-}
+/*
 
 .mixerElement div{
     position: absolute;
     width: 100%;
 }
 
+*/
 .mixerElement h5{
     width: 100%;
     background-color: #AFF1EB;
@@ -447,4 +436,19 @@ input[type=range].custom_range:focus::-webkit-slider-runnable-track {
     overflow: hidden;
     text-overflow: ellipsis;
     cursor: default;
+}
+.sliderVolume .noUi-connect {
+    background: var(--slider-track-color);
+}
+.sliderVolume {
+    margin-top: 20px;
+}
+.sliderBalance{
+    margin-top:   20px;
+    margin-left:   15px;
+    margin-right:  15px;
+}
+
+.noUi-handle:focus {
+    outline: none;
 }
