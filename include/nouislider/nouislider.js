@@ -1927,15 +1927,28 @@ function closure ( target, options, originalOptions ){
 		});
 	}
 
+	function trySnapToCloseValue(to){
+		if (originalOptions.snap_to_close_value != null) {
+			for (var i = 0; i < originalOptions.snap_to_close_value.values.length; i++) {
+				if(Math.abs(to-originalOptions.snap_to_close_value.values[i]) < originalOptions.snap_to_close_value.distance){
+					// console.log('yeah')
+					return originalOptions.snap_to_close_value.values[i];
+				}
+			}
+		}
+		return to;
+	}
+
 	// Test suggested values and apply margin, step.
 	function setHandle ( handleNumber, to, lookBackward, lookForward ) {
 
 		to = checkHandlePosition(scope_Locations, handleNumber, to, lookBackward, lookForward, false);
 
-		// console.log(to)
 		if ( to === false ) {
 			return false;
 		}
+		to = trySnapToCloseValue(to);
+
 		updateHandlePosition(handleNumber, to);
 
 		return true;

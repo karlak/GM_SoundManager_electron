@@ -49,7 +49,11 @@ ModuleRegisterFuncs['mixerElement'] = function($elem, args) {
         range: {
             'min': -1,
             'max': 1
-        }
+        },
+        snap_to_close_value: {
+            'distance': 10,
+            'values': [50]
+        },
     });
 }
 

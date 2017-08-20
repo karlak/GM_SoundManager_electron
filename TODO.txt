@@ -1,3 +1,14 @@
+Dark theme issues:
+  - context menu font is illegible
+
+Sliders:
+  - mousewheel to change the value
+  - dissociate the filling of the slider bar from the handle.
+  	* provide a function to change the value of the filling
+
+Mixer Element:
+  - 
+
 Treeview:
   - When moving a file, the search is done again completely instead of just updating the counters
 
@@ -14,6 +25,6 @@ Global keyboard shortcut that show a command-window like sublimetext, even if th
 Portable version
 
 Librosa turns out to be very slow to do what I want, maybe translate the loop detection algorithm in essentia/yaafe ?
-	- http://essentia.upf.edu/documentation/
-	- http://yaafe.sourceforge.net/manual.html
-	- https://www.ntnu.edu/documents/1001201110/1266017954/DAFx-15_submission_43_v2.pdf (essentia/yaafe 26x faster than librosa ?)
+  - http://essentia.upf.edu/documentation/
+  - http://yaafe.sourceforge.net/manual.html
+  - https://www.ntnu.edu/documents/1001201110/1266017954/DAFx-15_submission_43_v2.pdf (essentia/yaafe 26x faster than librosa ?)
