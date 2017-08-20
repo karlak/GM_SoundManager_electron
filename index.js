@@ -36,13 +36,7 @@ function closewindow() {
     win.close();
 }
 
-function update_cpuusage(argument) {
-    cpu = remote.process.getCPUUsage();
-    document.getElementById("cpuusage").innerHTML = "[CPU " + cpu.percentCPUUsage.toFixed(2) + "%]";
-}
 
-///////////////////////////////////////
-///////////////////////////////////////
 
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -62,7 +56,6 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("border").classList.add('maximized');
         document.getElementById("window").classList.add('maximized');
     }
-    // var t = setInterval(update_cpuusage, 1000);
 
     /***********************/
     /******* Splitter ******/

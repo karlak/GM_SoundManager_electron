@@ -8,7 +8,7 @@
     --window-margin-max: 1px 1px var(--window-border-bottom-max) 1px;
     
     --titlebar-color: #191f2a;
-    --slider-track-color: red;
+    --slider-track-color: #4281C3;
 
     /*--titlebar-color: #009688;*/
     /*--slider-track-color: var(--titlebar-color);*/
@@ -99,10 +99,11 @@ body.loaded {
     height: calc(100% - var(--window-border-bottom-max));
 }
 
-#cpuusage {
+#titleDiv {
     position: absolute;
     left: 10px;
     top: 1px;
+    right: 10px;
     -webkit-user-drag: none;
     -webkit-user-select: none;
     line-height: 32px;
@@ -448,10 +449,10 @@ input[type=range].custom_range:focus::-webkit-slider-runnable-track {
 */
 .mixerElement h5{
     width: 100%;
-    background-color: #AFF1EB;
+    background-color: hsl(220, 25%, 29%);
     margin-top: 0;
     padding: 5px 10px;
-    border-bottom: 1px solid #D4D4D4;
+    border-bottom: 1px solid #353D4E;
     overflow: hidden;
     text-overflow: ellipsis;
     cursor: default;
@@ -474,3 +475,4 @@ input[type=range].custom_range:focus::-webkit-slider-runnable-track {
 .noUi-handle:focus {
     outline: none;
 }
+
