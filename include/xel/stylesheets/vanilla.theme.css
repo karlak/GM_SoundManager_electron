@@ -22,7 +22,7 @@ body {
   --accent-color-h: 211;
   --accent-color-s: 86%;
   --accent-color-l: 57%;
-  --text-color: #B9BEC5;
+  --text-color: #D1D6DE;
   --text-color-greyed: #505254;
   --text-color-greyed2: #6E7173;
   --selection-background: hsl(var(--accent-color-h), var(--accent-color-s), calc(var(--accent-color-l) + 35%));
@@ -1062,7 +1062,7 @@ x-input > x-label {
   max-width: 100%;
   padding: 0 5px 0 5px;
   transform: translateY(-50%);
-  color: var(--text-color-greyed);
+  color: var(--text-color-greyed2);
   font-family: inherit;
   font-size: inherit;
   line-height: inherit;

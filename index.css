@@ -6,14 +6,23 @@
     --window-border-max: 1px 2px var(--window-border-bottom-max) 2px;
     --window-margin: 1px 4px var(--window-border-bottom) 4px;
     --window-margin-max: 1px 1px var(--window-border-bottom-max) 1px;
-    --title-bar-color: #009688;
+    
+    --titlebar-color: #191f2a;
+    --slider-track-color: red;
 
-    --slider-track-color: var(--title-bar-color);
+    /*--titlebar-color: #009688;*/
+    /*--slider-track-color: var(--titlebar-color);*/
     cursor: default;
 }
 
 body {
+    opacity: 0;
     overflow: hidden;
+    background-color: black;
+}
+body.loaded {
+    animation: body_fadein 0.4s;
+    opacity: 1;
 }
 
 #border {
@@ -26,7 +35,7 @@ body {
 
     border-style: solid;
     border-width: var(--window-border);
-    border-color: var(--title-bar-color);
+    border-color: var(--titlebar-color);
     /*border-color: #6785A4;*/
 
     pointer-events: none;
@@ -40,7 +49,7 @@ body {
     z-index: 109;
     height: 80px;
     width: 80px;
-    background-color: #009688;
+    background-color: var(--titlebar-color);
     position: absolute;
     right: -51px;
     bottom: -51px;
@@ -145,7 +154,7 @@ body {
     cursor: default;
     height: 33px;
     min-height: 33px;
-    background-color: var(--title-bar-color);
+    background-color: var(--titlebar-color);
     /*border-bottom-style: solid;
     border-bottom-width: 1px;
     border-bottom-color: #6785A4;*/
@@ -158,7 +167,7 @@ body {
     right: 5px;
     top: 5px;
     height: 27px;
-    background-color: var(--title-bar-color);
+    background-color: var(--titlebar-color);
     -webkit-app-region: drag;
 }
 
@@ -167,6 +176,16 @@ body {
     right: 0px;
     top: 0px;
     height: 32px;
+}
+
+#titlebar-down {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    background-color: var(--titlebar-color);
+    width: 100%;
+    height: 60px;
+    z-index: 95;
 }
 
 #menubar {
@@ -187,15 +206,6 @@ body {
     }
 }
 
-body {
-    opacity: 0;
-    background-color: #FFF;
-}
-
-body.loaded {
-    animation: body_fadein 0.4s;
-    opacity: 1;
-}
 
 #app {
     margin-top: -1px;
@@ -238,10 +248,12 @@ x-card {
 }
 
 #right-panel {
+    position: relative;
     background-color: #191F2A;
     margin: unset;
     margin-left: -5px;
     padding: 5px;
+    padding-top: 60px;
     min-width: 0px;
     flex-grow: 1;
     flex-basis: 1px;
@@ -274,8 +286,9 @@ x-card {
     width: 100%;
     max-width: unset;
     border: none;
-    background-color: #191F2A;
-    color: #A9ADB4;
+    border-bottom: solid 1px #191f2a;
+    background-color: #283143;
+    color: var(--text-color);
     --input-margin-right: 22px;
 }
 

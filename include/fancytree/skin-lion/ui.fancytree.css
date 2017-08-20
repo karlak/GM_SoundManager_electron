@@ -10,6 +10,33 @@
 	blue highlight-bar and -border #3875D7
 
 */
+:root{
+  --triangle-color: #ffffff;
+
+  --triangle-right-border-top: 6px solid transparent;
+  --triangle-right-border-bottom: 6px solid transparent;
+  --triangle-right-border-left: 9px solid var(--triangle-color);
+  --triangle-right-width: 0;
+  --triangle-right-height: 0;
+  --triangle-right-margin-left: 5px;
+  --triangle-right-margin-top: 3px;
+  --triangle-right-margin-right: 2px;
+  --triangle-right-margin-bottom: 0;
+
+  --triangle-bottom-border-right: 6px solid transparent;
+  --triangle-bottom-border-left:  6px solid transparent;
+  --triangle-bottom-border-top:  9px solid var(--triangle-color);
+  --triangle-bottom-width: 0;
+  --triangle-bottom-height: 0;
+  --triangle-bottom-margin-left: 2px;
+  --triangle-bottom-margin-top: 5px;
+  --triangle-bottom-margin-right: 2px;
+  --triangle-bottom-margin-bottom: 2px;
+
+  --treefocus-bgcolor2: rgba(0, 0, 0, 0.25);
+  --treefocus-bgcolor: rgba(255, 255, 255, 0.25);
+}
+
 /*******************************************************************************
  * Common Styles for Fancytree Skins.
  *
@@ -42,7 +69,7 @@ ul.fancytree-container {
   position: relative;
 }
 ul.fancytree-container ul {
-  padding: 0 0 0 16px;
+  padding: 0 0 0 19px;
   margin: 0;
 }
 ul.fancytree-container ul > li:before {
@@ -61,7 +88,7 @@ ul.fancytree-container li {
   background-repeat: repeat-y;
   background-image: none;
   margin: 0;
-  /*margin-left: -250px;*/
+  /* margin-left: -250px; */
   /*padding-left: 250px;*/
 }
 ul.fancytree-container li.fancytree-lastsib {
@@ -156,6 +183,11 @@ span.fancytree-expander {
   height: 20px;
   margin-bottom: -2px;
   margin-top: -2px;
+/*
+  height: 22px;
+  border-left: solid 1px red;
+  margin-left: 8px;
+  margin-right: -8px;*/
 }
 .fancytree-connectors .fancytree-exp-nl span.fancytree-expander,
 .fancytree-connectors .fancytree-exp-nl span.fancytree-expander:hover {
@@ -166,90 +198,334 @@ span.fancytree-expander {
   background-position: -16px -64px;
 }
 
+
 /**************************/
 /****WHEN IT'S SELECTED****/
 .fancytree-exp-c.fancytree-active span.fancytree-expander {
-  background-position: 0px -80px;
+  /*background-position: 0px -176px;*/
+  background-image: none;
+  width: var(--triangle-right-width); 
+  height: var(--triangle-right-height);
+  border-top: var(--triangle-right-border-top);
+  border-bottom: var(--triangle-right-border-bottom);
+  border-left: var(--triangle-right-border-left);
+  margin-left: var(--triangle-right-margin-left);
+  margin-right: var(--triangle-right-margin-right);
+  margin-top: var(--triangle-right-margin-top);
+  margin-bottom: var(--triangle-right-margin-bottom);
 }
 .fancytree-exp-c.fancytree-active span.fancytree-expander:hover {
-  background-position: -16px -80px;
+  /*background-position: -16px -176px;*/
+  background-image: none;
+  width: var(--triangle-right-width); 
+  height:  var(--triangle-right-height); 
+  border-top: var(--triangle-right-border-top);
+  border-bottom: var(--triangle-right-border-bottom);
+  border-left: var(--triangle-right-border-left);
+  margin-left: var(--triangle-right-margin-left);
+  margin-right: var(--triangle-right-margin-right);
+  margin-top: var(--triangle-right-margin-top);
+  margin-bottom: var(--triangle-right-margin-bottom);
 }
 .fancytree-exp-cl.fancytree-active span.fancytree-expander {
-  background-position: 0px -96px;
+  /*background-position: 0px -96px;*/
+  background-image: none;
+  width: var(--triangle-right-width); 
+  height:  var(--triangle-right-height); 
+  border-top: var(--triangle-right-border-top);
+  border-bottom: var(--triangle-right-border-bottom);
+  border-left: var(--triangle-right-border-left);
+  margin-left: var(--triangle-right-margin-left);
+  margin-right: var(--triangle-right-margin-right);
+  margin-top: var(--triangle-right-margin-top);
+  margin-bottom: var(--triangle-right-margin-bottom);
 }
 .fancytree-exp-cl.fancytree-active span.fancytree-expander:hover {
-  background-position: -16px -96px;
+  /*background-position: -16px -96px;*/
+  background-image: none;
+  width: var(--triangle-right-width); 
+  height:  var(--triangle-right-height); 
+  border-top: var(--triangle-right-border-top);
+  border-bottom: var(--triangle-right-border-bottom);
+  border-left: var(--triangle-right-border-left);
+  margin-left: var(--triangle-right-margin-left);
+  margin-right: var(--triangle-right-margin-right);
+  margin-top: var(--triangle-right-margin-top);
+  margin-bottom: var(--triangle-right-margin-bottom);
 }
 .fancytree-exp-cd.fancytree-active span.fancytree-expander {
-  background-position: -64px -80px;
+  /*background-position: -64px -176px;*/
+  background-image: none;
+  width: var(--triangle-right-width); 
+  height:  var(--triangle-right-height); 
+  border-top: var(--triangle-right-border-top);
+  border-bottom: var(--triangle-right-border-bottom);
+  border-left: var(--triangle-right-border-left);
+  margin-left: var(--triangle-right-margin-left);
+  margin-right: var(--triangle-right-margin-right);
+  margin-top: var(--triangle-right-margin-top);
+  margin-bottom: var(--triangle-right-margin-bottom);
 }
 .fancytree-exp-cd.fancytree-active span.fancytree-expander:hover {
-  background-position: -80px -80px;
+  /*background-position: -80px -176px;*/
+  background-image: none;
+  width: var(--triangle-right-width); 
+  height:  var(--triangle-right-height); 
+  border-top: var(--triangle-right-border-top);
+  border-bottom: var(--triangle-right-border-bottom);
+  border-left: var(--triangle-right-border-left);
+  margin-left: var(--triangle-right-margin-left);
+  margin-right: var(--triangle-right-margin-right);
+  margin-top: var(--triangle-right-margin-top);
+  margin-bottom: var(--triangle-right-margin-bottom);
 }
 .fancytree-exp-cdl.fancytree-active span.fancytree-expander {
-  background-position: -64px -96px;
+  /*background-position: -64px -96px;*/
+  background-image: none;
+  width: var(--triangle-right-width); 
+  height:  var(--triangle-right-height); 
+  border-top: var(--triangle-right-border-top);
+  border-bottom: var(--triangle-right-border-bottom);
+  border-left: var(--triangle-right-border-left);
+  margin-left: var(--triangle-right-margin-left);
+  margin-right: var(--triangle-right-margin-right);
+  margin-top: var(--triangle-right-margin-top);
+  margin-bottom: var(--triangle-right-margin-bottom);
 }
 .fancytree-exp-cdl.fancytree-active span.fancytree-expander:hover {
-  background-position: -80px -96px;
+  /*background-position: -80px -96px;*/
+  background-image: none;
+  width: var(--triangle-right-width); 
+  height:  var(--triangle-right-height); 
+  border-top: var(--triangle-right-border-top);
+  border-bottom: var(--triangle-right-border-bottom);
+  border-left: var(--triangle-right-border-left);
+  margin-left: var(--triangle-right-margin-left);
+  margin-right: var(--triangle-right-margin-right);
+  margin-top: var(--triangle-right-margin-top);
+  margin-bottom: var(--triangle-right-margin-bottom);
 }
 .fancytree-exp-e.fancytree-active span.fancytree-expander,
 .fancytree-exp-ed.fancytree-active span.fancytree-expander {
-  background-position: -32px -80px;
+  /*background-position: -32px -176px;*/
+  background-image: none;
+  width: var(--triangle-bottom-width); 
+  height:  var(--triangle-bottom-height); 
+  border-right: var(--triangle-bottom-border-right);
+  border-left: var(--triangle-bottom-border-left);
+  border-top: var(--triangle-bottom-border-top);
+  margin-left: var(--triangle-bottom-margin-left);
+  margin-right: var(--triangle-bottom-margin-right);
+  margin-top: var(--triangle-bottom-margin-top);
+  margin-bottom: var(--triangle-bottom-margin-bottom);
+
 }
 .fancytree-exp-e.fancytree-active span.fancytree-expander:hover,
 .fancytree-exp-ed.fancytree-active span.fancytree-expander:hover {
-  background-position: -48px -80px;
+  /*background-position: -48px -176px;*/
+  background-image: none;
+  width: var(--triangle-bottom-width); 
+  height:  var(--triangle-bottom-height); 
+  border-right: var(--triangle-bottom-border-right);
+  border-left: var(--triangle-bottom-border-left);
+  border-top: var(--triangle-bottom-border-top);
+  margin-left: var(--triangle-bottom-margin-left);
+  margin-right: var(--triangle-bottom-margin-right);
+  margin-top: var(--triangle-bottom-margin-top);
+  margin-bottom: var(--triangle-bottom-margin-bottom);
 }
 .fancytree-exp-el.fancytree-active span.fancytree-expander,
 .fancytree-exp-edl.fancytree-active span.fancytree-expander {
-  background-position: -32px -96px;
+  /*background-position: -32px -96px;*/
+  background-image: none;
+  width: var(--triangle-bottom-width); 
+  height:  var(--triangle-bottom-height); 
+  border-right: var(--triangle-bottom-border-right);
+  border-left: var(--triangle-bottom-border-left);
+  border-top: var(--triangle-bottom-border-top);
+  margin-left: var(--triangle-bottom-margin-left);
+  margin-right: var(--triangle-bottom-margin-right);
+  margin-top: var(--triangle-bottom-margin-top);
+  margin-bottom: var(--triangle-bottom-margin-bottom);
 }
 .fancytree-exp-el.fancytree-active span.fancytree-expander:hover,
 .fancytree-exp-edl.fancytree-active span.fancytree-expander:hover {
-  background-position: -48px -96px;
+  /*background-position: -48px -96px;*/
+  background-image: none;
+  width: var(--triangle-bottom-width); 
+  height:  var(--triangle-bottom-height); 
+  border-right: var(--triangle-bottom-border-right);
+  border-left: var(--triangle-bottom-border-left);
+  border-top: var(--triangle-bottom-border-top);
+  margin-left: var(--triangle-bottom-margin-left);
+  margin-right: var(--triangle-bottom-margin-right);
+  margin-top: var(--triangle-bottom-margin-top);
+  margin-bottom: var(--triangle-bottom-margin-bottom);
 }
+
+
 
 /*************************/
 /****WHEN NOT SELECTED****/
 .fancytree-exp-c span.fancytree-expander {
-  background-position: 0px -176px;
+  /*background-position: 0px -176px;*/
+  background-image: none;
+  width: var(--triangle-right-width); 
+  height:  var(--triangle-right-height); 
+  border-top: var(--triangle-right-border-top);
+  border-bottom: var(--triangle-right-border-bottom);
+  border-left: var(--triangle-right-border-left);
+  margin-left: var(--triangle-right-margin-left);
+  margin-right: var(--triangle-right-margin-right);
+  margin-top: var(--triangle-right-margin-top);
+  margin-bottom: var(--triangle-right-margin-bottom);
 }
 .fancytree-exp-c span.fancytree-expander:hover {
-  background-position: -16px -176px;
+  /*background-position: -16px -176px;*/
+  background-image: none;
+  width: var(--triangle-right-width); 
+  height:  var(--triangle-right-height); 
+  border-top: var(--triangle-right-border-top);
+  border-bottom: var(--triangle-right-border-bottom);
+  border-left: var(--triangle-right-border-left);
+  margin-left: var(--triangle-right-margin-left);
+  margin-right: var(--triangle-right-margin-right);
+  margin-top: var(--triangle-right-margin-top);
+  margin-bottom: var(--triangle-right-margin-bottom);
 }
 .fancytree-exp-cl span.fancytree-expander {
-  background-position: 0px -176px;
+  /*background-position: 0px -176px;*/
+  background-image: none;
+  width: var(--triangle-right-width); 
+  height:  var(--triangle-right-height); 
+  border-top: var(--triangle-right-border-top);
+  border-bottom: var(--triangle-right-border-bottom);
+  border-left: var(--triangle-right-border-left);
+  margin-left: var(--triangle-right-margin-left);
+  margin-right: var(--triangle-right-margin-right);
+  margin-top: var(--triangle-right-margin-top);
+  margin-bottom: var(--triangle-right-margin-bottom);
 }
 .fancytree-exp-cl span.fancytree-expander:hover {
-  background-position: -16px -176px;
+  /*background-position: -16px -176px;*/
+  background-image: none;
+  width: var(--triangle-right-width); 
+  height:  var(--triangle-right-height); 
+  border-top: var(--triangle-right-border-top);
+  border-bottom: var(--triangle-right-border-bottom);
+  border-left: var(--triangle-right-border-left);
+  margin-left: var(--triangle-right-margin-left);
+  margin-right: var(--triangle-right-margin-right);
+  margin-top: var(--triangle-right-margin-top);
+  margin-bottom: var(--triangle-right-margin-bottom);
 }
 .fancytree-exp-cd span.fancytree-expander {
-  background-position: -64px -176px;
+  /*background-position: -64px -176px;*/
+  background-image: none;
+  width: var(--triangle-right-width); 
+  height:  var(--triangle-right-height); 
+  border-top: var(--triangle-right-border-top);
+  border-bottom: var(--triangle-right-border-bottom);
+  border-left: var(--triangle-right-border-left);
+  margin-left: var(--triangle-right-margin-left);
+  margin-right: var(--triangle-right-margin-right);
+  margin-top: var(--triangle-right-margin-top);
+  margin-bottom: var(--triangle-right-margin-bottom);
 }
 .fancytree-exp-cd span.fancytree-expander:hover {
-  background-position: -80px -176px;
+  /*background-position: -80px -176px;*/
+  background-image: none;
+  width: var(--triangle-right-width); 
+  height:  var(--triangle-right-height); 
+  border-top: var(--triangle-right-border-top);
+  border-bottom: var(--triangle-right-border-bottom);
+  border-left: var(--triangle-right-border-left);
+  margin-left: var(--triangle-right-margin-left);
+  margin-right: var(--triangle-right-margin-right);
+  margin-top: var(--triangle-right-margin-top);
+  margin-bottom: var(--triangle-right-margin-bottom);
 }
 .fancytree-exp-cdl span.fancytree-expander {
-  background-position: -64px -176px;
+  /*background-position: -64px -176px;*/
+  background-image: none;
+  width: var(--triangle-right-width); 
+  height:  var(--triangle-right-height); 
+  border-top: var(--triangle-right-border-top);
+  border-bottom: var(--triangle-right-border-bottom);
+  border-left: var(--triangle-right-border-left);
+  margin-left: var(--triangle-right-margin-left);
+  margin-right: var(--triangle-right-margin-right);
+  margin-top: var(--triangle-right-margin-top);
+  margin-bottom: var(--triangle-right-margin-bottom);
 }
 .fancytree-exp-cdl span.fancytree-expander:hover {
-  background-position: -80px -176px;
+  /*background-position: -80px -176px;*/
+  background-image: none;
+  width: var(--triangle-right-width); 
+  height:  var(--triangle-right-height); 
+  border-top: var(--triangle-right-border-top);
+  border-bottom: var(--triangle-right-border-bottom);
+  border-left: var(--triangle-right-border-left);
+  margin-left: var(--triangle-right-margin-left);
+  margin-right: var(--triangle-right-margin-right);
+  margin-top: var(--triangle-right-margin-top);
+  margin-bottom: var(--triangle-right-margin-bottom);
 }
 .fancytree-exp-e span.fancytree-expander,
 .fancytree-exp-ed span.fancytree-expander {
-  background-position: -32px -176px;
+  /*background-position: -32px -176px;*/
+  background-image: none;
+  width: var(--triangle-bottom-width); 
+  height:  var(--triangle-bottom-height); 
+  border-right: var(--triangle-bottom-border-right);
+  border-left: var(--triangle-bottom-border-left);
+  border-top: var(--triangle-bottom-border-top);
+  margin-left: var(--triangle-bottom-margin-left);
+  margin-right: var(--triangle-bottom-margin-right);
+  margin-top: var(--triangle-bottom-margin-top);
+  margin-bottom: var(--triangle-bottom-margin-bottom);
 }
 .fancytree-exp-e span.fancytree-expander:hover,
 .fancytree-exp-ed span.fancytree-expander:hover {
-  background-position: -48px -176px;
+  /*background-position: -48px -176px;*/
+  background-image: none;
+  width: var(--triangle-bottom-width); 
+  height:  var(--triangle-bottom-height); 
+  border-right: var(--triangle-bottom-border-right);
+  border-left: var(--triangle-bottom-border-left);
+  border-top: var(--triangle-bottom-border-top);
+  margin-left: var(--triangle-bottom-margin-left);
+  margin-right: var(--triangle-bottom-margin-right);
+  margin-top: var(--triangle-bottom-margin-top);
+  margin-bottom: var(--triangle-bottom-margin-bottom);
 }
 .fancytree-exp-el span.fancytree-expander,
 .fancytree-exp-edl span.fancytree-expander {
-  background-position: -32px -176px;
+  /*background-position: -32px -176px;*/
+  background-image: none;
+  width: var(--triangle-bottom-width); 
+  height:  var(--triangle-bottom-height); 
+  border-right: var(--triangle-bottom-border-right);
+  border-left: var(--triangle-bottom-border-left);
+  border-top: var(--triangle-bottom-border-top);
+  margin-left: var(--triangle-bottom-margin-left);
+  margin-right: var(--triangle-bottom-margin-right);
+  margin-top: var(--triangle-bottom-margin-top);
+  margin-bottom: var(--triangle-bottom-margin-bottom);
 }
 .fancytree-exp-el span.fancytree-expander:hover,
 .fancytree-exp-edl span.fancytree-expander:hover {
-  background-position: -48px -176px;
+  /*background-position: -48px -176px;*/
+  background-image: none;
+  width: var(--triangle-bottom-width); 
+  height:  var(--triangle-bottom-height); 
+  border-right: var(--triangle-bottom-border-right);
+  border-left: var(--triangle-bottom-border-left);
+  border-top: var(--triangle-bottom-border-top);
+  margin-left: var(--triangle-bottom-margin-left);
+  margin-right: var(--triangle-bottom-margin-right);
+  margin-top: var(--triangle-bottom-margin-top);
+  margin-bottom: var(--triangle-bottom-margin-bottom);
 }
 
 /*****************/
@@ -549,10 +825,10 @@ table.fancytree-ext-columnview span.fancytree-node.fancytree-expanded {
 table.fancytree-ext-columnview .fancytree-has-children span.fancytree-cv-right {
   position: absolute;
   right: 3px;
-  background-position: 0px -80px;
+  background-position: 0px -176px;
 }
 table.fancytree-ext-columnview .fancytree-has-children span.fancytree-cv-right:hover {
-  background-position: -16px -80px;
+  background-position: -16px -176px;
 }
 /*------------------------------------------------------------------------------
  * 'filter' extension
@@ -702,7 +978,7 @@ span.fancytree-selected,
 span.fancytree-active {
 /*  margin-left: -250px;
   padding-left: 250px;*/
-  background-color: #D4D4D4;
+  background-color: var(--treefocus-bgcolor2);
 }
 span.fancytree-selected span.fancytree-title {
   font-style: italic;
@@ -718,7 +994,8 @@ span.fancytree-selected span.fancytree-title {
   /*color: white;*/
   /*margin-left: -250px;*/
   /*padding-left: 250px*/
-  background-color: #CCE8FF;
+  background-color: var(--treefocus-bgcolor);
+  /*background-color: #CCE8FF;*/
 }
 /*******************************************************************************
  * 'table' extension
