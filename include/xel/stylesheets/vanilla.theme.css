@@ -22,8 +22,9 @@ body {
   --accent-color-h: 211;
   --accent-color-s: 86%;
   --accent-color-l: 57%;
-  --text-color: #A9ADB4;
+  --text-color: #B9BEC5;
   --text-color-greyed: #505254;
+  --text-color-greyed2: #6E7173;
   --selection-background: hsl(var(--accent-color-h), var(--accent-color-s), calc(var(--accent-color-l) + 35%));
 }
 

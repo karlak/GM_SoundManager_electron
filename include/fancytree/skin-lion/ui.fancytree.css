@@ -393,7 +393,7 @@ span.fancytree-node {
   padding-left: 250px;
 }
 span.fancytree-title {
-  color: black;
+  color: var(--text-color);
   /*cursor: pointer;*/
   cursor: default;
   display: inline-block;
@@ -558,17 +558,17 @@ table.fancytree-ext-columnview .fancytree-has-children span.fancytree-cv-right:h
  * 'filter' extension
  *----------------------------------------------------------------------------*/
 .fancytree-ext-filter-dimm span.fancytree-node span.fancytree-title {
-  color: silver;
+  color: var(--text-color-greyed2);
   font-weight: lighter;
 }
 .fancytree-ext-filter-dimm tr.fancytree-submatch span.fancytree-title,
 .fancytree-ext-filter-dimm span.fancytree-node.fancytree-submatch span.fancytree-title {
-  color: black;
+  color: var(--text-color);
   font-weight: normal;
 }
 .fancytree-ext-filter-dimm tr.fancytree-match span.fancytree-title,
 .fancytree-ext-filter-dimm span.fancytree-node.fancytree-match span.fancytree-title {
-  color: black;
+  color: var(--text-color);
   font-weight: bold;
 }
 .fancytree-ext-filter-hide tr.fancytree-hide,
@@ -577,12 +577,12 @@ table.fancytree-ext-columnview .fancytree-has-children span.fancytree-cv-right:h
 }
 .fancytree-ext-filter-hide tr.fancytree-submatch span.fancytree-title,
 .fancytree-ext-filter-hide span.fancytree-node.fancytree-submatch span.fancytree-title {
-  color: silver;
+  color: var(--text-color-greyed2);
   font-weight: lighter;
 }
 .fancytree-ext-filter-hide tr.fancytree-match span.fancytree-title,
 .fancytree-ext-filter-hide span.fancytree-node.fancytree-match span.fancytree-title {
-  color: black;
+  color: var(--text-color);
   font-weight: normal;
 }
 /* Hide expanders if all child nodes are hidden by filter */
