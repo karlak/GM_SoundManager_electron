@@ -92,7 +92,8 @@ document.addEventListener("DOMContentLoaded", () => {
         gutterStyle: function(dimension, gutterSize) {
             return {
                 'flex-basis': gutterSize + 'px',
-                'min-width': gutterSize + 'px'
+                'min-width': gutterSize + 'px',
+                'z-index': '80',
             }
         }
     })

@@ -55,3 +55,5 @@ include/fancytree/jquery\.fancytree\.min\.js
 include/xel/src/
 
 include/loopfinder/
+
+index\.css\.mod

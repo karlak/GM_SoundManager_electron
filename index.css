@@ -217,8 +217,8 @@ body.loaded {
 }
 
 .panel {
-    background: #EEEEEE;
-    border: 1px solid #b8b8b8;
+    /*background: #EEEEEE;*/
+    /* border: 1px solid #b8b8b8; */
     box-sizing: border-box;
 }
 
@@ -234,10 +234,13 @@ x-card {
     max-width: 400px;
     flex-basis: 330px;
     overflow: hidden;
+    /* border-right: solid 1px #353d4e; */
 }
 
 #right-panel {
+    background-color: #191F2A;
     margin: unset;
+    margin-left: -5px;
     padding: 5px;
     min-width: 0px;
     flex-grow: 1;
@@ -248,19 +251,18 @@ x-card {
 /******** Split ********/
 
 .gutter {
-    background-color: #ddd;
-
+    background-color: #191f2a;
     background-repeat: no-repeat;
     background-position: 50%;
 }
 
 .gutter.gutter-horizontal {
-    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==');
+    /*background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==');*/
     cursor: ew-resize;
 }
 
 .gutter.gutter-vertical {
-    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAFAQMAAABo7865AAAABlBMVEVHcEzMzMzyAv2sAAAAAXRSTlMAQObYZgAAABBJREFUeF5jOAMEEAIEEFwAn3kMwcB6I2AAAAAASUVORK5CYII=');
+    /*background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAFAQMAAABo7865AAAABlBMVEVHcEzMzMzyAv2sAAAAAXRSTlMAQObYZgAAABBJREFUeF5jOAMEEAIEEFwAn3kMwcB6I2AAAAAASUVORK5CYII=');*/
     cursor: ns-resize;
 }
 
@@ -271,10 +273,9 @@ x-card {
     box-sizing: border-box;
     width: 100%;
     max-width: unset;
-    border-top: none;
-    border-left: none;
-    border-right: none;
-    border-bottom-color: #D5D5D5;
+    border: none;
+    background-color: #191F2A;
+    color: #A9ADB4;
     --input-margin-right: 22px;
 }
 
@@ -298,7 +299,8 @@ x-card {
     margin: 0;
     padding: 0;
     flex-grow: 1;
-    background-color: #FFF;
+    /*background-color: #283143;*/
+    /*background-color: #FFF;*/
     line-height: normal;
     margin-left: -10px;
     width: calc(100% + 10px);
@@ -310,7 +312,8 @@ x-card {
     height: 100%;
     width: 100%;
     position: relative;
-    background-color: #FFF;
+    background-color: #283143;
+    /*background-color: #FFF;*/
     line-height: normal;
     overflow-y: auto;
     overflow-x: hidden;
@@ -408,16 +411,19 @@ input[type=range].custom_range:focus::-webkit-slider-runnable-track {
 }
 */
 .mixerElement{
-    width: 150px;
+    width: 120px;
     height: 300px;
 
-    margin: 4px;
+    margin: 4px 1px 4px 0;
+
+    margin-right: 1px;
     padding: 0;
 
     display: inline-block;
     position: relative;
 
-    background: white;
+    background: #283143;
+    border: solid 1px #353D4E;
 }
 /*
 
@@ -431,7 +437,7 @@ input[type=range].custom_range:focus::-webkit-slider-runnable-track {
     width: 100%;
     background-color: #AFF1EB;
     margin-top: 0;
-    padding: 3px;
+    padding: 5px 10px;
     border-bottom: 1px solid #D4D4D4;
     overflow: hidden;
     text-overflow: ellipsis;

@@ -1932,7 +1932,7 @@ function closure ( target, options, originalOptions ){
 
 		to = checkHandlePosition(scope_Locations, handleNumber, to, lookBackward, lookForward, false);
 
-		console.log(to)
+		// console.log(to)
 		if ( to === false ) {
 			return false;
 		}

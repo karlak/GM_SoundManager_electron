@@ -22,7 +22,8 @@ body {
   --accent-color-h: 211;
   --accent-color-s: 86%;
   --accent-color-l: 57%;
-  --text-color: rgba(0, 0, 0, 0.8);
+  --text-color: #A9ADB4;
+  --text-color-greyed: #505254;
   --selection-background: hsl(var(--accent-color-h), var(--accent-color-s), calc(var(--accent-color-l) + 35%));
 }
 
@@ -1046,7 +1047,7 @@ x-input > x-icon {
   height: 15px;
   min-width: 15px;
   margin: 0 0 0 5px;
-  color: #565656;
+  color: var(--text-color);
 }
 x-input > x-icon:hover {
   cursor: default;
@@ -1060,7 +1061,7 @@ x-input > x-label {
   max-width: 100%;
   padding: 0 5px 0 5px;
   transform: translateY(-50%);
-  color: rgba(0, 0, 0, 0.4);
+  color: var(--text-color-greyed);
   font-family: inherit;
   font-size: inherit;
   line-height: inherit;
