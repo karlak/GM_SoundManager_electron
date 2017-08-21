@@ -357,7 +357,7 @@ input.fancytree-edit-input::selection {
 }
 
 span.fancytree-custom-icon.music {
-    background-image: url(./include/imgs/music2.png);
+    background-image: url(./include/imgs/music.png);
 }
 span.fancytree-custom-icon.sound {
     background-image: url(./include/imgs/sound.png);
@@ -367,10 +367,10 @@ span.fancytree-custom-icon.soundboard {
 }
 
 span.fancytree-custom-icon {
-    width: 19px;
+    width: 16px;
     height: 16px;
-    margin-left: 2px;
-    margin-right: -2px;
+    /*margin-left: 2px;*/
+    /*margin-right: -2px;*/
 }
 
 .noFocus :focus {
@@ -475,4 +475,3 @@ input[type=range].custom_range:focus::-webkit-slider-runnable-track {
 .noUi-handle:focus {
     outline: none;
 }
-
