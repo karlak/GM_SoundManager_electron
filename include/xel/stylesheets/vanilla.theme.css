@@ -1,7 +1,7 @@
 
 /*
  * @copyright
- *   © 2016-2017 Jarosław Foksa
+ *   Â© 2016-2017 JarosÅ‚aw Foksa
  */
 
 html {
@@ -698,7 +698,7 @@ x-doctab[disabled] > * {
 
 x-menu {
   padding: 2px 0;
-  background: #F0F0F0;
+  background: #364663;
   box-shadow: rgba(0, 0, 0, 0.3) 0px 4px 22px;
   border: 1px solid rgba(0, 0, 0, 0.25);
   color: var(--text-color);
@@ -756,7 +756,7 @@ x-menuitem x-icon {
   left: 4px;
   top: 1px;
   position: absolute;
-  color: #5b5b5b;
+  color: var(--text-color);
 }
 x-menuitem x-icon:not([name]) {
   display: none;

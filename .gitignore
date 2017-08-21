@@ -56,4 +56,4 @@ include/xel/src/
 
 include/loopfinder/
 
-index\.css\.mod
+*.mod
