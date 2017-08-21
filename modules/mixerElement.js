@@ -1,6 +1,6 @@
 console.log('MixerElement.js Loaded !');
 
-
+var volume;
 ModuleRegisterFuncs['mixerElement'] = function($elem, args) {
     console.log('MixerElement Registered !', $elem, args);
 
@@ -16,7 +16,7 @@ ModuleRegisterFuncs['mixerElement'] = function($elem, args) {
     else
         volumeContainer = null;
 
-    noUiSlider.create(sliderVolume, {
+    volume = noUiSlider.create(sliderVolume, {
         behaviour: "snap",
         volumeContainer: volumeContainer,
         start: 40,
@@ -28,6 +28,8 @@ ModuleRegisterFuncs['mixerElement'] = function($elem, args) {
             'max': 100
         }
     });
+    // console.log(volume);
+    // volume.setConnectValue(0, 0, 0);
 
 
     // Balance Slider
@@ -41,10 +43,11 @@ ModuleRegisterFuncs['mixerElement'] = function($elem, args) {
     else
         balanceContainer = null;
     
-    noUiSlider.create(sliderBalance, {
+    var balance = noUiSlider.create(sliderBalance, {
         behaviour: "snap",
         volumeContainer: balanceContainer,
-        start: [0],
+        start: 0,
+        connect: [true, false],
         // connect: [false, true, false],
         range: {
             'min': -1,
@@ -55,6 +58,7 @@ ModuleRegisterFuncs['mixerElement'] = function($elem, args) {
             'values': [50]
         },
     });
+    // console.log(balance);
 }
 
 

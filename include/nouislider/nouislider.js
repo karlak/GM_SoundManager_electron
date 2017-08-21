@@ -1781,7 +1781,6 @@ function closure ( target, options, originalOptions ){
 
 		// Attach the tap event to the slider base.
 		if ( behaviour.tap ) {
-			// console.log(scope_Base);
 			if(options.volumeContainer != null)
 				attachEvent (actions.start, options.volumeContainer, eventTap, {});
 
@@ -1900,8 +1899,8 @@ function closure ( target, options, originalOptions ){
 		// Called synchronously or on the next animationFrame
 		var stateUpdate = function() {
 			scope_Handles[handleNumber].style[options.style] = toPct(to);
-			updateConnect(handleNumber);
-			updateConnect(handleNumber + 1);
+			// updateConnect(handleNumber);
+			// updateConnect(handleNumber + 1);
 		};
 
 		// Set the handle to the new position.
@@ -1931,7 +1930,6 @@ function closure ( target, options, originalOptions ){
 		if (originalOptions.snap_to_close_value != null) {
 			for (var i = 0; i < originalOptions.snap_to_close_value.values.length; i++) {
 				if(Math.abs(to-originalOptions.snap_to_close_value.values[i]) < originalOptions.snap_to_close_value.distance){
-					// console.log('yeah')
 					return originalOptions.snap_to_close_value.values[i];
 				}
 			}
@@ -1971,10 +1969,29 @@ function closure ( target, options, originalOptions ){
 
 		if ( index !== scope_Connects.length - 1 ) {
 			h = scope_Locations[index];
+
 		}
 
 		scope_Connects[index].style[options.style] = toPct(l);
 		scope_Connects[index].style[options.styleOposite] = toPct(100 - h);
+	}
+
+	// Updates style attribute for connect nodes
+	function setConnectValue( index, percent_low, percent_high ) {
+		// Skip connects set to false
+		if ( !scope_Connects[index] ) {
+			return;
+		}
+		percent_low = scope_Spectrum.toStepping(percent_low);
+		percent_high = scope_Spectrum.toStepping(percent_high);
+		var l = Math.max(Math.min(percent_low, percent_high), 0);
+		var h = 100-Math.max(percent_low, percent_high);
+
+		// var l = Math.max(l, 0);
+		// var h = Math.max(Math.min(h, 100), 0);
+
+		scope_Connects[index].style[options.style] = toPct(l);
+		scope_Connects[index].style[options.styleOposite] = toPct(h);
 	}
 
 	// ...
@@ -2226,7 +2243,8 @@ function closure ( target, options, originalOptions ){
 		updateOptions: updateOptions,
 		target: scope_Target, // Issue #597
 		removePips: removePips,
-		pips: pips // Issue #594
+		pips: pips, // Issue #594
+		setConnectValue: setConnectValue,
 	};
 
 	// Attach user events.
@@ -2235,6 +2253,7 @@ function closure ( target, options, originalOptions ){
 	// Use the public value method to set the start values.
 	valueSet(options.start);
 
+	
 	if ( options.pips ) {
 		pips(options.pips);
 	}
@@ -2244,6 +2263,9 @@ function closure ( target, options, originalOptions ){
 	}
 
 	aria();
+
+	// if(scope_Connects!=null)
+	setConnectValue(0, 0, 0);
 
 	return scope_Self;
 

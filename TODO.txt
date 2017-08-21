@@ -1,10 +1,6 @@
-Dark theme issues:
-  - context menu font is illegible
 
 Sliders:
   - mousewheel to change the value
-  - dissociate the filling of the slider bar from the handle.
-  	* provide a function to change the value of the filling
 
 Mixer Element:
   - 
