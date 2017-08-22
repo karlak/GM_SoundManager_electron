@@ -1,10 +1,10 @@
-.mixerElement{
+.mixerElement {
     --volumeHeight: 150px;
 
     width: 120px;
     height: 300px;
 
-    margin: 4px 1px 4px 0;
+    margin: 4px 0px 4px 3px;
 
     margin-right: 1px;
     padding: 0;
@@ -19,34 +19,27 @@
 
 .volumeContainer .scale {
     position: absolute;
-    
+
     left: calc(50% - 12px);
     top: 50%;
     right: 0;
-    
+
     margin: 0;
     padding: 0;
-    
+
     transform: rotate(90deg);
-    
+
     font-size: 9px;
     font-weight: 900;
-    
+
     line-height: 0;
     color: var(--text-color-greyed2);
 }
-.volumeContainer{
+.volumeContainer {
     position: relative;
 }
-/*
 
-.mixerElement div{
-    position: absolute;
-    width: 100%;
-}
-
-*/
-.mixerElement h5{
+.mixerElement h5 {
     width: 100%;
     background-color: hsl(220, 25%, 29%);
     margin-top: 0;
@@ -55,43 +48,37 @@
     overflow: hidden;
     text-overflow: ellipsis;
     cursor: default;
+    font-weight: normal;
 }
 .sliderVolume .noUi-connect {
     background: var(--slider-track-color);
 }
- .noUi-handle:after{
+.noUi-handle:after {
     background: var(--slider-track-color);
 }
 .sliderVolume {
     margin-top: 20px;
-}
-.sliderBalance{
-    /*margin-top:   20px;*/
-    /*margin-left:   15px;*/
-    /*margin-right:  15px;*/
 }
 
 .noUi-handle:focus {
     outline: none;
 }
 
-.balanceContainer{
+.balanceContainer {
     position: relative;
-    margin-left:   15px;
-    margin-right:  15px;
+    margin-left: 15px;
+    margin-right: 15px;
 }
 .balanceContainer .scale {
     position: absolute;
-    
+
     left: 0;
     top: 39px;
     right: 0;
-    
+
     margin: 0;
     padding: 0;
-    
-    /*transform: rotate(90deg);*/
-    
+
     font-size: 9px;
     font-weight: 900;
 
@@ -107,14 +94,14 @@
     bottom: 2px;
 }
 
-.volumeContainer .pip{
+.volumeContainer .pip {
     height: 1px;
-    color: var(--color-fg);
+    color: var(--text-color);
     position: absolute;
     left: 0;
 }
 
-.volumeContainer .pip:before{
+.volumeContainer .pip:before {
     content: "";
     position: absolute;
     top: 0;
@@ -122,11 +109,11 @@
     width: 5px;
     height: 1px;
     bottom: 0;
-    background: #4281C3;
-    opacity: 0.5;
-    box-shadow: 0 0 0 1px #191f2a, 0 0 0 2px rgba(255, 255, 255, 0.09);
+    background: var(--slider-track-color);
+    opacity: 0.8;
+    box-shadow: 0 0 0 1px rgba(25, 31, 42, 0.7), 0 0 0 2px rgba(255, 255, 255, 0.06);
 }
-.volumeContainer .pip:after{
+.volumeContainer .pip:after {
     content: "";
     position: absolute;
     top: 0;
@@ -134,12 +121,12 @@
     width: 5px;
     height: 1px;
     bottom: 0;
-    background: #4281C3;
-    opacity: 0.5;
-    box-shadow: 0 0 0 1px #191f2a, 0 0 0 2px rgba(255, 255, 255, 0.09);
+    background: var(--slider-track-color);
+    opacity: 0.8;
+    box-shadow: 0 0 0 1px rgba(25, 31, 42, 0.7), 0 0 0 2px rgba(255, 255, 255, 0.06);
 }
 
-.volumeContainer .pip span{
+.volumeContainer .pip span {
     left: 20px;
     position: relative;
     top: -12px;
@@ -156,14 +143,14 @@
     bottom: 0;
 }
 
-.balanceContainer .pip{
+.balanceContainer .pip {
     height: 1px;
     color: var(--color-fg);
     position: absolute;
     left: 0;
 }
 
-.balanceContainer .pip:before{
+.balanceContainer .pip:before {
     content: "";
     position: absolute;
     top: -14px;
@@ -171,11 +158,11 @@
     width: 1px;
     height: 5px;
     bottom: 0;
-    background: #4281C3;
-    opacity: 0.5;
-    box-shadow: 0 0 0 1px #191f2a, 0 0 0 2px rgba(255, 255, 255, 0.09);
+    background: var(--slider-track-color);
+    opacity: 0.8;
+    box-shadow: 0 0 0 1px rgba(25, 31, 42, 0.7), 0 0 0 2px rgba(255, 255, 255, 0.06);
 }
-.balanceContainer .pip:after{
+.balanceContainer .pip:after {
     content: "";
     position: absolute;
     top: 5px;
@@ -183,12 +170,12 @@
     width: 1px;
     height: 5px;
     bottom: 0;
-    background: #4281C3;
-    opacity: 0.5;
-    box-shadow: 0 0 0 1px #191f2a, 0 0 0 2px rgba(255, 255, 255, 0.09);
+    background: var(--slider-track-color);
+    opacity: 0.8;
+    box-shadow: 0 0 0 1px rgba(25, 31, 42, 0.7), 0 0 0 2px rgba(255, 255, 255, 0.06);
 }
 
-.balanceContainer .pip span{
+.balanceContainer .pip span {
     left: -50%;
     position: relative;
     top: 6px;
