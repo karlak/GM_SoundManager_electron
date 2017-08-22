@@ -19,7 +19,8 @@ ModuleRegisterFuncs['mixerElement'] = function($elem, args) {
     volume = noUiSlider.create(sliderVolume, {
         behaviour: "snap,wheel",
         volumeContainer: volumeContainer,
-        start: 40,
+        start: 50,
+        // padding: 10, 
         connect: [true, false],
         direction: 'rtl',
         orientation: 'vertical',

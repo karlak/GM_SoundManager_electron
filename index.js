@@ -760,10 +760,19 @@ document.addEventListener("DOMContentLoaded", () => {
     function getModule(module, args) {
         if(ModuleList[module] == null){
             console.log("Loading module...", module);
-            // var script = $jquery('<script type="text/javascript" src="'+module+'.js"></script>');
-            // $jquery("body").append(script);
+            // CSS
+            var stylesheet = document.createElement('link');
+            stylesheet.href = './modules/'+module+'.css';
+            stylesheet.rel = 'stylesheet';
+            stylesheet.type = 'text/css';
+            stylesheet.media = 'only x';
+            stylesheet.onload = function() {stylesheet.media = 'all'}
+            document.getElementsByTagName('head')[0].appendChild(stylesheet);
+
+            // Javascript
             var dfd = $jquery.getScript('./modules/'+module+'.js');
 
+            // HTML
             var file_content = fs.readFileSync('./modules/'+module+'.html', "utf8");
             ModuleList[module] = {html: $jquery(file_content), registerDfd: dfd};
             
