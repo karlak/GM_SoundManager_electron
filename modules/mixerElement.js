@@ -17,7 +17,7 @@ ModuleRegisterFuncs['mixerElement'] = function($elem, args) {
         volumeContainer = null;
 
     volume = noUiSlider.create(sliderVolume, {
-        behaviour: "snap",
+        behaviour: "snap,wheel",
         volumeContainer: volumeContainer,
         start: 40,
         connect: [true, false],
@@ -44,11 +44,10 @@ ModuleRegisterFuncs['mixerElement'] = function($elem, args) {
         balanceContainer = null;
     
     var balance = noUiSlider.create(sliderBalance, {
-        behaviour: "snap",
+        behaviour: "snap,wheel",
         volumeContainer: balanceContainer,
         start: 0,
         connect: [true, false],
-        // connect: [false, true, false],
         range: {
             'min': -1,
             'max': 1

@@ -703,6 +703,7 @@
 		var fixed = entry.indexOf('fixed') >= 0;
 		var snap = entry.indexOf('snap') >= 0;
 		var hover = entry.indexOf('hover') >= 0;
+		var wheel = entry.indexOf('wheel') >= 0;
 
 		if ( fixed ) {
 
@@ -719,7 +720,8 @@
 			drag: drag,
 			fixed: fixed,
 			snap: snap,
-			hover: hover
+			hover: hover,
+			wheel: wheel
 		};
 	}
 
@@ -1746,6 +1748,32 @@ function closure ( target, options, originalOptions ){
 		}
 	}
 
+	function eventWheel ( event ) {
+
+		// The event shouldn't propagate up
+		event.stopPropagation();
+
+		var proposal = calcPointToPercentage(event.calcPoint);
+		var handleNumber = getClosestHandle(proposal);
+
+		// Tackle the case that all handles are 'disabled'.
+		if ( handleNumber === false ) {
+			return false;
+		}
+
+		var dir = event.wheelDelta > 0 ? 1 : -1;
+		var factor = event.ctrlKey ? 1 : 5;
+		//
+		setHandle(handleNumber, scope_Locations[handleNumber]+dir*factor, true, true, false);
+		
+
+		setZindex();
+
+		fireEvent('slide', handleNumber, true);
+		fireEvent('update', handleNumber, true);
+		fireEvent('change', handleNumber, true);
+		fireEvent('set', handleNumber, true);
+	}
 	// Fires a 'hover' event for a hovered mouse/pen position.
 	function eventHover ( event ) {
 
@@ -1790,6 +1818,13 @@ function closure ( target, options, originalOptions ){
 		// Fire hover events
 		if ( behaviour.hover ) {
 			attachEvent (actions.move, scope_Base, eventHover, { hover: true });
+		}
+
+		if ( behaviour.wheel ) {
+			console.log("wheeeel");
+			if(options.volumeContainer != null)
+				attachEvent ('mousewheel', options.volumeContainer, eventWheel, {});
+			attachEvent ('mousewheel', scope_Base, eventWheel, {});
 		}
 
 		// Make the range draggable.
@@ -1938,14 +1973,14 @@ function closure ( target, options, originalOptions ){
 	}
 
 	// Test suggested values and apply margin, step.
-	function setHandle ( handleNumber, to, lookBackward, lookForward ) {
+	function setHandle ( handleNumber, to, lookBackward, lookForward, trySnapOrNot = true) {
 
 		to = checkHandlePosition(scope_Locations, handleNumber, to, lookBackward, lookForward, false);
 
 		if ( to === false ) {
 			return false;
 		}
-		to = trySnapToCloseValue(to);
+		if(trySnapOrNot) to = trySnapToCloseValue(to);
 
 		updateHandlePosition(handleNumber, to);
 

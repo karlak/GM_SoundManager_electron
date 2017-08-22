@@ -1,6 +1,6 @@
 
 Sliders:
-  - mousewheel to change the value
+  - add a scale and a label to tell what they do
 
 Mixer Element:
   - 
