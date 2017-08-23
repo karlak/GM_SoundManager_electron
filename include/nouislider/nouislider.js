@@ -1821,7 +1821,6 @@ function closure ( target, options, originalOptions ){
 		}
 
 		if ( behaviour.wheel ) {
-			console.log("wheeeel");
 			if(options.volumeContainer != null)
 				attachEvent ('mousewheel', options.volumeContainer, eventWheel, {});
 			attachEvent ('mousewheel', scope_Base, eventWheel, {});

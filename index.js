@@ -245,7 +245,7 @@ document.addEventListener("DOMContentLoaded", () => {
         var options = {
             title: "Import sound...",
             filters: [
-                { name: 'Audio files', extensions: ['ogg', 'mp3', 'flac'] },
+                { name: 'Audio files', extensions: ['ogg', 'mp3', 'flac', 'wav'] },
             ],
             properties: ["openFile", "multiSelections"],
         }
@@ -255,6 +255,26 @@ document.addEventListener("DOMContentLoaded", () => {
 
             for (var i = 0; i < filePaths.length; i++) {
                 newJob("jobNewSound", {path: filePaths[i], parent_key: data.node.key});
+            }
+        });
+    });
+    myTreeContextMenuFolder.on("click", "x-menuitem[name='addMusic']", (event) => {
+        var data = $jquery(event.delegateTarget).data('contextData');
+        // setTimeout(function() { data.node.editCreateNode("child", { title: "", folder: true }); }, 30);
+
+        var options = {
+            title: "Import music...",
+            filters: [
+                { name: 'Audio files', extensions: ['ogg', 'mp3', 'flac', 'wav'] },
+            ],
+            properties: ["openFile", "multiSelections"],
+        }
+        dialog.showOpenDialog(win, options, (filePaths) => {
+            if (filePaths == null)
+                return;
+
+            for (var i = 0; i < filePaths.length; i++) {
+                newJob("jobNewMusic", {path: filePaths[i], parent_key: data.node.key});
             }
         });
     });
@@ -700,7 +720,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 console.error("workerError!", message.data);
                 $jquery("#workInfoImg").addClass('error');
                 break;
-            case '_jobNewSound':
+            case 'file_imported':
                 var parent_node = $jquery("#tree").fancytree("getTree").getNodeByKey(message.data.parent_key);
                 if(parent_node==null || (parent_node.lazy && parent_node.children==null))
                     return;
@@ -709,7 +729,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     folder: false,
                     key: message.data.key,
                     lazy: false,
-                    icon: 'sound',
+                    icon: message.data.type,
                 });
                 break;
             case 'working':
@@ -730,23 +750,23 @@ document.addEventListener("DOMContentLoaded", () => {
     /*************************/
     /* Importing audio files */
 
-    $jquery("#importSound").click((event) => {
-        var options = {
-            title: "Import sound...",
-            filters: [
-                { name: 'Audio files', extensions: ['ogg', 'mp3'] },
-            ],
-            properties: ["openFile", "multiSelections"],
-        }
-        dialog.showOpenDialog(win, options, (filePaths) => {
-            if (filePaths == null)
-                return;
-            // console.log(filePaths);
-            for (var i = 0; i < filePaths.length; i++) {
-                newJob("jobNewSound", {path: filePaths[i], parent_key: "root"});
-            }
-        });
-    });
+    // $jquery("#importSound").click((event) => {
+    //     var options = {
+    //         title: "Import sound...",
+    //         filters: [
+    //             { name: 'Audio files', extensions: ['ogg', 'mp3'] },
+    //         ],
+    //         properties: ["openFile", "multiSelections"],
+    //     }
+    //     dialog.showOpenDialog(win, options, (filePaths) => {
+    //         if (filePaths == null)
+    //             return;
+    //         // console.log(filePaths);
+    //         for (var i = 0; i < filePaths.length; i++) {
+    //             newJob("jobNewSound", {path: filePaths[i], parent_key: "root"});
+    //         }
+    //     });
+    // });
 
 
     /************************/

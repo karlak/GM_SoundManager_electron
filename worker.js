@@ -60,7 +60,9 @@ function getJobDesc(message) {
         case "jobClose":
 			return "Close this window.";
         case "jobNewSound":
-			return "Import the sound file '"+message.data.path+"'";
+            return "Import the sound file '"+message.data.path+"'";
+        case "jobNewMusic":
+            return "Import the music file '"+message.data.path+"'";
         default:
 			return "@todo: add job description";
     }
@@ -114,7 +116,10 @@ function doNextJobs(job) {
             dfdJob.resolve({ok: true, msg: ""});
             break;
         case "jobNewSound":
-            jobNewSound(job.data, dfdJob);
+            jobImportAudioFile(job.data, 'sound', dfdJob);
+            break;
+        case "jobNewMusic":
+            jobImportAudioFile(job.data, 'music', dfdJob);
             break;
         default:
             console.error("Job unknown !");
@@ -124,45 +129,55 @@ function doNextJobs(job) {
     return dfdJob.promise();
 }
 
-function jobNewSound(data, dfd) {
-	//{path: filePaths[i], parent_key: data.node.key}
-	input_path = data.path;
-	parent_key = data.parent_key;
+function jobImportAudioFile(data, type, dfd) {
+    //{path: filePaths[i], parent_key: data.node.key}
+    input_path = data.path;
+    parent_key = data.parent_key;
     // Convert the file to the right type and copy the result in the right folder, with a generated unique name.
     // 1. Define the name
     // 1.1 Create an entry in the db which is labeled 'deleted' to get the id
     input_info = path.parse(input_path);
-    db.insert({ title: input_info.name, is_folder: false, parent: parent_key, deleted: true, type: "sound" }, function(err, newDocs) {
-    	if(err!=null){
-			dfd.resolve({ok: false, msg: "Error while inserting the entry in the database"});
-    		return;
-    	}
+    db.insert({ title: input_info.name, is_folder: false, parent: parent_key, deleted: true, type: type }, function(err, newDocs) {
+        if(err!=null){
+            dfd.resolve({ok: false, msg: "Error while inserting the entry in the database"});
+            return;
+        }
         var key = newDocs._id;
         console.log("Converting the file...", input_info.name);
 
-        var child = spawn('sox.exe', [input_path, '-r', '44100', '-t', 'ogg', path.join(path_sounds, key)], { cwd: './include/sox/' });
+        var child;
+        if(type=='music'){
+            child = spawn('sox.exe', [input_path, '-r', '44100', '-t', 'ogg', path.join(path_musics, key)], { cwd: './include/sox/' });
+        }
+        else if(type=='sound'){
+            child = spawn('sox.exe', [input_path, '-r', '44100', '-t', 'ogg', path.join(path_sounds, key)], { cwd: './include/sox/' });
+        }
+        else{
+            dfd.resolve({ok: false, msg: "Type Unknown!"});
+        }
 
         child.on('exit', function(code) {
             if (code != 0) {
                 child.stderr.on('data', data => {
                     console.log(`stderr: ${data}`);
                 });
-				dfd.resolve({ok: false, msg: "Error while converting the file"});
+                dfd.resolve({ok: false, msg: "Error while converting the file"});
                 return;
             }
             console.log("Converted !");
             db.update({_id: key}, {$set: {deleted: false}}, {}, (err, numAffected)=>{
-            	if(err!=null){
-					dfd.resolve({ok: false, msg: "Error while updating the database entry !"});
-                	return;
-            	}
-            	sendParent('_jobNewSound', {title: input_info.name, key: key, parent_key: parent_key});
-				dfd.resolve({ok: true, msg: ""});
-				return;
+                if(err!=null){
+                    dfd.resolve({ok: false, msg: "Error while updating the database entry !"});
+                    return;
+                }
+                sendParent('file_imported', {title: input_info.name, key: key, parent_key: parent_key, type: type});
+                dfd.resolve({ok: true, msg: ""});
+                return;
             });
         });
     });
 }
+
 
 // document.addEventListener("DOMContentLoaded", () => {});
 
