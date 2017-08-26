@@ -10,31 +10,13 @@
     text-align: center;
 }
 
-/*.musicProgress{
-	position: relative;
-	height: 10px;
-	background-color: #20293A;
-	border: solid 1px #191F2A;
-	margin: 0 2px 0 2px;
-	overflow: hidden;
-}
-
-.currentProgress {
-	position: absolute;
-	left: 0;
-	top: 0;
-	bottom: 0;
-	width: 57%;
-	background-color: #6C5326;
-	border-right: solid 1px #FFA500;
-	box-sizing: border-box;
-}
-*/
-.musicEdit .noUi-handle {
+.currentProgress .noUi-handle {
 	display: none;
 }
 
 .progressContainer{
-	height: 40px;
-	background-color: red;
+	/*height: 40px;*/
+	padding-top: 10px;
+	padding-bottom: 10px;
+	background-color: #2c3649;
 }

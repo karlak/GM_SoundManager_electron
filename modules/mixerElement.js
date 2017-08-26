@@ -1,8 +1,8 @@
-console.log('MixerElement.js Loaded !');
+// console.log('MixerElement.js Loaded !');
 
 var volume;
 ModuleRegisterFuncs['mixerElement'] = function($elem, args) {
-    console.log('MixerElement Registered !', $elem, args);
+    // console.log('MixerElement Registered !', $elem, args);
 
 
     // Volume Slider
@@ -26,7 +26,7 @@ ModuleRegisterFuncs['mixerElement'] = function($elem, args) {
         orientation: 'vertical',
         range: {
             'min': 0,
-            'max': 100
+            'max': 1
         }
     });
     // console.log(volume);
@@ -58,7 +58,33 @@ ModuleRegisterFuncs['mixerElement'] = function($elem, args) {
             'values': [50]
         },
     });
-    // console.log(balance);
+    
+    ///////////
+    // Update
+    ///////////
+    var music_slot = args.slot;
+    args.register(update);
+
+    function update() {
+        var vol = gm_music.music_getGain(music_slot);
+        volume.setConnectValue(0, 0, vol);
+        var bal = gm_music.music_getBalance(music_slot);
+        balance.setConnectValue(0, 0, bal);
+    }
+
+    function test(a) {
+        console.log(music_slot, a)
+        
+    }
+
+    volume.on('set', function(values){
+        var value = values[0]*1;
+        gm_music.music_setGain(music_slot, value);
+    });
+    balance.on('set', function(values){
+        var value = values[0]*1;
+        gm_music.music_setBalance(music_slot, value);
+    });
 }
 
 
