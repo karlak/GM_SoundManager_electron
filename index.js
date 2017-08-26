@@ -61,10 +61,16 @@ document.addEventListener("DOMContentLoaded", () => {
     /******* Splitter ******/
     const element_split_parent = document.querySelector("#split-parent");
 
-    Split(['#left-panel', '#right-panel'], {
+    var leftPanelReduced = false;
+    var leftPanelLastSize = null;
+    var splitter = Split(['#left-panel', '#right-panel'], {
         gutterSize: 5,
         snapOffset: 0,
+        minSize: 200,
         elementStyle: function(dimension, size, gutterSize, num = -1) {
+            if(leftPanelReduced){
+                expandedTree();
+            }
             if (typeof size === 'string' || size instanceof String) {
                 if (size.indexOf('%') > 0 || size.indexOf('px') > 0) {
                     var ret = [];
@@ -90,6 +96,27 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
     })
+    function collapseTree() {
+        if(leftPanelReduced){
+            splitter.setSizes(leftPanelLastSize);
+            expandedTree();
+        }
+        else{
+            leftPanelLastSize = splitter.getSizes();
+            splitter.collapse(0);
+            leftPanelReduced = true;
+            $jquery("#reduceLabel").text(">");    
+        }
+        
+    }
+    function expandedTree(){
+        leftPanelReduced = false;
+        $jquery("#reduceLabel").text("<");
+    }
+    $jquery("#reduceLabel").click(()=>{
+        collapseTree();
+    });
+
     /***********************/
     /*******SearchBar*******/
     document.getElementById("searchBar").addEventListener("keydown", (event) => {
@@ -124,7 +151,6 @@ document.addEventListener("DOMContentLoaded", () => {
     /********TreeView********/
     function myAfterCollapse(event, data) {
         if (data.node.children != null && data.node.children.length > 0) {
-            // console.log("resetLazy");
             data.node.resetLazy();
         }
         return true;
@@ -133,7 +159,6 @@ document.addEventListener("DOMContentLoaded", () => {
     function myLazyLoad(event, data) {
         var node = data.node;
         var parent_key = node.key;
-        // console.log("Lazy load for key: ", parent_key);
 
 
         var dfd = new $jquery.Deferred();
@@ -803,11 +828,10 @@ document.addEventListener("DOMContentLoaded", () => {
         });
         return element;
     }
-    $jquery("#right-panel").append(getModule("mixerElement", {id: 10, volume: 7}));
-    $jquery("#right-panel").append(getModule("mixerElement"));
-    $jquery("#right-panel").append(getModule("mixerElement"));
-    $jquery("#right-panel").append(getModule("mixerElement"));
-    // mixerElementRegister();
+    // $jquery("#right-panel").append(getModule("mixerElement", {id: 10, volume: 7}));
+    // $jquery("#right-panel").append(getModule("mixerElement"));
+    // $jquery("#right-panel").append(getModule("mixerElement"));
+    // $jquery("#right-panel").append(getModule("mixerElement"));
 
     ///////////
 

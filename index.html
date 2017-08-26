@@ -101,9 +101,6 @@
             </x-menubar>
         </div>
         <div id="app">
-            <div id="workInfo" class="active">
-                <img id="workInfoImg" src="include/imgs/cog.png">
-            </div>
             <div id="split-parent">
                 <div id="left-panel" class="panel">
                     <x-input id="searchBar">
@@ -150,31 +147,15 @@
                     </div>
                 </div>
                 <div id="right-panel" class="panel">
-                    <div id="titlebar-down"></div>
-                    <x-contextmenu id="mycontext2">
-                        <x-menu>
-                            <x-menuitem>
-                                <x-label>22222</x-label>
-                            </x-menuitem>
-                            <x-menuitem>
-                                <x-label>Redo</x-label>
-                            </x-menuitem>
-                            <hr>
-                            <x-menuitem>
-                                <x-label>Cut</x-label>
-                            </x-menuitem>
-                            <x-menuitem>
-                                <x-label>Copy</x-label>
-                            </x-menuitem>
-                            <x-menuitem>
-                                <x-label>Paste</x-label>
-                            </x-menuitem>
-                            <hr>
-                            <x-menuitem>
-                                <x-label>Refresh</x-label>
-                            </x-menuitem>
-                        </x-menu>
-                    </x-contextmenu>
+                    <!-- <div id="titlebar-down"></div> -->
+                    <div class="tab-group">
+                        <div class="tab"><span>TAB</span></div>
+                        <div class="tab on"><span>TAB</span></div>
+                        <div class="tab"><span>TAB</span></div>
+                        <div class="tab"><span>TAB</span></div>
+                    </div>
+                    <div id="tabs-content">
+                    </div>
                     <!-- 
                     
     
@@ -182,6 +163,15 @@
                     <x-progressbar value="0.5"></x-progressbar>
                     <x-button id="myButton">Hello my beautiful world !</x-button> -->
                 </div>
+            </div>
+        </div>
+        <div id="status-bar">
+            <span>
+                <span id="reduceLabel">&lt;</span>
+            </span>
+            <span id="status-message">Status bar message...</span>
+            <div id="workInfo" class="active">
+                <img id="workInfoImg" src="include/imgs/cog.png">
             </div>
         </div>
     </div>
