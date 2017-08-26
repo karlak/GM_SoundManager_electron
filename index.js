@@ -11,8 +11,14 @@ var fs = require('fs');
 // const Datastore = remote.require('./include/nedb')
 const path = require('path');
 var db;
+var gm_music;
 let assistWin;
 let workerWin;
+
+const path_sounds = path.join(app.getPath("userData"), 'audioData', 'sounds')
+const path_musics = path.join(app.getPath("userData"), 'audioData', 'musics')
+const path_loops = path.join(app.getPath("userData"), 'audioData', 'loops')
+
 
 // Prevents the middle click scroll behavior
 document.body.onmousedown = e => {
@@ -146,6 +152,11 @@ document.addEventListener("DOMContentLoaded", () => {
     /********Database********/
     db = remote.getGlobal("db");
 
+    /************************/
+    /********GM_Music********/
+    gm_music = remote.getGlobal("gm_music");
+
+
 
     /************************/
     /********TreeView********/
@@ -199,6 +210,16 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         });
     }
+
+    function myTreeDblClick(event, data) {
+        var node = data.node;
+        if (data.targetType === 'title' || data.targetType === 'icon') {
+            // console.log(data, event);
+            if(node.icon=="music"){
+                editMusic(data.node.key, data.node);
+            }
+        }
+    } 
 
     // ContextMenu
     var myTreeContextMenuFolder = $jquery("#treeViewContext");
@@ -328,6 +349,7 @@ document.addEventListener("DOMContentLoaded", () => {
         },
         lazyLoad: myLazyLoad,
         collapse: myAfterCollapse,
+        dblclick: myTreeDblClick,
         // click: myTreeClick,
         // clickUp: myTreeContext,
         contextmenu: myTreeContext,
@@ -722,18 +744,10 @@ document.addEventListener("DOMContentLoaded", () => {
         $jquery("#workInfo").toggleClass('active');
     });
 
-    function newJob(type, data) {
-        if (workerWinReady) {
-            workerWin.webContents.send('newJob', JSON.stringify({ type: type, data: data }));
-        } else {
-            console.error("Tried to create a job before the worker being ready !")
-        }
-    }
     createWorkerWindow();
     window.onbeforeunload = (e) => {
         newJob("jobClose", "");
     }
-    var workerWinReady = false;
     $jquery("#workInfoImg").click(() => {
         $jquery("#workInfoImg").removeClass('error');        
         workerWin.show();
@@ -757,8 +771,14 @@ document.addEventListener("DOMContentLoaded", () => {
                     icon: message.data.type,
                 });
                 break;
+            // case 'music_loaded':
+            //     MusicSlots[message.data.slot]['musicLoaded']();
+            //     break;
+            // case 'music_unloaded':
+            //     setFreeMusicSlot(message.data.slot);
+            //     break;
             case 'working':
-                console.log("worker working...", message.data);
+                // console.log("worker working...", message.data);
                 if(message.data>0){
                     $jquery("#workInfoImg").addClass('active');
                 }
@@ -772,70 +792,96 @@ document.addEventListener("DOMContentLoaded", () => {
         workerWinReady = true;
     });
 
-    /*************************/
-    /* Importing audio files */
-
-    // $jquery("#importSound").click((event) => {
-    //     var options = {
-    //         title: "Import sound...",
-    //         filters: [
-    //             { name: 'Audio files', extensions: ['ogg', 'mp3'] },
-    //         ],
-    //         properties: ["openFile", "multiSelections"],
-    //     }
-    //     dialog.showOpenDialog(win, options, (filePaths) => {
-    //         if (filePaths == null)
-    //             return;
-    //         // console.log(filePaths);
-    //         for (var i = 0; i < filePaths.length; i++) {
-    //             newJob("jobNewSound", {path: filePaths[i], parent_key: "root"});
-    //         }
-    //     });
-    // });
-
-
     /************************/
     /*** Show the app div ***/
     document.body.classList.add('loaded');
 
-    /************************/
-    /**  Load HTML Module  **/
-    ModuleList = [];
-    ModuleRegisterFuncs = [];
-    function getModule(module, args) {
-        if(ModuleList[module] == null){
-            console.log("Loading module...", module);
-            // CSS
-            var stylesheet = document.createElement('link');
-            stylesheet.href = './modules/'+module+'.css';
-            stylesheet.rel = 'stylesheet';
-            stylesheet.type = 'text/css';
-            stylesheet.media = 'only x';
-            stylesheet.onload = function() {stylesheet.media = 'all'}
-            document.getElementsByTagName('head')[0].appendChild(stylesheet);
-
-            // Javascript
-            var dfd = $jquery.getScript('./modules/'+module+'.js');
-
-            // HTML
-            var file_content = fs.readFileSync('./modules/'+module+'.html', "utf8");
-            ModuleList[module] = {html: $jquery(file_content), registerDfd: dfd};
-            
-        }
-        var element = ModuleList[module].html.clone();
-        ModuleList[module].registerDfd.then(()=>{
-            ModuleRegisterFuncs[module](element, args);
-        });
-        return element;
-    }
+    
     // $jquery("#right-panel").append(getModule("mixerElement", {id: 10, volume: 7}));
     // $jquery("#right-panel").append(getModule("mixerElement"));
     // $jquery("#right-panel").append(getModule("mixerElement"));
     // $jquery("#right-panel").append(getModule("mixerElement"));
+    // $jquery("#music_edit").append(getModule("musicEdit"));
 
     ///////////
 
 });
+
+
+var workerWinReady = false;
+function newJob(type, data) {
+    if (workerWinReady) {
+        workerWin.webContents.send('newJob', JSON.stringify({ type: type, data: data }));
+    } else {
+        console.error("Tried to create a job before the worker being ready !")
+    }
+}
+
+
+/************************/
+/**  Load HTML Module  **/
+ModuleList = [];
+ModuleRegisterFuncs = [];
+function getModule(module, args) {
+    if(ModuleList[module] == null){
+        console.log("Loading module...", module);
+        // CSS
+        var stylesheet = document.createElement('link');
+        stylesheet.href = './modules/'+module+'.css';
+        stylesheet.rel = 'stylesheet';
+        stylesheet.type = 'text/css';
+        stylesheet.media = 'only x';
+        stylesheet.onload = function() {stylesheet.media = 'all'}
+        document.getElementsByTagName('head')[0].appendChild(stylesheet);
+
+        // Javascript
+        var dfd = $jquery.getScript('./modules/'+module+'.js');
+
+        // HTML
+        var file_content = fs.readFileSync('./modules/'+module+'.html', "utf8");
+        ModuleList[module] = {html: $jquery(file_content), registerDfd: dfd};
+        
+    }
+    var element = ModuleList[module].html.clone();
+    ModuleList[module].registerDfd.then(()=>{
+        ModuleRegisterFuncs[module](element, args);
+    });
+    return element;
+}
+var rightPanelElement = null;
+function rightPanelShow($elem) {
+    if(rightPanelElement){
+        rightPanelElement.hide();
+    }
+    rightPanelElement = $elem;
+    $elem.show();
+}
+
+function editMusic(filename, node) {
+    $elem = $jquery("#musicEditContainer");
+    $elem.empty();
+    $elem.append(getModule("musicEdit", {filename: filename, node: node}));
+    rightPanelShow($elem);
+}
+
+
+MusicSlots = [];
+MusicSlotsSize = 2;
+function getFreeMusicSlot(handler) {
+    for (var i = 0; i < MusicSlotsSize; i++) {
+        if(MusicSlots[i] != null)
+            continue;
+        MusicSlots[i] = handler;
+        console.log("LOAD", i);
+        return i;
+    }
+    return null;
+}
+
+function setFreeMusicSlot(slot) {
+    MusicSlots[slot] = null;
+    console.log("FREE", slot);
+}
 
 
 // Debug Functions

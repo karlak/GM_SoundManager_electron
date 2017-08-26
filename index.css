@@ -377,18 +377,14 @@ input[type=range].custom_range:focus::-webkit-slider-runnable-track {
   /*background: #4b9bf2;*/
 }
 
-/*************/
-
-/*.verticalize{
-    position: absolute;
-    transform-origin: right;
-    transform:translate(-100%, -47px) rotate(270deg);
-}
-*/
-
 /**
  * TABS
  */
+
+#scenes {
+    height: 100%;
+    display: none;
+}
 
 #tab-container {
     position: relative;
@@ -403,7 +399,7 @@ input[type=range].custom_range:focus::-webkit-slider-runnable-track {
 }
 #tabs-content{
     background-color: #283143;
-    height: calc(100% - 41px);
+    height: calc(100% - 40px);
 }
 
 .tab{
@@ -438,7 +434,7 @@ input[type=range].custom_range:focus::-webkit-slider-runnable-track {
 }
 
 /**
- * 
+ * Status bar
  */
 
 #status-bar {
@@ -456,21 +452,6 @@ input[type=range].custom_range:focus::-webkit-slider-runnable-track {
     position: absolute;
     right: 2px;
     top: 1px;
-    /*z-index: 109;*/
-    /*height: 80px;*/
-    /*width: 80px;*/
-    /*background-color: var(--titlebar-color);*/
-    /*position: absolute;*/
-    /*right: -51px;*/
-    /*bottom: -51px;*/
-
-    /*transform: scale(0);*/
-    /*border-radius: 30px;*/
-    /*transition: all .5s;*/
-}
-#workInfo.active {
-    /*transform: scale(1);*/
-    /*border-radius: 10px;*/
 }
 #workInfo img {
     -webkit-user-drag: none;
@@ -503,5 +484,26 @@ input[type=range].custom_range:focus::-webkit-slider-runnable-track {
     cursor: pointer;
     position: relative;
     padding: 0 10px 0 10px;
+    margin-right: 5px;
     border-right: solid 1px rgba(255, 255, 255, 0.3);
 }
+
+/**
+ * Music Edit
+ */
+
+#musicEditContainer{
+    width: 500px;
+    height: 500px;
+    background-color: blue;
+
+    position:absolute;
+    left:0; right:0;
+    top:0; bottom:0;
+    margin:auto;
+
+    max-width:100%;
+    max-height:100%;
+    /*overflow:auto;*/
+}
+

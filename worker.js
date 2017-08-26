@@ -14,8 +14,15 @@ mkdirp(path_sounds);
 mkdirp(path_musics);
 mkdirp(path_loops);
 console.log(path_loops);
-// const Datastore = remote.require('./include/nedb')
+
 var db = remote.getGlobal("db");
+var gm_music = remote.getGlobal("gm_music");
+
+// gm_music = require('./gm_music_lib/bin/win32-x64-53/gm_music_lib.node');
+// gm_music.initialize();
+// gm_music.openDefaultStream();
+
+
 
 // const dialog = remote.dialog;
 // const menu = remote.Menu;
@@ -33,6 +40,10 @@ window.onbeforeunload = (e) => {
     if (!canClose) {
         e.returnValue = false
         win.hide();
+    }
+    else{
+        // gm_music.closeStream();
+        // gm_music.terminate();
     }
 }
 
@@ -63,6 +74,10 @@ function getJobDesc(message) {
             return "Import the sound file '"+message.data.path+"'";
         case "jobNewMusic":
             return "Import the music file '"+message.data.path+"'";
+        case "jobMusicLoad":
+            return "Loading the music file '"+message.data.filename+"'";
+        case "jobMusicUnload":
+            return "Unloading the music file '"+message.data.filename+"'";
         default:
 			return "@todo: add job description";
     }
@@ -76,32 +91,34 @@ var values = []
 dfd.resolve();
 
 
-ipc.on('newJob', (event, message) => {
+ipc.on('newJob', pushJob);
+
+function pushJob(event, message) {
     var rec = JSON.parse(message);
-	
+    
     var tableLine = addTableElem(rec.type, getJobDesc(rec));
     values.push([rec, tableLine]);
     
     sendParent("working", values.length)
-	
+    
     dfdNext = dfdNext.then(function () {
-    	var value = values.shift();
-    	return doNextJobs({ type: value[0].type, data: value[0].data }).then((res)=>{
-    		sendParent("working", values.length)
-    		if (res.ok) {
-    			value[1].find("td[name='res']").text("ok");
-    			value[1].addClass("ok");
-    		}else{
-    			sendParent("error", res.msg);
-    			value[1].addClass("nok");
-    			value[1].find("td[name='res']").text("err");
-    			var errLine = $jquery("<tr class='error' />");
-    			errLine.append($jquery("<td colspan='3' />").text(res.msg));
-    			value[1].after(errLine);
-    		}
-    	});
+        var value = values.shift();
+        return doNextJobs({ type: value[0].type, data: value[0].data }).then((res)=>{
+            sendParent("working", values.length)
+            if (res.ok) {
+                value[1].find("td[name='res']").text("ok");
+                value[1].addClass("ok");
+            }else{
+                sendParent("error", res.msg);
+                value[1].addClass("nok");
+                value[1].find("td[name='res']").text("err");
+                var errLine = $jquery("<tr class='error' />");
+                errLine.append($jquery("<td colspan='3' />").text(res.msg));
+                value[1].after(errLine);
+            }
+        });
     });
-})
+}
 
 function sendParent(type, data) {
     parentWin.webContents.send("worker_msg", JSON.stringify({ type: type, data: data }));
@@ -121,12 +138,35 @@ function doNextJobs(job) {
         case "jobNewMusic":
             jobImportAudioFile(job.data, 'music', dfdJob);
             break;
+        case "jobMusicLoad":
+            jobMusicLoad(job.data, dfdJob);
+            break;
+        case "jobMusicUnload":
+            jobMusicUnload(job.data, dfdJob);
+            break;
         default:
-            console.error("Job unknown !");
+            console.error("Job unknown !", job);
             // sendParent("error", "Tried to start an unknown job ! [" + job.type + "]");
             dfdJob.resolve({ok: false, msg: "Tried to run an unknown job ! [" + job.type + "]"});
     }
     return dfdJob.promise();
+}
+
+function jobMusicLoad(data, dfd) {
+    if(data.slot == null){
+        // We can't load the file right now, no slot free left
+        dfd.resolve({ok: false, msg: "No Free Slot left"});
+    }
+    var file_path = path.join(path_musics, data.filename);
+    gm_music.music_load(data.slot, file_path);
+    sendParent('music_loaded', data);
+    dfd.resolve({ok: true, msg: ""});
+}
+
+function jobMusicUnload(data, dfd) {
+    gm_music.music_unload(data.slot);
+    sendParent('music_unloaded', data);
+    dfd.resolve({ok: true, msg: ""});
 }
 
 function jobImportAudioFile(data, type, dfd) {
