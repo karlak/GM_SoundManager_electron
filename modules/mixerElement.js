@@ -1,6 +1,6 @@
 // console.log('MixerElement.js Loaded !');
 
-var volume;
+
 ModuleRegisterFuncs['mixerElement'] = function($elem, args) {
     // console.log('MixerElement Registered !', $elem, args);
 
@@ -16,7 +16,7 @@ ModuleRegisterFuncs['mixerElement'] = function($elem, args) {
     else
         volumeContainer = null;
 
-    volume = noUiSlider.create(sliderVolume, {
+    var volume = noUiSlider.create(sliderVolume, {
         behaviour: "snap,wheel",
         volumeContainer: volumeContainer,
         start: 50,
@@ -64,24 +64,26 @@ ModuleRegisterFuncs['mixerElement'] = function($elem, args) {
     ///////////
     var music_slot = args.slot;
     args.register(update);
+    volume.set(gm_music.music_getGain(music_slot));
+    balance.set(gm_music.music_getBalance(music_slot));
 
     function update() {
         var vol = gm_music.music_getGain(music_slot);
         volume.setConnectValue(0, 0, vol);
+
         var bal = gm_music.music_getBalance(music_slot);
-        balance.setConnectValue(0, 0, bal);
+        // Compute balance gains
+        var angle = bal * 0.78539816339;
+        var bal_left  = (0.70710678118 * (Math.cos(angle) - Math.sin(angle)));
+        var bal_right = (0.70710678118 * (Math.cos(angle) + Math.sin(angle)));
+        balance.setConnectValue(0, -bal_left, bal_right);
     }
 
-    function test(a) {
-        console.log(music_slot, a)
-        
-    }
-
-    volume.on('set', function(values){
+    volume.on('slide', function(values){
         var value = values[0]*1;
         gm_music.music_setGain(music_slot, value);
     });
-    balance.on('set', function(values){
+    balance.on('slide', function(values){
         var value = values[0]*1;
         gm_music.music_setBalance(music_slot, value);
     });

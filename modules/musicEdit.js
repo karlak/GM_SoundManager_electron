@@ -1,13 +1,12 @@
 // console.log('musicEdit.js Loaded !');
 
-// var volume;
 ModuleRegisterFuncs['musicEdit'] = function($elem, args) {
     var music_slot = getFreeMusicSlot();
     var music_length;
 
-    $elem_play = $elem.find(".play");
-    $elem_stop = $elem.find(".stop");
-    $elem_mixerContainer = $elem.find(".mixerContainer");
+    var $elem_play = $elem.find(".play");
+    var $elem_stop = $elem.find(".stop");
+    var $elem_mixerContainer = $elem.find(".mixerContainer");
 
     $elem.find(".musicTitle").text(args.node.title);
     gm_music.music_load(music_slot, path.join(path_musics, args.filename));
@@ -15,7 +14,7 @@ ModuleRegisterFuncs['musicEdit'] = function($elem, args) {
     gm_music.music_play(music_slot);
 
 
-    progressionSlider = noUiSlider.create($elem.find(".currentProgress")[0], {
+    var progressionSlider = noUiSlider.create($elem.find(".currentProgress")[0], {
         behaviour: "snap,wheel",
         volumeContainer: $elem.find(".progressContainer")[0],
         start: 50,
@@ -43,8 +42,11 @@ ModuleRegisterFuncs['musicEdit'] = function($elem, args) {
         }
         if(mixerUpdate) mixerUpdate();
     }
+    
+    var mixerUpdate = null;
+    $elem_mixerContainer.append(getModule("mixerElement", {slot: music_slot, register: (cb)=>{mixerUpdate = cb;}}));
 
-    var updateInterval = window.setInterval(update, 100);
+    var updateInterval = window.setInterval(update, 1);
 
 
     $elem.find(".toggle").click((event)=>{
@@ -63,8 +65,6 @@ ModuleRegisterFuncs['musicEdit'] = function($elem, args) {
         gm_music.music_stop(music_slot);
     });
 
-    var mixerUpdate = null;
-    $elem_mixerContainer.append(getModule("mixerElement", {slot: music_slot, register: (cb)=>{mixerUpdate = cb;}}));
 
 
     $elem.on('remove', ()=>{

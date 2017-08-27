@@ -866,14 +866,14 @@ function editMusic(filename, node) {
 
 
 MusicSlots = [];
-MusicSlotsSize = 2;
+MusicSlotsSize = 32;
 function getFreeMusicSlot(handler) {
     for (var i = 0; i < MusicSlotsSize; i++) {
-        if(MusicSlots[i] != null)
-            continue;
-        MusicSlots[i] = handler;
-        console.log("LOAD", i);
-        return i;
+        if(MusicSlots[i] == null){
+            MusicSlots[i] = handler || true;
+            console.log("LOAD", i);
+            return i;
+        }
     }
     return null;
 }
