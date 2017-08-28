@@ -27,6 +27,20 @@ body.loaded {
 
 }
 
+.loading *:not(.showloading) {
+    display: none;
+    visibility: collapse;
+}
+.loading *.showloading {
+    display: initial;
+    visibility: visible;
+}
+*.showloading {
+    display: none;
+    visibility: collapse;
+}
+
+
 #border {
     position: absolute;
     left: 0;
@@ -493,14 +507,16 @@ input[type=range].custom_range:focus::-webkit-slider-runnable-track {
  */
 
 #musicEditContainer{
-    /*width: 500px;*/
-    height: 410px;
-    background-color: green;
-
-    position:absolute;
-    left:0; right:2px;
-    top:0; bottom:0;
-    margin:auto;
+    /*background-color: green;*/
+    position: absolute;
+    left: 0;
+    right: 2px;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 div.toggle {

@@ -1,10 +1,32 @@
-<div class="musicEdit">
-    <div class="musicTitle"></div>
+<div class="musicEdit loading">
+    <div class="showloading">
+        <span class="showloading">Loading...</span>
+    </div>
+    <div class="musicTitle">.</div>
     <div class="progressContainer">
         <div class="currentProgress"></div>
     </div>
     <center>
-        <div class="mixerContainer"></div>
+        <div class="mixerContainer">
+            <div class="mixerElement">
+                <center class="volumeContainer" style="height:var(--volumeHeight);margin-bottom: 15px;">
+                    <div class="sliderVolume" style="height:var(--volumeHeight);"></div>
+                    <div class="scale">VOL</div>
+                    <div class="pips">
+                        <div class="pip" style="bottom: 0%"><span>0</span></div>
+                        <div class="pip" style="bottom: 100%"><span>1</span></div>
+                    </div>
+                </center>
+                <center class="balanceContainer" style="height: 45px;">
+                    <div class="sliderBalance" style="top: 15px;" />
+                    <div class="scale">BAL</div>
+                    <div class="pips">
+                        <div class="pip" style="left: 0%"><span>L</span></div>
+                        <div class="pip" style="left: 100%"><span>R</span></div>
+                    </div>
+                </center>
+            </div>
+        </div>
         <div class="play toggle"><span><x-icon name="play-arrow"></x-icon></span></div>
         <div class="stop button"><span><x-icon name="stop"></x-icon></span></div>
     </center>
