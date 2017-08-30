@@ -8,8 +8,9 @@
     --window-margin-max: 1px 1px var(--window-border-bottom-max) 1px;
     
     --titlebar-color: #191f2a;
-    --slider-track-color: #4281C3;
-
+    --slider-track-color: #bd7b00;
+    /*--slider-track-color: #4281C3;*/
+    
     /*--titlebar-color: #009688;*/
     /*--slider-track-color: var(--titlebar-color);*/
     cursor: default;
@@ -507,6 +508,18 @@ input[type=range].custom_range:focus::-webkit-slider-runnable-track {
  */
 
 #musicEditContainer{
+    /*background-color: green;*/
+    position: absolute;
+    left: 0;
+    right: 2px;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#soundEditContainer{
     /*background-color: green;*/
     position: absolute;
     left: 0;

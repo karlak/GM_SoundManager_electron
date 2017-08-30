@@ -19,7 +19,6 @@ const path_sounds = path.join(app.getPath("userData"), 'audioData', 'sounds')
 const path_musics = path.join(app.getPath("userData"), 'audioData', 'musics')
 const path_loops = path.join(app.getPath("userData"), 'audioData', 'loops')
 
-
 // Prevents the middle click scroll behavior
 document.body.onmousedown = e => {
     if (e.button === 1) return false;
@@ -57,7 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("border").classList.remove('maximized');
         document.getElementById("window").classList.remove('maximized');
     })
-    if(win.isMaximized()){
+    if (win.isMaximized()) {
         document.getElementById("titlebar").classList.add('maximized');
         document.getElementById("border").classList.add('maximized');
         document.getElementById("window").classList.add('maximized');
@@ -74,7 +73,7 @@ document.addEventListener("DOMContentLoaded", () => {
         snapOffset: 0,
         minSize: 200,
         elementStyle: function(dimension, size, gutterSize, num = -1) {
-            if(leftPanelReduced){
+            if (leftPanelReduced) {
                 expandedTree();
             }
             if (typeof size === 'string' || size instanceof String) {
@@ -102,24 +101,25 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
     })
+
     function collapseTree() {
-        if(leftPanelReduced){
+        if (leftPanelReduced) {
             splitter.setSizes(leftPanelLastSize);
             expandedTree();
-        }
-        else{
+        } else {
             leftPanelLastSize = splitter.getSizes();
             splitter.collapse(0);
             leftPanelReduced = true;
-            $jquery("#reduceLabel").text(">");    
+            $jquery("#reduceLabel").text(">");
         }
-        
+
     }
-    function expandedTree(){
+
+    function expandedTree() {
         leftPanelReduced = false;
         $jquery("#reduceLabel").text("<");
     }
-    $jquery("#reduceLabel").click(()=>{
+    $jquery("#reduceLabel").click(() => {
         collapseTree();
     });
 
@@ -215,11 +215,13 @@ document.addEventListener("DOMContentLoaded", () => {
         var node = data.node;
         if (data.targetType === 'title' || data.targetType === 'icon') {
             // console.log(data, event);
-            if(node.icon=="music"){
+            if (node.icon == "music") {
                 editMusic(data.node.key, data.node);
+            } else if (node.icon == "sound") {
+                editSound(data.node.key, data.node);
             }
         }
-    } 
+    }
 
     // ContextMenu
     var myTreeContextMenuFolder = $jquery("#treeViewContext");
@@ -300,7 +302,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
 
             for (var i = 0; i < filePaths.length; i++) {
-                newJob("jobNewSound", {path: filePaths[i], parent_key: data.node.key});
+                newJob("jobNewSound", { path: filePaths[i], parent_key: data.node.key });
             }
         });
     });
@@ -320,7 +322,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
 
             for (var i = 0; i < filePaths.length; i++) {
-                newJob("jobNewMusic", {path: filePaths[i], parent_key: data.node.key});
+                newJob("jobNewMusic", { path: filePaths[i], parent_key: data.node.key });
             }
         });
     });
@@ -740,7 +742,7 @@ document.addEventListener("DOMContentLoaded", () => {
             slashes: true
         }));
     }
-    $jquery("#myButton").click(()=>{
+    $jquery("#myButton").click(() => {
         $jquery("#workInfo").toggleClass('active');
     });
 
@@ -749,7 +751,7 @@ document.addEventListener("DOMContentLoaded", () => {
         newJob("jobClose", "");
     }
     $jquery("#workInfoImg").click(() => {
-        $jquery("#workInfoImg").removeClass('error');        
+        $jquery("#workInfoImg").removeClass('error');
         workerWin.show();
     });
     ipc.on('worker_msg', (event, message) => {
@@ -761,7 +763,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 break;
             case 'file_imported':
                 var parent_node = $jquery("#tree").fancytree("getTree").getNodeByKey(message.data.parent_key);
-                if(parent_node==null || (parent_node.lazy && parent_node.children==null))
+                if (parent_node == null || (parent_node.lazy && parent_node.children == null))
                     return;
                 parent_node.addNode({
                     title: message.data.title,
@@ -771,18 +773,17 @@ document.addEventListener("DOMContentLoaded", () => {
                     icon: message.data.type,
                 });
                 break;
-            // case 'music_loaded':
-            //     MusicSlots[message.data.slot]['musicLoaded']();
-            //     break;
-            // case 'music_unloaded':
-            //     setFreeMusicSlot(message.data.slot);
-            //     break;
+                // case 'music_loaded':
+                //     MusicSlots[message.data.slot]['musicLoaded']();
+                //     break;
+                // case 'music_unloaded':
+                //     setFreeMusicSlot(message.data.slot);
+                //     break;
             case 'working':
                 // console.log("worker working...", message.data);
-                if(message.data>0){
+                if (message.data > 0) {
                     $jquery("#workInfoImg").addClass('active');
-                }
-                else{
+                } else {
                     $jquery("#workInfoImg").removeClass('active');
                 }
                 break;
@@ -796,7 +797,7 @@ document.addEventListener("DOMContentLoaded", () => {
     /*** Show the app div ***/
     document.body.classList.add('loaded');
 
-    
+
     // $jquery("#right-panel").append(getModule("mixerElement", {id: 10, volume: 7}));
     // $jquery("#right-panel").append(getModule("mixerElement"));
     // $jquery("#right-panel").append(getModule("mixerElement"));
@@ -809,6 +810,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 var workerWinReady = false;
+
 function newJob(type, data) {
     if (workerWinReady) {
         workerWin.webContents.send('newJob', JSON.stringify({ type: type, data: data }));
@@ -817,41 +819,15 @@ function newJob(type, data) {
     }
 }
 
-
-/************************/
-/**  Load HTML Module  **/
-ModuleList = [];
-ModuleRegisterFuncs = [];
-function getModule(module, args) {
-    if(ModuleList[module] == null){
-        console.log("Loading module...", module);
-        // CSS
-        var stylesheet = document.createElement('link');
-        stylesheet.href = './modules/'+module+'.css';
-        stylesheet.rel = 'stylesheet';
-        stylesheet.type = 'text/css';
-        stylesheet.media = 'only x';
-        stylesheet.onload = function() {stylesheet.media = 'all'}
-        document.getElementsByTagName('head')[0].appendChild(stylesheet);
-
-        // Javascript
-        var dfd = $jquery.getScript('./modules/'+module+'.js');
-
-        // HTML
-        var file_content = fs.readFileSync('./modules/'+module+'.html', "utf8");
-        ModuleList[module] = {html: $jquery(file_content), registerDfd: dfd};
-        
-    }
-    var element = ModuleList[module].html.clone();
-    ModuleList[module].registerDfd.then(()=>{
-        ModuleRegisterFuncs[module](element, args);
-    });
-    return element;
-}
 var rightPanelElement = null;
+
 function rightPanelShow($elem) {
-    if(rightPanelElement){
+    if (rightPanelElement) {
         rightPanelElement.hide();
+        rightPanelElement.find(".module").each((index, _elem) => {
+            _$elem = $jquery(_elem);
+            ModuleFuncs[_$elem.data('moduleName')].onhide(_$elem);
+        });
     }
     rightPanelElement = $elem;
     $elem.show();
@@ -860,16 +836,24 @@ function rightPanelShow($elem) {
 function editMusic(filename, node) {
     $elem = $jquery("#musicEditContainer");
     $elem.empty();
-    $elem.append(getModule("musicEdit", {filename: filename, node: node}));
     rightPanelShow($elem);
+    $elem.append(getModule("musicEdit", { filename: filename, node: node }));
+}
+
+function editSound(filename, node) {
+    $elem = $jquery("#soundEditContainer");
+    $elem.empty();
+    rightPanelShow($elem);
+    $elem.append(getModule("soundEdit", { filename: filename, node: node }));
 }
 
 
 MusicSlots = [];
 MusicSlotsSize = 32;
+
 function getFreeMusicSlot(handler) {
     for (var i = 0; i < MusicSlotsSize; i++) {
-        if(MusicSlots[i] == null){
+        if (MusicSlots[i] == null) {
             MusicSlots[i] = handler || true;
             console.log("LOAD", i);
             return i;

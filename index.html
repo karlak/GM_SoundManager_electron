@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="include/xel/stylesheets/vanilla.theme.css">
     <link rel="stylesheet" href="include/nouislider/nouislider.css">
     <link rel="stylesheet" href="modules/musicEdit.css">
+    <link rel="stylesheet" href="modules/soundEdit.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
     <link href="include/fancytree/skin-lion/ui.fancytree.css" rel="stylesheet">
     <link rel="stylesheet" href="index.css">
@@ -23,6 +24,9 @@
     <script type="text/javascript" src="include/jquery-ui.min.js"></script>
     <!-- <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"> -->
     <script type="text/javascript" src="include/fancytree/jquery.fancytree-all.js"></script>
+    <script type="text/javascript" src="modules/init.js"></script>
+    <script type="text/javascript" src="modules/musicEdit.js"></script>
+    <script type="text/javascript" src="modules/soundEdit.js"></script>
     <script type="text/javascript">
     var $jquery = $.noConflict(true);
     </script>
@@ -148,7 +152,7 @@
                     </div>
                 </div>
                 <div id="right-panel" class="panel">
-                    <div id="scenes">
+                    <div id="scenes" style="display: none;">
                         <div class="tab-group">
                             <div class="tab"><span>TAB</span></div>
                             <div class="tab on"><span>TAB</span></div>
@@ -158,8 +162,9 @@
                         <div id="tabs-content">
                         </div>
                     </div>
-                    <div id="musicEditContainer">
-                        
+                    <div id="soundEditContainer" style="display: none;">
+                    </div>
+                    <div id="musicEditContainer" style="display: none;">
                     </div>
                 </div>
             </div>

@@ -2,18 +2,17 @@ if (typeof ModuleFuncs === 'undefined') {
     ModuleFuncs = [];
 }
 
-ModuleFuncs['musicEdit'] = newModule();
-ModuleFuncs['musicEdit']['register'] = function($elem, args) {
+ModuleFuncs['soundEdit'] = newModule();
+ModuleFuncs['soundEdit']['register'] = function($elem, args) {
     var music_slot = getFreeMusicSlot();
     var music_length;
 
     var $elem_play = $elem.find(".play");
-    // console.log($elem_play);
     var $elem_stop = $elem.find(".stop");
     var $elem_mixerContainer = $elem.find(".mixerContainer");
 
     $elem.find(".musicTitle").text(" [" + music_slot + "]" + args.node.title);
-    gm_music.music_load(music_slot, path.join(path_musics, args.filename));
+    gm_music.music_load(music_slot, path.join(path_sounds, args.filename));
     music_length = gm_music.music_getLengthFrame(music_slot);
     gm_music.music_play(music_slot);
 
@@ -56,7 +55,7 @@ ModuleFuncs['musicEdit']['register'] = function($elem, args) {
             'max': 1
         },
         snap_to_close_value: {
-            'distance': 5,
+            'distance': 10,
             'values': [50]
         },
     });
@@ -146,11 +145,12 @@ ModuleFuncs['musicEdit']['register'] = function($elem, args) {
         gm_music.music_unload(music_slot);
         clearInterval(updateInterval);
     });
-
+    // console.log($elem)
+    // $elem.hide();
 }
 
 
-ModuleFuncs['musicEdit']['onhide'] = function($elem, args) {
+ModuleFuncs['soundEdit']['onhide'] = function($elem, args) {
     $elem.remove();
 }
 // var mixerUpdate = null;
