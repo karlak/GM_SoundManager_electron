@@ -2,6 +2,9 @@
 Mixer Element:
   - 
 
+Show an animation when a job is created
+  - more visual ? cog from the center of the screen to the far right-bottom ?
+
 Treeview:
   - When moving a file, the search is done again completely instead of just updating the counters
 

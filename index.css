@@ -468,6 +468,35 @@ input[type=range].custom_range:focus::-webkit-slider-runnable-track {
     right: 2px;
     top: 1px;
 }
+#workInfo.active {
+    animation: workInfoActivate 2.25s ease;
+}
+@keyframes workInfoActivate{
+    from {
+        transform: translateY(0);
+    }
+    10% {
+        transform: translateY(-20px);
+    }
+    20% {
+        transform: translateY(0px);
+    }
+    30% {
+        transform: translateY(-15px);
+    }
+    40% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+    60% {
+        transform: translateY(0px);
+    }
+    to   {
+        transform: translateY(0);
+    }
+}
 #workInfo img {
     -webkit-user-drag: none;
     -webkit-user-select: none;

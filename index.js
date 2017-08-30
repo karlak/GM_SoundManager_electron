@@ -782,8 +782,10 @@ document.addEventListener("DOMContentLoaded", () => {
             case 'working':
                 // console.log("worker working...", message.data);
                 if (message.data > 0) {
+                    $jquery("#workInfo").addClass('active');
                     $jquery("#workInfoImg").addClass('active');
                 } else {
+                    $jquery("#workInfo").removeClass('active');
                     $jquery("#workInfoImg").removeClass('active');
                 }
                 break;
