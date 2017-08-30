@@ -338,7 +338,7 @@ span.fancytree-custom-icon.music {
 span.fancytree-custom-icon.sound {
     background-image: url(./include/imgs/sound.png);
 }
-span.fancytree-custom-icon.audioscene {
+span.fancytree-custom-icon.audioScene {
     background-image: url(./include/imgs/audioscene.png);
 }
 
@@ -537,7 +537,6 @@ input[type=range].custom_range:focus::-webkit-slider-runnable-track {
  */
 
 #musicEditContainer{
-    /*background-color: green;*/
     position: absolute;
     left: 0;
     right: 2px;
@@ -549,7 +548,17 @@ input[type=range].custom_range:focus::-webkit-slider-runnable-track {
     justify-content: center;
 }
 #soundEditContainer{
-    /*background-color: green;*/
+    position: absolute;
+    left: 0;
+    right: 2px;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#audioSceneContainer{
     position: absolute;
     left: 0;
     right: 2px;

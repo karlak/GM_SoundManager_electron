@@ -1,6 +1,6 @@
 
-Mixer Element:
-  - 
+Add a way to export a scene
+  - With all related audio files & options zipped, maybe ? 
 
 Show an animation when a job is created
   - more visual ? cog from the center of the screen to the far right-bottom ?

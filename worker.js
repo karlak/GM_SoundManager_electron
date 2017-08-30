@@ -10,10 +10,12 @@ const parentWin = win.getParentWindow();
 const path_sounds = path.join(app.getPath("userData"), 'audioData', 'sounds')
 const path_musics = path.join(app.getPath("userData"), 'audioData', 'musics')
 const path_loops = path.join(app.getPath("userData"), 'audioData', 'loops')
+const path_scenes = path.join(app.getPath("userData"), 'audioData', 'scenes')
 mkdirp(path_sounds);
 mkdirp(path_musics);
 mkdirp(path_loops);
-console.log(path_loops);
+mkdirp(path_scenes);
+// console.log(path_loops);
 
 var db = remote.getGlobal("db");
 var gm_music = remote.getGlobal("gm_music");

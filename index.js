@@ -18,6 +18,7 @@ let workerWin;
 const path_sounds = path.join(app.getPath("userData"), 'audioData', 'sounds')
 const path_musics = path.join(app.getPath("userData"), 'audioData', 'musics')
 const path_loops = path.join(app.getPath("userData"), 'audioData', 'loops')
+const path_scenes = path.join(app.getPath("userData"), 'audioData', 'scenes')
 
 // Prevents the middle click scroll behavior
 document.body.onmousedown = e => {
@@ -258,7 +259,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     myTreeContextMenuFolder.on("click", "x-menuitem[name='newFolder']", (event) => {
         var data = $jquery(event.delegateTarget).data('contextData');
-        setTimeout(function() { data.node.editCreateNode("child", { title: "", folder: true }); }, 30);
+        setTimeout(function() { data.node.editCreateNode("child", { title: "", folder: true, type: 'folder' }); }, 30);
     });
     myTreeContextMenuFolder.on("click", "x-menuitem[name='delete']", (event) => {
         var data = $jquery(event.delegateTarget).data('contextData');
@@ -325,22 +326,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     myTreeContextMenuFolder.on("click", "x-menuitem[name='addScene']", (event) => {
         var data = $jquery(event.delegateTarget).data('contextData');
-
-        var options = {
-            title: "Import music...",
-            filters: [
-                { name: 'Audio files', extensions: ['ogg', 'mp3', 'flac', 'wav'] },
-            ],
-            properties: ["openFile", "multiSelections"],
-        }
-        dialog.showOpenDialog(win, options, (filePaths) => {
-            if (filePaths == null)
-                return;
-
-            for (var i = 0; i < filePaths.length; i++) {
-                newJob("jobNewMusic", { path: filePaths[i], parent_key: data.node.key });
-            }
-        });
+        setTimeout(function() { data.node.editCreateNode("child", { title: "", folder: false, icon: 'audioScene', type: 'audioScene' }); }, 30);
     });
 
 
@@ -414,14 +400,34 @@ document.addEventListener("DOMContentLoaded", () => {
                 // returns).
                 var node = data.node;
                 if (data.isNew) {
-                    db.insert({ title: data.input.val(), is_folder: true, parent: node.parent.key, deleted: false }, function(err, newDocs) {
-                        if (err != null) {
-                            console.error(err);
-                            node.remove();
-                        }
-                        node.key = newDocs._id;
-                        $jquery(node.span).removeClass("pending");
-                    });
+                    if (node.data.type == "folder") {
+                        console.log("Adding folder");
+                        db.insert({ title: data.input.val(), is_folder: true, parent: node.parent.key, deleted: false }, function(err, newDocs) {
+                            if (err != null) {
+                                console.error(err);
+                                node.remove();
+                            }
+                            node.key = newDocs._id;
+                            $jquery(node.span).removeClass("pending");
+                        });
+                    } else if (node.data.type == "audioScene") {
+                        console.log("Adding AudioScene");
+                        db.insert({ title: data.input.val(), is_folder: false, parent: node.parent.key, deleted: false, type: 'audioScene' }, function(err, newDocs) {
+                            if (err != null) {
+                                console.error(err);
+                                node.remove();
+                            }
+                            node.key = newDocs._id;
+                            var audioSceneContent = JSON.stringify({});
+                            fs.writeFile(path.join(path_scenes, newDocs._id), audioSceneContent, function(err) {
+                                if (err) {
+                                    return console.error(err);
+                                }
+                                $jquery(node.span).removeClass("pending");
+                            });
+
+                        });
+                    }
                 } else {
                     db.update({ _id: node.key }, { $set: { title: data.input.val() } }, {}, (err, numAffected) => {
                         if (err != null) {
