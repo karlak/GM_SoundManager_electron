@@ -259,7 +259,6 @@ document.addEventListener("DOMContentLoaded", () => {
     myTreeContextMenuFolder.on("click", "x-menuitem[name='newFolder']", (event) => {
         var data = $jquery(event.delegateTarget).data('contextData');
         setTimeout(function() { data.node.editCreateNode("child", { title: "", folder: true }); }, 30);
-
     });
     myTreeContextMenuFolder.on("click", "x-menuitem[name='delete']", (event) => {
         var data = $jquery(event.delegateTarget).data('contextData');
@@ -288,7 +287,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     myTreeContextMenuFolder.on("click", "x-menuitem[name='addSound']", (event) => {
         var data = $jquery(event.delegateTarget).data('contextData');
-        // setTimeout(function() { data.node.editCreateNode("child", { title: "", folder: true }); }, 30);
 
         var options = {
             title: "Import sound...",
@@ -308,7 +306,25 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     myTreeContextMenuFolder.on("click", "x-menuitem[name='addMusic']", (event) => {
         var data = $jquery(event.delegateTarget).data('contextData');
-        // setTimeout(function() { data.node.editCreateNode("child", { title: "", folder: true }); }, 30);
+
+        var options = {
+            title: "Import music...",
+            filters: [
+                { name: 'Audio files', extensions: ['ogg', 'mp3', 'flac', 'wav'] },
+            ],
+            properties: ["openFile", "multiSelections"],
+        }
+        dialog.showOpenDialog(win, options, (filePaths) => {
+            if (filePaths == null)
+                return;
+
+            for (var i = 0; i < filePaths.length; i++) {
+                newJob("jobNewMusic", { path: filePaths[i], parent_key: data.node.key });
+            }
+        });
+    });
+    myTreeContextMenuFolder.on("click", "x-menuitem[name='addScene']", (event) => {
+        var data = $jquery(event.delegateTarget).data('contextData');
 
         var options = {
             title: "Import music...",
