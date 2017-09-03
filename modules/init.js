@@ -13,7 +13,7 @@ function getModule(module, args) {
     element.addClass('module');
     element.data('moduleName', module);
 
-    console.log(module);
+    // console.log(module);
     ModuleFuncs[module].register(element, args);
     return element;
 }

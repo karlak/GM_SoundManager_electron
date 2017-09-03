@@ -569,6 +569,18 @@ input[type=range].custom_range:focus::-webkit-slider-runnable-track {
     align-items: center;
     justify-content: center;
 }
+#audioScenesContainer{
+    position: absolute;
+    left: 0;
+    right: 2px;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 
 div.toggle {
     position: relative;

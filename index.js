@@ -20,6 +20,8 @@ const path_musics = path.join(app.getPath("userData"), 'audioData', 'musics')
 const path_loops = path.join(app.getPath("userData"), 'audioData', 'loops')
 const path_scenes = path.join(app.getPath("userData"), 'audioData', 'scenes')
 
+var $audioScenes;
+
 // Prevents the middle click scroll behavior
 document.body.onmousedown = e => {
     if (e.button === 1) return false;
@@ -220,6 +222,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 editMusic(data.node.key, data.node);
             } else if (node.icon == "sound") {
                 editSound(data.node.key, data.node);
+            } else if (node.icon == "audioScene") {
+                editAudioScene(data.node.key, data.node);
             }
         }
     }
@@ -830,6 +834,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     ///////////
 
+    var $audioScenesContainer = $jquery("#audioScenesContainer");
+    $audioScenes = getModule("audioScenes");
+    $audioScenesContainer.append($audioScenes);
+    
+
 });
 
 
@@ -858,17 +867,24 @@ function rightPanelShow($elem) {
 }
 
 function editMusic(filename, node) {
-    $elem = $jquery("#musicEditContainer");
+    var $elem = $jquery("#musicEditContainer");
     $elem.empty();
     rightPanelShow($elem);
     $elem.append(getModule("musicEdit", { filename: filename, node: node }));
 }
 
 function editSound(filename, node) {
-    $elem = $jquery("#soundEditContainer");
+    var $elem = $jquery("#soundEditContainer");
     $elem.empty();
     rightPanelShow($elem);
     $elem.append(getModule("soundEdit", { filename: filename, node: node }));
+}
+
+function editAudioScene(filename, node) {
+    var $elem = $jquery("#audioSceneContainer");
+    $elem.empty();
+    rightPanelShow($elem);
+    $elem.append(getModule("audioSceneEdit", { filename: filename, node: node }));
 }
 
 

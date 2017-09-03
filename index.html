@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="include/nouislider/nouislider.css">
     <link rel="stylesheet" href="modules/musicEdit.css">
     <link rel="stylesheet" href="modules/soundEdit.css">
+    <link rel="stylesheet" href="modules/audioSceneEdit.css">
+    <link rel="stylesheet" href="modules/audioScenes.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
     <link href="include/fancytree/skin-lion/ui.fancytree.css" rel="stylesheet">
     <link rel="stylesheet" href="index.css">
@@ -27,6 +29,8 @@
     <script type="text/javascript" src="modules/init.js"></script>
     <script type="text/javascript" src="modules/musicEdit.js"></script>
     <script type="text/javascript" src="modules/soundEdit.js"></script>
+    <script type="text/javascript" src="modules/audioSceneEdit.js"></script>
+    <script type="text/javascript" src="modules/audioScenes.js"></script>
     <script type="text/javascript">
     var $jquery = $.noConflict(true);
     </script>
@@ -123,20 +127,20 @@
                                         <x-label>Add</x-label>
                                         <x-menu>
                                             <x-menuitem name="addSound">
-                                                <img src="include/imgs/sound.png"/>
+                                                <img src="include/imgs/sound.png" />
                                                 <x-label>Sound</x-label>
                                             </x-menuitem>
                                             <x-menuitem name="addMusic">
-                                                <img src="include/imgs/music2.png"/>
+                                                <img src="include/imgs/music2.png" />
                                                 <x-label>Music</x-label>
                                             </x-menuitem>
                                             <x-menuitem name="addLoopingMusic">
-                                                <img src="include/imgs/repeat.png"/>
+                                                <img src="include/imgs/repeat.png" />
                                                 <x-label>Looping Music</x-label>
                                             </x-menuitem>
                                             <hr>
                                             <x-menuitem name="addScene">
-                                                <img src="include/imgs/audioscene.png"/>
+                                                <img src="include/imgs/audioscene.png" />
                                                 <x-label>Audio Scene</x-label>
                                             </x-menuitem>
                                         </x-menu>
@@ -174,7 +178,9 @@
                     </div>
                     <div id="musicEditContainer" style="display: none;">
                     </div>
-                    <div id="audioSceneContainer" style="display: none;">
+                    <!--<div id="audioSceneContainer" style="display: none;">
+                    </div>-->
+                    <div id="audioScenesContainer">
                     </div>
                 </div>
             </div>

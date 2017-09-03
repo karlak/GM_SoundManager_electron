@@ -1,0 +1,21 @@
+.audioSceneEdit{
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background-color: green;
+    border: solid 1px #353D4E;
+    margin: 10px;
+}
+
+
+.soundEdit .showloading {
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	background-color: rgba(0, 0, 0, 0.3);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
